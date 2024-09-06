@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +40,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Example5Page(close: () -> Unit = {}) {
+fun CalenderScreen(close: () -> Unit = {}) {
     val currentDate = remember { LocalDate.now() }
     val startDate = remember { currentDate.minusDays(500) }
     val endDate = remember { currentDate.plusDays(500) }
@@ -57,18 +59,25 @@ fun Example5Page(close: () -> Unit = {}) {
         TopAppBar(
             title = { Text(text = getWeekPageTitle(visibleWeek)) },
             navigationIcon = { NavigationIcon(onBackClick = close) },
+            colors = TopAppBarDefaults.topAppBarColors().copy(
+                titleContentColor = Color.Black,
+                navigationIconContentColor = Color.Black
+            )
         )
-        WeekCalendar(
-            modifier = Modifier.background(color = colorResource(R.color.purple_700)),
-            state = state,
-            dayContent = { day ->
-                Day(day.date, isSelected = selection == day.date) { clicked ->
-                    if (selection != clicked) {
-                        selection = clicked
+        Column {
+            WeekCalendar(
+                modifier = Modifier.background(color = colorResource(R.color.purple_700)),
+                state = state,
+                dayContent = { day ->
+                    Day(day.date, isSelected = selection == day.date) { clicked ->
+                        if (selection != clicked) {
+                            selection = clicked
+                        }
                     }
-                }
-            },
-        )
+                },
+            )
+            Text(text = "${selection}")
+        }
     }
 }
 
@@ -115,6 +124,6 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Un
 
 @Preview
 @Composable
-private fun Example5Preview() {
-    Example5Page()
+private fun CalenderScreenPreview() {
+    CalenderScreen()
 }

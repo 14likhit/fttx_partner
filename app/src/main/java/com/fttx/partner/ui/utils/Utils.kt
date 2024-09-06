@@ -76,13 +76,12 @@ fun NavigationIcon(onBackClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxHeight()
-            .aspectRatio(1f)
             .padding(8.dp)
             .clip(shape = CircleShape)
             .clickable(role = Role.Button, onClick = onBackClick),
     ) {
         Icon(
-            tint = Color.White,
+            tint = Color.Black,
             modifier = Modifier.align(Alignment.Center),
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "Back",

@@ -1,6 +1,5 @@
 package com.fttx.partner.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,8 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fttx.partner.R
-import com.fttx.partner.displayText
-import com.fttx.partner.getWeekPageTitle
+import com.fttx.partner.ui.utils.displayText
+import com.fttx.partner.ui.utils.getWeekPageTitle
+import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
 import com.fttx.partner.ui.utils.rememberFirstVisibleWeekAfterScroll
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -125,5 +125,7 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Un
 @Preview
 @Composable
 private fun CalenderScreenPreview() {
-    CalenderScreen()
+    FTTXPartnerTheme {
+        CalenderScreen()
+    }
 }

@@ -1,4 +1,4 @@
-package com.fttx.partner
+package com.fttx.partner.ui.utils
 
 import android.app.Activity
 import android.content.Context

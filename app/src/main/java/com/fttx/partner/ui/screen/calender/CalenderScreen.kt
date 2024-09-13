@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.screen
+package com.fttx.partner.ui.screen.calender
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fttx.partner.R
-import com.fttx.partner.ui.component.TicketList
+import com.fttx.partner.ui.component.ticket.TicketList
 import com.fttx.partner.ui.mock.getTickets
 import com.fttx.partner.ui.utils.displayText
 import com.fttx.partner.ui.utils.getWeekPageTitle

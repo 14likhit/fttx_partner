@@ -66,4 +66,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kizitonwose.calender.compose)
+    implementation (libs.androidx.material.icons.extended)
 }

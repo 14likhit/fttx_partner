@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.component
+package com.fttx.partner.ui.component.ticket
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

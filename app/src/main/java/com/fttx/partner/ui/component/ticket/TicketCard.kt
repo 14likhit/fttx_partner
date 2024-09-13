@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.component
+package com.fttx.partner.ui.component.ticket
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize

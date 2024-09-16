@@ -1,4 +1,4 @@
-package com.fttx.partner
+package com.fttx.partner.ui.screen.calender
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fttx.partner.ui.screen.calender.CalenderScreen
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 class MainActivity : ComponentActivity() {

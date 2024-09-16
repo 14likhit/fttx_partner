@@ -1,0 +1,191 @@
+package com.fttx.partner.ui.screen.form
+
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.fttx.partner.ui.theme.FTTXPartnerTheme
+import java.text.DateFormatSymbols
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
+@Composable
+fun AddTicketFormScreen(modifier: Modifier = Modifier) {
+    val maxLength = 10
+    var title by rememberSaveable { mutableStateOf("") }
+    var isNameError by rememberSaveable { mutableStateOf(false) }
+    var description by rememberSaveable { mutableStateOf("") }
+    var priority by rememberSaveable { mutableStateOf("") }
+    var endDate by rememberSaveable { mutableLongStateOf(0L) }
+
+    Column(
+        modifier = modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(text = "Add Ticket")
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "Title")
+        TextField(
+            value = title,
+            onValueChange = {
+                if (it.length > 10) {
+                    isNameError = true
+                } else {
+                    title = it
+                    isNameError = false
+                }
+            },
+            trailingIcon = {
+                if (isNameError) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = "Error",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            placeholder = { Text(text = "Repair/New Connection") },
+            isError = isNameError,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        if (isNameError) {
+            Text(text = "Error Name")
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(text = "Description")
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            placeholder = { Text(text = "Description") })
+        DropDownSelector(dropDownSelection = { priority = it })
+        Spacer(modifier = Modifier.padding(8.dp))
+        EstimatedEndDateCompletion({ endDate = it })
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(text = "Priority")
+        val priorities = listOf("High", "Medium", "Low")
+        var expanded by remember { mutableStateOf(false) }
+        var selectedPriority by remember { mutableStateOf(priorities[0]) }
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+            TextField(
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                value = selectedPriority,
+                onValueChange = {},
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                priorities.forEach { priority ->
+                    DropdownMenuItem(
+                        text = { Text(text = priority) },
+                        onClick = {
+                            selectedPriority = priority
+                            dropDownSelection(selectedPriority)
+                            expanded = false
+                        })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
+    Column {
+        Text(text = "Estimated Completion Date")
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed: Boolean by interactionSource.collectIsPressedAsState()
+        val currentDate = Date().toFormattedString()
+        var selectedDate by rememberSaveable { mutableStateOf(currentDate) }
+
+        val context = LocalContext.current
+        val calender = Calendar.getInstance()
+        val year: Int = calender.get(Calendar.YEAR)
+        val month: Int = calender.get(Calendar.MONTH)
+        val day: Int = calender.get(Calendar.DAY_OF_MONTH)
+        calender.time = Date()
+
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _: DatePicker, seletectedYear: Int, seletectedMonth: Int, selectedDayOfMonth: Int ->
+                val newDate = Calendar.getInstance()
+                newDate.set(seletectedYear, seletectedMonth, selectedDayOfMonth)
+                selectedDate =
+                    "${seletectedMonth.toMonthName()} $selectedDayOfMonth, $seletectedYear"
+                endDate(newDate.timeInMillis)
+            },
+            year,
+            month,
+            day
+        )
+
+        TextField(
+            modifier = Modifier,
+            readOnly = true,
+            value = selectedDate,
+            onValueChange = {},
+            trailingIcon = { Icons.Default.DateRange },
+            interactionSource = interactionSource
+        )
+
+        if (isPressed) {
+            datePickerDialog.show()
+        }
+    }
+}
+
+private fun Int.toMonthName(): String {
+    return DateFormatSymbols().months[this]
+}
+
+private fun Date.toFormattedString(): String {
+    val simpleDateFormat = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
+    return simpleDateFormat.format(this)
+}
+
+@Preview
+@Composable
+private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
+    FTTXPartnerTheme {
+        AddTicketFormScreen()
+    }
+}

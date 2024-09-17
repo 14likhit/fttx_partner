@@ -25,8 +25,8 @@ import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 @Composable
-fun TicketCard(ticket: Ticket, modifier: Modifier = Modifier) {
-    OutlinedCard(onClick = { }, modifier = modifier.fillMaxWidth()) {
+fun TicketCard(ticket: Ticket, onCardClick: (Ticket) -> Unit = {}, modifier: Modifier = Modifier) {
+    OutlinedCard(onClick = { onCardClick(ticket) }, modifier = modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Row {
                 Text(text = ticket.category, modifier = Modifier.weight(1f))

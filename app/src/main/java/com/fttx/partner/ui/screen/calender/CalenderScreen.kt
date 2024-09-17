@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fttx.partner.R
+import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.component.ticket.TicketList
 import com.fttx.partner.ui.mock.getTickets
 import com.fttx.partner.ui.utils.displayText
@@ -42,13 +43,17 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalenderScreen(close: () -> Unit = {}) {
+fun CalenderScreen(
+    close: () -> Unit = {},
+    onCardClick: (Ticket) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     val currentDate = remember { LocalDate.now() }
     val startDate = remember { currentDate.minusDays(500) }
     val endDate = remember { currentDate.plusDays(500) }
     var selection by remember { mutableStateOf(currentDate) }
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White),
     ) {
@@ -78,7 +83,10 @@ fun CalenderScreen(close: () -> Unit = {}) {
                     }
                 },
             )
-            TicketList(tickets = getTickets())
+            TicketList(
+                tickets = getTickets(),
+                onCardClick = onCardClick
+            )
         }
     }
 }

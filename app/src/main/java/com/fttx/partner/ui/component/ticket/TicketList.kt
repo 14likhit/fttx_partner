@@ -10,10 +10,10 @@ import com.fttx.partner.ui.mock.getTickets
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 @Composable
-fun TicketList(tickets: List<Ticket>, modifier: Modifier = Modifier) {
+fun TicketList(tickets: List<Ticket>,onCardClick:(Ticket) -> Unit = {}, modifier: Modifier = Modifier) {
     LazyColumn {
         items(items = tickets) { ticket ->
-            TicketCard(ticket = ticket)
+            TicketCard(ticket = ticket, onCardClick = onCardClick)
         }
     }
 }

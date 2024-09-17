@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -42,6 +43,9 @@ fun LoginScreen(modifier: Modifier = Modifier) {
     ) {
         LoginField(value = "Test", onChange = {})
         PasswordField(value = "Test", onChange = {}, submit = { })
+        Button(onClick = onLoginClick) {
+            Text(text = "Login")
+        }
     }
 }
 
@@ -134,6 +138,6 @@ fun PasswordField(
 @Composable
 private fun LoginScreenPreview() {
     FTTXPartnerTheme {
-        LoginScreen()
+        LoginScreen(onLoginClick = {})
     }
 }

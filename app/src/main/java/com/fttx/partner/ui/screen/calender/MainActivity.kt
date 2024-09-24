@@ -26,6 +26,9 @@ class MainActivity : ComponentActivity() {
                         close = { finish() },
                         onCardClick = {
                             startActivity(Intent(this, TicketFormActivity::class.java))
+                        },
+                        onAddClick = {
+                            startActivity(Intent(this, TicketFormActivity::class.java))
                         }
                     )
                 }

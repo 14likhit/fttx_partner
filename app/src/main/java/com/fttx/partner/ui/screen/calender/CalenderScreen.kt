@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,47 +50,57 @@ import java.time.format.DateTimeFormatter
 fun CalenderScreen(
     close: () -> Unit = {},
     onCardClick: (Ticket) -> Unit = {},
+    onAddClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val currentDate = remember { LocalDate.now() }
     val startDate = remember { currentDate.minusDays(500) }
     val endDate = remember { currentDate.plusDays(500) }
     var selection by remember { mutableStateOf(currentDate) }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.White),
-    ) {
-        val state = rememberWeekCalendarState(
-            startDate = startDate,
-            endDate = endDate,
-            firstVisibleWeekDate = currentDate,
-        )
-        val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
-        TopAppBar(
-            title = { Text(text = getWeekPageTitle(visibleWeek)) },
-            navigationIcon = { NavigationIcon(onBackClick = close) },
-            colors = TopAppBarDefaults.topAppBarColors().copy(
-                titleContentColor = Color.Black,
-                navigationIconContentColor = Color.Black
+    Box {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+        ) {
+            val state = rememberWeekCalendarState(
+                startDate = startDate,
+                endDate = endDate,
+                firstVisibleWeekDate = currentDate,
             )
-        )
-        Column {
-            WeekCalendar(
-                modifier = Modifier.background(color = colorResource(R.color.purple_700)),
-                state = state,
-                dayContent = { day ->
-                    Day(day.date, isSelected = selection == day.date) { clicked ->
-                        if (selection != clicked) {
-                            selection = clicked
+            val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
+            TopAppBar(
+                title = { Text(text = getWeekPageTitle(visibleWeek)) },
+                navigationIcon = { NavigationIcon(onBackClick = close) },
+                colors = TopAppBarDefaults.topAppBarColors().copy(
+                    titleContentColor = Color.Black,
+                    navigationIconContentColor = Color.Black
+                )
+            )
+            Column {
+                WeekCalendar(
+                    modifier = Modifier.background(color = colorResource(R.color.purple_700)),
+                    state = state,
+                    dayContent = { day ->
+                        Day(day.date, isSelected = selection == day.date) { clicked ->
+                            if (selection != clicked) {
+                                selection = clicked
+                            }
                         }
-                    }
-                },
-            )
-            TicketList(
-                tickets = getTickets(),
-                onCardClick = onCardClick
-            )
+                    },
+                )
+                TicketList(
+                    tickets = getTickets(),
+                    onCardClick = onCardClick
+                )
+            }
+        }
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 64.dp),
+            onClick = onAddClick) {
+            Icon(imageVector = Icons.Filled.Add, contentDescription = "FAB")
         }
     }
 }

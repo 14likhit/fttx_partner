@@ -49,7 +49,6 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginField(
     value: String,

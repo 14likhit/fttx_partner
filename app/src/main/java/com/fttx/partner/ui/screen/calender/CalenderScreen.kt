@@ -35,12 +35,11 @@ import com.fttx.partner.R
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.component.ticket.TicketList
 import com.fttx.partner.ui.mock.getTickets
-import com.fttx.partner.ui.utils.displayText
-import com.fttx.partner.ui.utils.getWeekPageTitle
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
+import com.fttx.partner.ui.utils.displayText
+import com.fttx.partner.ui.utils.getWeekPageTitle
 import com.fttx.partner.ui.utils.rememberFirstVisibleWeekAfterScroll
-import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -77,23 +76,10 @@ fun CalenderScreen(
                     navigationIconContentColor = Color.Black
                 )
             )
-            Column {
-                WeekCalendar(
-                    modifier = Modifier.background(color = colorResource(R.color.purple_700)),
-                    state = state,
-                    dayContent = { day ->
-                        Day(day.date, isSelected = selection == day.date) { clicked ->
-                            if (selection != clicked) {
-                                selection = clicked
-                            }
-                        }
-                    },
-                )
-                TicketList(
-                    tickets = getTickets(),
-                    onCardClick = onCardClick
-                )
-            }
+            TicketList(
+                tickets = getTickets(),
+                onCardClick = onCardClick
+            )
         }
         FloatingActionButton(
             modifier = Modifier

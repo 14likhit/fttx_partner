@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.android.dagger.hilt)
 }
 
 android {
@@ -67,4 +69,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.kizitonwose.calender.compose)
     implementation (libs.androidx.material.icons.extended)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
+    implementation (libs.hilt.android)
+    annotationProcessor(libs.hilt.compiler)
 }
+

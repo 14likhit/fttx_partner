@@ -10,9 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fttx.partner.ui.screen.calender.CalenderScreen
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TicketFormActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

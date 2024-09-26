@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.dagger.hilt)
 }
 
@@ -71,9 +72,9 @@ dependencies {
     implementation (libs.androidx.material.icons.extended)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
-    implementation (libs.okhttp)
-    implementation (libs.logging.interceptor)
+//    implementation (libs.okhttp)
+//    implementation (libs.logging.interceptor)
     implementation (libs.hilt.android)
-    annotationProcessor(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }
 

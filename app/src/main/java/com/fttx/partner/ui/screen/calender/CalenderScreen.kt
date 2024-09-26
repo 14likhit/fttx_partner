@@ -76,6 +76,24 @@ fun CalenderScreen(
                     navigationIconContentColor = Color.Black
                 )
             )
+            //todo -> if we have to use calendar need to evaluate calender crash.
+//            Column {
+//                WeekCalendar(
+//                    modifier = Modifier.background(color = colorResource(R.color.purple_700)),
+//                    state = state,
+//                    dayContent = { day ->
+//                        Day(day.date, isSelected = selection == day.date) { clicked ->
+//                            if (selection != clicked) {
+//                                selection = clicked
+//                            }
+//                        }
+//                    },
+//                )
+//                TicketList(
+//                    tickets = getTickets(),
+//                    onCardClick = onCardClick
+//                )
+//            }
             TicketList(
                 tickets = getTickets(),
                 onCardClick = onCardClick

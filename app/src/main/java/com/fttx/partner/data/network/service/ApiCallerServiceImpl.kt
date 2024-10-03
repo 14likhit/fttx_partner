@@ -10,7 +10,6 @@ class ApiCallerServiceImpl
 constructor(
 ) : ApiCallerService {
     override suspend fun <T> safeApiCall(
-        callingSource: String,
         apiCallBlock: suspend () -> Response<T>,
     ): Result<T> {
         return try {

@@ -20,7 +20,6 @@
         <activity
             android:name=".ui.screen.login.LoginActivity"
             android:exported="true"
-            android:label="@string/title_activity_login"
             android:theme="@style/Theme.FTTXPartner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -2,6 +2,7 @@ package com.fttx.partner.ui.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fttx.partner.data.source.local.datastore.DataStorePreferences
 import com.fttx.partner.domain.usecase.GetTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val getTicketUseCase: GetTicketUseCase
+    private val getTicketUseCase: GetTicketUseCase,
+    private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel(), IModel<LoginState, LoginIntent, LoginEffect> {
 
     override val intents: Channel<LoginIntent> = Channel(Channel.UNLIMITED)

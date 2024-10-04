@@ -6,12 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fttx.partner.domain.model.Ticket
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
-fun CalenderRoute(
-    navigateToTicketFormActivity: () -> Unit,
+fun HomeRoute(
+    navigateToTicketFormActivity: (Ticket?) -> Unit,
     onBackPress: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -22,12 +24,14 @@ fun CalenderRoute(
     LaunchedEffect(Unit) {
         homeViewModel.uiEffect.onEach {
             when (it) {
-                HomeEffect.NavigateToAddHome -> {}
+                HomeEffect.NavigateBack -> onBackPress()
+                HomeEffect.NavigateToAddTicket -> navigateToTicketFormActivity(null)
+                is HomeEffect.NavigateToTicketDetails -> navigateToTicketFormActivity(it.ticket)
             }
-        }
+        }.collect()
     }
 
-    CalenderScreen(
+    HomeScreen(
         onTriggerIntent = {
             coroutineScope.launch {
                 homeViewModel.intents.send(it)

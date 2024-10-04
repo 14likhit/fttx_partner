@@ -38,6 +38,17 @@ class HomeViewModel @Inject constructor(
             intents.receiveAsFlow().collect {
                 when (it) {
                     is HomeIntent.Init -> {}
+                    HomeIntent.AddCta -> {
+                        _uiEffect.send(HomeEffect.NavigateToAddTicket)
+                    }
+
+                    HomeIntent.BackCta -> {
+                        _uiEffect.send(HomeEffect.NavigateBack)
+                    }
+
+                    is HomeIntent.TicketCardCta -> {
+                        _uiEffect.send(HomeEffect.NavigateToTicketDetails(it.ticket))
+                    }
                 }
             }
         }

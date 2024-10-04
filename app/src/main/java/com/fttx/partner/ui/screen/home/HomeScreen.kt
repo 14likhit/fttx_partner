@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fttx.partner.R
-import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.component.ticket.TicketList
 import com.fttx.partner.ui.mock.getTickets
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
@@ -46,12 +45,9 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalenderScreen(
-    onTriggerIntent: (HomeIntent)-> Unit,
+fun HomeScreen(
+    onTriggerIntent: (HomeIntent) -> Unit,
     uiState: HomeState,
-    close: () -> Unit = {},
-    onCardClick: (Ticket) -> Unit = {},
-    onAddClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val currentDate = remember { LocalDate.now() }
@@ -72,7 +68,11 @@ fun CalenderScreen(
             val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
             TopAppBar(
                 title = { Text(text = getWeekPageTitle(visibleWeek)) },
-                navigationIcon = { NavigationIcon(onBackClick = close) },
+                navigationIcon = {
+                    NavigationIcon(onBackClick = {
+                        onTriggerIntent(HomeIntent.BackCta)
+                    })
+                },
                 colors = TopAppBarDefaults.topAppBarColors().copy(
                     titleContentColor = Color.Black,
                     navigationIconContentColor = Color.Black
@@ -98,14 +98,18 @@ fun CalenderScreen(
 //            }
             TicketList(
                 tickets = getTickets(),
-                onCardClick = onCardClick
+                onCardClick = {
+                    onTriggerIntent(HomeIntent.TicketCardCta(it))
+                },
             )
         }
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 64.dp),
-            onClick = onAddClick) {
+            onClick = {
+                onTriggerIntent(HomeIntent.AddCta)
+            }) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "FAB")
         }
     }
@@ -156,6 +160,6 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Un
 @Composable
 private fun CalenderScreenPreview() {
     FTTXPartnerTheme {
-        CalenderScreen({},HomeState())
+        HomeScreen({}, HomeState())
     }
 }

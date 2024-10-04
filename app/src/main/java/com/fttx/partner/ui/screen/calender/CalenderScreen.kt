@@ -47,6 +47,8 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalenderScreen(
+    onTriggerIntent: (TicketIntent)-> Unit,
+    uiState: TicketState,
     close: () -> Unit = {},
     onCardClick: (Ticket) -> Unit = {},
     onAddClick: () -> Unit = {},
@@ -154,6 +156,6 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Un
 @Composable
 private fun CalenderScreenPreview() {
     FTTXPartnerTheme {
-        CalenderScreen()
+        CalenderScreen({},TicketState())
     }
 }

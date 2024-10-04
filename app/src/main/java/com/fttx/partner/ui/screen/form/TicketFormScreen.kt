@@ -5,7 +5,6 @@ import android.widget.DatePicker
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -40,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
-import com.fttx.partner.ui.utils.getWeekPageTitle
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -49,7 +47,11 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTicketFormScreen(modifier: Modifier = Modifier) {
+fun TicketFormScreen(
+    onTriggerIntent: (TicketFormIntent) -> Unit,
+    uiState: TicketFormState,
+    modifier: Modifier = Modifier
+) {
     val maxLength = 10
     var title by rememberSaveable { mutableStateOf("") }
     var isNameError by rememberSaveable { mutableStateOf(false) }
@@ -60,7 +62,7 @@ fun AddTicketFormScreen(modifier: Modifier = Modifier) {
     Column {
         TopAppBar(
             title = { Text(text = "Add Ticket") },
-            navigationIcon = { NavigationIcon(onBackClick = {}) },
+            navigationIcon = { NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) }) },
             colors = TopAppBarDefaults.topAppBarColors().copy(
                 titleContentColor = Color.Black,
                 navigationIconContentColor = Color.Black
@@ -205,6 +207,6 @@ private fun Date.toFormattedString(): String {
 @Composable
 private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
     FTTXPartnerTheme {
-        AddTicketFormScreen()
+        TicketFormScreen({ }, TicketFormState())
     }
 }

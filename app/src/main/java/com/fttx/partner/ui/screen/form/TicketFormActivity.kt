@@ -21,18 +21,13 @@ class TicketFormActivity : ComponentActivity() {
         setContent {
             FTTXPartnerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AddTicketFormScreen(modifier = Modifier.padding(innerPadding))
+                    TicketFormRoute(onBackPress = {
+                        finish()
+                    })
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FTTXPartnerTheme {
-        AddTicketFormScreen()
-    }
-}
 

@@ -23,26 +23,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             FTTXPartnerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CalenderScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        close = { finish() },
-                        onCardClick = {
+                    CalenderRoute(
+                        navigateToTicketFormActivity = {
                             startActivity(Intent(this, TicketFormActivity::class.java))
                         },
-                        onAddClick = {
-                            startActivity(Intent(this, TicketFormActivity::class.java))
-                        }
+                        onBackPress = { finish() },
                     )
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FTTXPartnerTheme {
-        CalenderScreen()
     }
 }

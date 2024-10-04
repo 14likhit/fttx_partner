@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CalenderRoute(
-    homeViewModel:HomeViewModel = hiltViewModel()
+    navigateToTicketFormActivity: () -> Unit,
+    onBackPress: () -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val uiState by homeViewModel.uiState.collectAsState()
@@ -19,7 +21,7 @@ fun CalenderRoute(
 
     LaunchedEffect(Unit) {
         homeViewModel.uiEffect.onEach {
-            when(it){
+            when (it) {
                 HomeEffect.NavigateToAddHome -> {}
             }
         }

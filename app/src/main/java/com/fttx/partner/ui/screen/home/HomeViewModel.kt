@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.screen.calender
+package com.fttx.partner.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,18 +15,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TicketViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val getTicketUseCase: GetTicketUseCase
-) : ViewModel(), IModel<TicketState, TicketIntent, TicketEffect> {
+) : ViewModel(), IModel<HomeState, HomeIntent, HomeEffect> {
 
-    override val intents: Channel<TicketIntent> = Channel(Channel.UNLIMITED)
+    override val intents: Channel<HomeIntent> = Channel(Channel.UNLIMITED)
 
-    private val _uiState = MutableStateFlow(TicketState())
-    override val uiState: StateFlow<TicketState>
+    private val _uiState = MutableStateFlow(HomeState())
+    override val uiState: StateFlow<HomeState>
         get() = _uiState.asStateFlow()
 
-    private val _uiEffect = Channel<TicketEffect>()
-    override val uiEffect: Flow<TicketEffect>
+    private val _uiEffect = Channel<HomeEffect>()
+    override val uiEffect: Flow<HomeEffect>
         get() = _uiEffect.receiveAsFlow()
 
     init {
@@ -37,7 +37,7 @@ class TicketViewModel @Inject constructor(
         viewModelScope.launch {
             intents.receiveAsFlow().collect {
                 when (it) {
-                    is TicketIntent.Init -> {}
+                    is HomeIntent.Init -> {}
                 }
             }
         }

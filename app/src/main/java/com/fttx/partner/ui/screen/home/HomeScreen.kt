@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.screen.calender
+package com.fttx.partner.ui.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,8 +47,8 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalenderScreen(
-    onTriggerIntent: (TicketIntent)-> Unit,
-    uiState: TicketState,
+    onTriggerIntent: (HomeIntent)-> Unit,
+    uiState: HomeState,
     close: () -> Unit = {},
     onCardClick: (Ticket) -> Unit = {},
     onAddClick: () -> Unit = {},
@@ -156,6 +156,6 @@ private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Un
 @Composable
 private fun CalenderScreenPreview() {
     FTTXPartnerTheme {
-        CalenderScreen({},TicketState())
+        CalenderScreen({},HomeState())
     }
 }

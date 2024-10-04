@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.screen.calender
+package com.fttx.partner.ui.screen.home
 
 import android.content.Intent
 import android.os.Bundle

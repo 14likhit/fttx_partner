@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.screen.calender
+package com.fttx.partner.ui.screen.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,16 +11,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CalenderRoute(
-    ticketViewModel:TicketViewModel = hiltViewModel()
+    homeViewModel:HomeViewModel = hiltViewModel()
 ) {
 
-    val uiState by ticketViewModel.uiState.collectAsState()
+    val uiState by homeViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        ticketViewModel.uiEffect.onEach {
+        homeViewModel.uiEffect.onEach {
             when(it){
-                TicketEffect.NavigateToAddTicket -> {}
+                HomeEffect.NavigateToAddHome -> {}
             }
         }
     }
@@ -28,7 +28,7 @@ fun CalenderRoute(
     CalenderScreen(
         onTriggerIntent = {
             coroutineScope.launch {
-                ticketViewModel.intents.send(it)
+                homeViewModel.intents.send(it)
             }
         },
         uiState = uiState

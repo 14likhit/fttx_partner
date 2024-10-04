@@ -14,8 +14,10 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LoginScreen(onLoginClick = {
+            LoginRoute(navigateToHomeScreen = {
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }, onBackPress = {
                 finish()
             })
         }

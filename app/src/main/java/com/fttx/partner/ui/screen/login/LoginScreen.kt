@@ -35,7 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 @Composable
-fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
+fun LoginScreen(
+    onTriggerIntent: (LoginIntent) -> Unit,
+    uiState: LoginState,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -43,7 +47,9 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
     ) {
         LoginField(value = "Test", onChange = {})
         PasswordField(value = "Test", onChange = {}, submit = { })
-        Button(onClick = onLoginClick) {
+        Button(onClick = {
+            onTriggerIntent(LoginIntent.LoginCta)
+        }) {
             Text(text = "Login")
         }
     }
@@ -137,6 +143,6 @@ fun PasswordField(
 @Composable
 private fun LoginScreenPreview() {
     FTTXPartnerTheme {
-        LoginScreen(onLoginClick = {})
+        LoginScreen(onTriggerIntent = {}, uiState = LoginState())
     }
 }

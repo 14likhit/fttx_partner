@@ -2,5 +2,6 @@
     <string name="app_name">FTTX Partner</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_ticket_form">TicketFormActivity</string>
+    <string name="title_activity_account">AccountActivity</string>
     <string name="error">Error</string>
 </resources>

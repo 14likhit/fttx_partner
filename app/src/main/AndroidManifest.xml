@@ -32,6 +32,11 @@
             android:exported="false"
             android:label="@string/title_activity_ticket_form"
             android:theme="@style/Theme.FTTXPartner" />
+        <activity
+            android:name=".ui.screen.account.AccountActivity"
+            android:exported="false"
+            android:label="@string/title_activity_account"
+            android:theme="@style/Theme.FTTXPartner" />
     </application>
 
 </manifest>

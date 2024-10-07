@@ -1,8 +1,13 @@
 package com.fttx.partner.ui.screen.login
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -26,12 +31,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.fttx.partner.ui.screen.home.MainActivity
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 
 @Composable
@@ -40,18 +48,51 @@ fun LoginScreen(
     uiState: LoginState,
     modifier: Modifier = Modifier
 ) {
+
+    var credentials by remember { mutableStateOf(LoginUiModel()) }
+    val context = LocalContext.current
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoginField(value = "Test", onChange = {})
-        PasswordField(value = "Test", onChange = {}, submit = { })
-        Button(onClick = {
-            onTriggerIntent(LoginIntent.LoginCta)
-        }) {
+        LoginField(
+            value = credentials.login,
+            onChange = { data ->
+                credentials = credentials.copy(login = data)
+            }, modifier = Modifier.padding(16.dp)
+        )
+        PasswordField(
+            value = credentials.pwd,
+            onChange = { data ->
+                credentials = credentials.copy(pwd = data)
+            },
+            submit = {
+                if (!checkCredentials(credentials, context)) credentials = LoginUiModel()
+            },
+            modifier = Modifier.padding(16.dp)
+        )
+        Button(
+            modifier = Modifier.padding(16.dp),
+            onClick = {
+                onTriggerIntent(LoginIntent.LoginCta)
+            },
+            enabled = credentials.isNotEmpty(),
+        ) {
             Text(text = "Login")
         }
+    }
+}
+
+fun checkCredentials(creds: LoginUiModel, context: Context): Boolean {
+    if (creds.isNotEmpty() && creds.login == "admin") {
+        context.startActivity(Intent(context, MainActivity::class.java))
+        (context as Activity).finish()
+        return true
+    } else {
+        Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
+        return false
     }
 }
 

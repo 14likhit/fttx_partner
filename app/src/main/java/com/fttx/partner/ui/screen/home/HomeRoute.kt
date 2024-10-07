@@ -27,6 +27,7 @@ fun HomeRoute(
                 HomeEffect.NavigateBack -> onBackPress()
                 HomeEffect.NavigateToAddTicket -> navigateToTicketFormActivity(null)
                 is HomeEffect.NavigateToTicketDetails -> navigateToTicketFormActivity(it.ticket)
+                HomeEffect.NavigateToAccount -> {}
             }
         }.collect()
     }

@@ -10,12 +10,14 @@ sealed class HomeIntent : IIntent {
     data object BackCta : HomeIntent()
     data class TicketCardCta(val ticket: Ticket) : HomeIntent()
     data object AddCta : HomeIntent()
+    data object AccountCta: HomeIntent()
 }
 
 sealed class HomeEffect : IEffect {
     data object NavigateBack : HomeEffect()
     data class NavigateToTicketDetails(val ticket: Ticket) : HomeEffect()
     data object NavigateToAddTicket : HomeEffect()
+    data object NavigateToAccount : HomeEffect()
 }
 
 data class HomeState(

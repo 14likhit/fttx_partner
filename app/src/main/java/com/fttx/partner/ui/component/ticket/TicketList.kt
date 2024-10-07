@@ -19,8 +19,8 @@ import com.fttx.partner.ui.theme.FTTXPartnerTheme
 @Composable
 fun TicketList(
     tickets: List<Ticket>,
-    onCardClick: (Ticket) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCardClick: (Ticket) -> Unit = {}
 ) {
     LazyColumn(
         contentPadding = WindowInsets.navigationBars.asPaddingValues(),

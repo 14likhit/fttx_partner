@@ -49,6 +49,10 @@ class HomeViewModel @Inject constructor(
                     is HomeIntent.TicketCardCta -> {
                         _uiEffect.send(HomeEffect.NavigateToTicketDetails(it.ticket))
                     }
+
+                    HomeIntent.AccountCta -> {
+                        _uiEffect.send(HomeEffect.NavigateToAccount)
+                    }
                 }
             }
         }

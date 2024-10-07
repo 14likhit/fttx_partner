@@ -68,31 +68,18 @@ fun LoginScreen(
             onChange = { data ->
                 credentials = credentials.copy(pwd = data)
             },
-            submit = {
-                if (!checkCredentials(credentials, context)) credentials = LoginUiModel()
-            },
+            submit = {},
             modifier = Modifier.padding(16.dp)
         )
         Button(
             modifier = Modifier.padding(16.dp),
             onClick = {
-                onTriggerIntent(LoginIntent.LoginCta)
+                onTriggerIntent(LoginIntent.LoginCta(credentials))
             },
             enabled = credentials.isNotEmpty(),
         ) {
             Text(text = "Login")
         }
-    }
-}
-
-fun checkCredentials(creds: LoginUiModel, context: Context): Boolean {
-    if (creds.isNotEmpty() && creds.login == "admin") {
-        context.startActivity(Intent(context, MainActivity::class.java))
-        (context as Activity).finish()
-        return true
-    } else {
-        Toast.makeText(context, "Wrong Credentials", Toast.LENGTH_SHORT).show()
-        return false
     }
 }
 

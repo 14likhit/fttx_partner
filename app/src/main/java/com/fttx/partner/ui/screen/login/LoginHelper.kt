@@ -7,7 +7,7 @@ import com.fttx.partner.ui.mvicore.IState
 sealed class LoginIntent : IIntent {
     data object Init : LoginIntent()
     data object BackCta : LoginIntent()
-    data object LoginCta : LoginIntent()
+    data class LoginCta(val loginUiModel: LoginUiModel) : LoginIntent()
 }
 
 sealed class LoginEffect : IEffect {
@@ -16,5 +16,6 @@ sealed class LoginEffect : IEffect {
 }
 
 data class LoginState(
-    val id: Int = -1
+    val id: Int = -1,
+    val errorLogin: String = ""
 ) : IState

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.fttx.partner.ui.screen.account.AccountActivity
 import com.fttx.partner.ui.screen.form.TicketFormActivity
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +24,9 @@ class MainActivity : ComponentActivity() {
                     HomeRoute(
                         navigateToTicketFormActivity = {
                             startActivity(Intent(this, TicketFormActivity::class.java))
+                        },
+                        navigateToAccountActivity = {
+                            startActivity(Intent(this, AccountActivity::class.java))
                         },
                         onBackPress = { finish() },
                     )

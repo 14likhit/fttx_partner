@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeRoute(
+fun AccountRoute(
     onBackPress: () -> Unit,
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {

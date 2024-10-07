@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeRoute(
     navigateToTicketFormActivity: (Ticket?) -> Unit,
+    navigateToAccountActivity:()->Unit,
     onBackPress: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -27,7 +28,7 @@ fun HomeRoute(
                 HomeEffect.NavigateBack -> onBackPress()
                 HomeEffect.NavigateToAddTicket -> navigateToTicketFormActivity(null)
                 is HomeEffect.NavigateToTicketDetails -> navigateToTicketFormActivity(it.ticket)
-                HomeEffect.NavigateToAccount -> {}
+                HomeEffect.NavigateToAccount -> navigateToAccountActivity()
             }
         }.collect()
     }

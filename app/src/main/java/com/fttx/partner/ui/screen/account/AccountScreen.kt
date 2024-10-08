@@ -47,7 +47,9 @@ fun AccountScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         // Logout button
-        LogoutButton()
+        LogoutButton(onLogout = {
+            onTriggerIntent(AccountIntent.LogoutCta)
+        })
     }
 
 }
@@ -99,9 +101,9 @@ fun SettingsItem(title: String) {
 }
 
 @Composable
-fun LogoutButton() {
+fun LogoutButton(onLogout: () -> Unit) {
     Button(
-        onClick = { /* Handle logout */ },
+        onClick = { onLogout() },
         modifier = Modifier.fillMaxWidth()
     ) {
         Text("Logout")

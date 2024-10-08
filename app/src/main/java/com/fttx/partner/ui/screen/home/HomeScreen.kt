@@ -71,11 +71,6 @@ fun HomeScreen(
             val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
             TopAppBar(
                 title = { Text(text = getWeekPageTitle(visibleWeek)) },
-                navigationIcon = {
-                    NavigationIcon(onBackClick = {
-                        onTriggerIntent(HomeIntent.BackCta)
-                    })
-                },
                 actions = {
                     Icon(
                         imageVector = Icons.Rounded.AccountCircle,

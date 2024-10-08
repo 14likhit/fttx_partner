@@ -8,5 +8,7 @@ interface IDataStorePreferences {
     suspend fun saveCustomerId(customerId: Int)
     suspend fun getAuthToken(): String?
     suspend fun saveAuthToken(authToken: String)
+    suspend fun setUserLoggedIn(isLoggedIn: Boolean)
+    suspend fun isUserLoggedIn(): Boolean
     suspend fun clearDataStore()
 }

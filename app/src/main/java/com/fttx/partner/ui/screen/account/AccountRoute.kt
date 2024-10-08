@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AccountRoute(
+    onLogout:() -> Unit,
     onBackPress: () -> Unit,
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
@@ -22,8 +23,7 @@ fun AccountRoute(
     LaunchedEffect(Unit) {
         accountViewModel.uiEffect.onEach {
             when (it) {
-
-                else -> {}
+                AccountEffect.NavigateToLoginScreen -> onLogout()
             }
         }.collect()
     }

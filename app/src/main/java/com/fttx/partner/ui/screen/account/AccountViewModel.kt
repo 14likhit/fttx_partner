@@ -46,6 +46,7 @@ class AccountViewModel @Inject constructor(
 
     private suspend fun handleLogout() {
         dataStorePreferences.setUserLoggedIn(false)
+        dataStorePreferences.clearDataStore()
         _uiEffect.send(AccountEffect.NavigateToLoginScreen)
     }
 }

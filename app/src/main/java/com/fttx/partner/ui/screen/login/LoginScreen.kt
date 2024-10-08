@@ -45,33 +45,37 @@ fun LoginScreen(
     var credentials by remember { mutableStateOf(LoginUiModel()) }
     val context = LocalContext.current
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LoginField(
-            value = credentials.login,
-            onChange = { data ->
-                credentials = credentials.copy(login = data)
-            }, modifier = Modifier.padding(16.dp)
-        )
-        PasswordField(
-            value = credentials.pwd,
-            onChange = { data ->
-                credentials = credentials.copy(pwd = data)
-            },
-            submit = {},
-            modifier = Modifier.padding(16.dp)
-        )
-        Button(
-            modifier = Modifier.padding(16.dp),
-            onClick = {
-                onTriggerIntent(LoginIntent.LoginCta(credentials))
-            },
-            enabled = credentials.isNotEmpty(),
+    if(uiState.isLoading){
+        onTriggerIntent(LoginIntent.Init)
+    }else if(uiState.isLoggedIn.not()){
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Login")
+            LoginField(
+                value = credentials.login,
+                onChange = { data ->
+                    credentials = credentials.copy(login = data)
+                }, modifier = Modifier.padding(16.dp)
+            )
+            PasswordField(
+                value = credentials.pwd,
+                onChange = { data ->
+                    credentials = credentials.copy(pwd = data)
+                },
+                submit = {},
+                modifier = Modifier.padding(16.dp)
+            )
+            Button(
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    onTriggerIntent(LoginIntent.LoginCta(credentials))
+                },
+                enabled = credentials.isNotEmpty(),
+            ) {
+                Text(text = "Login")
+            }
         }
     }
 }

@@ -16,7 +16,8 @@ class AccountActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                AccountRoute(onBackPress = { finish() })
+                AccountRoute(onLogout = {},
+                    onBackPress = { finish() })
             }
         }
     }

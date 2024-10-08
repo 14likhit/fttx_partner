@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             intents.receiveAsFlow().collect {
                 when (it) {
-                    is LoginIntent.Init -> {}
+                    is LoginIntent.Init -> checkLogin()
                     is LoginIntent.LoginCta -> {
                         checkCredentials(it.loginUiModel)
                     }
@@ -52,7 +52,15 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkCredentials(loginUiModel: LoginUiModel){
+    private suspend fun checkLogin() {
+        if (dataStorePreferences.isUserLoggedIn()) {
+            _uiEffect.send(LoginEffect.NavigateToHome)
+        } else {
+            _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = false)
+        }
+    }
+
+    private suspend fun checkCredentials(loginUiModel: LoginUiModel) {
         if (loginUiModel.isNotEmpty()) {
             dataStorePreferences.setUserLoggedIn(true)
             _uiEffect.send(LoginEffect.NavigateToHome)

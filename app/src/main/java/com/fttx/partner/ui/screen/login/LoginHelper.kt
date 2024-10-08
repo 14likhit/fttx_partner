@@ -17,5 +17,7 @@ sealed class LoginEffect : IEffect {
 
 data class LoginState(
     val id: Int = -1,
-    val errorLogin: String = ""
+    val errorLogin: String = "",
+    val isLoading: Boolean = true,
+    val isLoggedIn: Boolean = false,
 ) : IState

@@ -35,9 +35,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fttx.partner.R
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
@@ -56,7 +58,7 @@ fun TicketFormScreen(
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
-    var title by rememberSaveable { mutableStateOf(ticket?.title?: "") }
+    var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
     var isNameError by rememberSaveable { mutableStateOf(false) }
     var description by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
@@ -64,7 +66,11 @@ fun TicketFormScreen(
 
     Column {
         TopAppBar(
-            title = { Text(text = ticket?.let { "Edit Ticket" } ?: "Add Ticket") },
+            title = {
+                Text(text = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
+                    R.string.add_ticket
+                ))
+            },
             navigationIcon = { NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) }) },
             colors = TopAppBarDefaults.topAppBarColors().copy(
                 titleContentColor = Color.Black,
@@ -78,7 +84,7 @@ fun TicketFormScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Title")
+            Text(text = stringResource(R.string.title))
             TextField(
                 value = title,
                 modifier = Modifier.fillMaxWidth(),
@@ -99,7 +105,7 @@ fun TicketFormScreen(
                         )
                     }
                 },
-                placeholder = { Text(text = "Repair/New Connection") },
+                placeholder = { Text(text = stringResource(R.string.repair_new_connection)) },
                 isError = isNameError,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
@@ -107,12 +113,12 @@ fun TicketFormScreen(
                 Text(text = "Error Name")
             }
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = "Description")
+            Text(text = stringResource(R.string.description))
             TextField(
                 value = description,
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = { description = it },
-                placeholder = { Text(text = "Description") })
+                placeholder = { Text(text = stringResource(R.string.description)) })
             DropDownSelector(
                 dropDownSelection = { priority = it },
                 modifier = Modifier.fillMaxWidth(),
@@ -129,7 +135,7 @@ fun TicketFormScreen(
 @Composable
 fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
-        Text(text = "Priority")
+        Text(text = stringResource(R.string.priority))
         val priorities = listOf("High", "Medium", "Low")
         var expanded by remember { mutableStateOf(false) }
         var selectedPriority by remember { mutableStateOf(priorities[0]) }
@@ -162,7 +168,7 @@ fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = M
 @Composable
 fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        Text(text = "Estimated Completion Date")
+        Text(text = stringResource(R.string.estimated_completion_date))
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed: Boolean by interactionSource.collectIsPressedAsState()
         val currentDate = Date().toFormattedString()

@@ -4,4 +4,11 @@
     <string name="title_activity_ticket_form">TicketFormActivity</string>
     <string name="title_activity_account">AccountActivity</string>
     <string name="error">Error</string>
+    <string name="edit_ticket">Edit Ticket</string>
+    <string name="add_ticket">Add Ticket</string>
+    <string name="title">Title</string>
+    <string name="repair_new_connection">Repair/New Connection</string>
+    <string name="description">Description</string>
+    <string name="priority">Priority</string>
+    <string name="estimated_completion_date">Estimated Completion Date</string>
 </resources>

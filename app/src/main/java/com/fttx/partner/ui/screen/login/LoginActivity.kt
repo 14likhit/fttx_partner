@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import com.fttx.partner.ui.screen.home.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,12 +18,14 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LoginRoute(navigateToHomeScreen = {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }, onBackPress = {
-                finish()
-            })
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                LoginRoute(navigateToHomeScreen = {
+                    startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                }, onBackPress = {
+                    finish()
+                })
+            }
         }
     }
 }

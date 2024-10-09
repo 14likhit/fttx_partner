@@ -6,12 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fttx.partner.domain.model.Ticket
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
 fun TicketFormRoute(
+    ticket: Ticket?,
     onBackPress: () -> Unit,
     ticketFormViewModel: TicketFormViewModel = hiltViewModel()
 ) {
@@ -30,6 +32,7 @@ fun TicketFormRoute(
     }
 
     TicketFormScreen(
+        ticket = ticket,
         onTriggerIntent = {
             coroutineScope.launch {
                 ticketFormViewModel.intents.send(it)

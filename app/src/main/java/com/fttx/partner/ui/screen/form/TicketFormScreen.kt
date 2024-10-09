@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
 import java.text.DateFormatSymbols
@@ -48,12 +50,13 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketFormScreen(
+    ticket: Ticket?,
     onTriggerIntent: (TicketFormIntent) -> Unit,
     uiState: TicketFormState,
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
-    var title by rememberSaveable { mutableStateOf("") }
+    var title by rememberSaveable { mutableStateOf(ticket?.title?: "") }
     var isNameError by rememberSaveable { mutableStateOf(false) }
     var description by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
@@ -61,7 +64,7 @@ fun TicketFormScreen(
 
     Column {
         TopAppBar(
-            title = { Text(text = "Add Ticket") },
+            title = { Text(text = ticket?.let { "Edit Ticket" } ?: "Add Ticket") },
             navigationIcon = { NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) }) },
             colors = TopAppBarDefaults.topAppBarColors().copy(
                 titleContentColor = Color.Black,
@@ -78,6 +81,7 @@ fun TicketFormScreen(
             Text(text = "Title")
             TextField(
                 value = title,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
                     if (it.length > 10) {
                         isNameError = true
@@ -106,11 +110,15 @@ fun TicketFormScreen(
             Text(text = "Description")
             TextField(
                 value = description,
+                modifier = Modifier.fillMaxWidth(),
                 onValueChange = { description = it },
                 placeholder = { Text(text = "Description") })
-            DropDownSelector(dropDownSelection = { priority = it })
+            DropDownSelector(
+                dropDownSelection = { priority = it },
+                modifier = Modifier.fillMaxWidth(),
+            )
             Spacer(modifier = Modifier.padding(8.dp))
-            EstimatedEndDateCompletion({ endDate = it })
+            EstimatedEndDateCompletion({ endDate = it }, modifier = Modifier.fillMaxWidth())
         }
     }
 
@@ -120,14 +128,16 @@ fun TicketFormScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
         Text(text = "Priority")
         val priorities = listOf("High", "Medium", "Low")
         var expanded by remember { mutableStateOf(false) }
         var selectedPriority by remember { mutableStateOf(priorities[0]) }
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
             TextField(
-                modifier = Modifier.menuAnchor(),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
                 readOnly = true,
                 value = selectedPriority,
                 onValueChange = {},
@@ -151,7 +161,7 @@ fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = M
 
 @Composable
 fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
-    Column {
+    Column(modifier = modifier) {
         Text(text = "Estimated Completion Date")
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed: Boolean by interactionSource.collectIsPressedAsState()
@@ -180,7 +190,7 @@ fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Mod
         )
 
         TextField(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(),
             readOnly = true,
             value = selectedDate,
             onValueChange = {},
@@ -207,6 +217,6 @@ private fun Date.toFormattedString(): String {
 @Composable
 private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
     FTTXPartnerTheme {
-        TicketFormScreen({ }, TicketFormState())
+        TicketFormScreen(null, { }, TicketFormState())
     }
 }

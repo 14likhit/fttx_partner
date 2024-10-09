@@ -21,3 +21,8 @@ sealed class TicketFormEffect : IEffect {
 data class TicketFormState(
     val id: Int = -1
 ) : IState
+
+enum class TicketFormScreenType(val type: String){
+    AddTicket("add_ticket"),
+    EditTicket("edit_ticket")
+}

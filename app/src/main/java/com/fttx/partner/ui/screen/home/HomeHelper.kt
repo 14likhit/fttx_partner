@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.home
 
+import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.mvicore.IEffect
 import com.fttx.partner.ui.mvicore.IIntent
@@ -16,7 +17,7 @@ sealed class HomeIntent : IIntent {
 sealed class HomeEffect : IEffect {
     data object NavigateBack : HomeEffect()
     data class NavigateToTicketDetails(val ticket: Ticket) : HomeEffect()
-    data object NavigateToAddTicket : HomeEffect()
+    data class NavigateToAddTicket(val customer: Customer) : HomeEffect()
     data object NavigateToAccount : HomeEffect()
 }
 

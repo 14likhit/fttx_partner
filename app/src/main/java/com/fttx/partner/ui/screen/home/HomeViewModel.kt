@@ -3,6 +3,7 @@ package com.fttx.partner.ui.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.domain.usecase.GetTicketUseCase
+import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -39,7 +40,7 @@ class HomeViewModel @Inject constructor(
                 when (it) {
                     is HomeIntent.Init -> {}
                     HomeIntent.AddCta -> {
-                        _uiEffect.send(HomeEffect.NavigateToAddTicket)
+                        _uiEffect.send(HomeEffect.NavigateToAddTicket(getCustomer()))
                     }
 
                     HomeIntent.BackCta -> {

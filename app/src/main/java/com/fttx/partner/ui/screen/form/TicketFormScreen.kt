@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,7 +41,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.R
+import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.mock.getCustomer
+import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
 import java.text.DateFormatSymbols
@@ -53,6 +57,7 @@ import java.util.Locale
 @Composable
 fun TicketFormScreen(
     ticket: Ticket?,
+    customer: Customer?,
     onTriggerIntent: (TicketFormIntent) -> Unit,
     uiState: TicketFormState,
     modifier: Modifier = Modifier
@@ -77,18 +82,24 @@ fun TicketFormScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.padding(8.dp))
+            ticket?.let {
+                TicketMetaInfo(ticket = it)
+                TicketCustomerDetail(customer = it.customer)
+            } ?: run {
+                customer?.let {
+                    TicketCustomerDetail(customer = it)
+                }
+            }
             TicketTitle(ticket = ticket)
-            Spacer(modifier = Modifier.padding(8.dp))
             TicketDescription()
             TicketPriority(
                 dropDownSelection = { priority = it },
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(modifier = Modifier.padding(8.dp))
             EstimatedEndDateCompletion({ endDate = it }, modifier = Modifier.fillMaxWidth())
         }
     }
@@ -96,7 +107,26 @@ fun TicketFormScreen(
 }
 
 @Composable
-private fun TicketTitle(ticket: Ticket?,modifier: Modifier = Modifier) {
+private fun TicketMetaInfo(ticket: Ticket, modifier: Modifier = Modifier) {
+    Column {
+        Row {
+            Text(text = ticket.category, modifier = Modifier.weight(1f))
+            Text(text = ticket.status)
+        }
+        Text(text = ticket.id)
+    }
+}
+
+@Composable
+private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
+    Column {
+        Text(text = customer.name)
+        Text(text = customer.address)
+    }
+}
+
+@Composable
+private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
     var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
     var isNameError by rememberSaveable { mutableStateOf(false) }
     Column {
@@ -236,6 +266,6 @@ private fun Date.toFormattedString(): String {
 @Composable
 private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
     FTTXPartnerTheme {
-        TicketFormScreen(null, { }, TicketFormState())
+        TicketFormScreen(getTicket(), getCustomer(), { }, TicketFormState())
     }
 }

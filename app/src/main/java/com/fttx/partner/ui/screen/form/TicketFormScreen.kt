@@ -45,7 +45,7 @@ import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
-import com.fttx.partner.ui.theme.FTTXPartnerTheme
+import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat

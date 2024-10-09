@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.theme
+package com.fttx.partner.ui.compose.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -51,7 +51,6 @@ fun FTTXPartnerTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }

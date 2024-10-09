@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <font
+        android:fontWeight="@integer/font_weight_200"
+        app:font="@font/montserrat_thin"
+        app:fontStyle="normal"
+        app:fontWeight="@integer/font_weight_200"
+        tools:targetApi="o" />
+    <font
+        android:fontWeight="@integer/font_weight_450"
+        app:font="@font/montserrat_regular"
+        app:fontStyle="normal"
+        app:fontWeight="@integer/font_weight_450"
+        tools:targetApi="o" />
+    <font
+        android:fontWeight="@integer/font_weight_550"
+        app:font="@font/montserrat_medium"
+        app:fontStyle="normal"
+        app:fontWeight="@integer/font_weight_550"
+        tools:targetApi="o" />
+    <font
+        android:fontWeight="@integer/font_weight_700"
+        app:font="@font/montserrat_bold"
+        app:fontStyle="normal"
+        app:fontWeight="@integer/font_weight_700"
+        tools:targetApi="o" />
+</font-family>

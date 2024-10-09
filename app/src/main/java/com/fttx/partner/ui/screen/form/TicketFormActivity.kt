@@ -9,7 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
-import com.fttx.partner.ui.theme.FTTXPartnerTheme
+import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.Constants.BundleKey.CUSTOMER
 import com.fttx.partner.ui.utils.Constants.BundleKey.TICKET
 import dagger.hilt.android.AndroidEntryPoint

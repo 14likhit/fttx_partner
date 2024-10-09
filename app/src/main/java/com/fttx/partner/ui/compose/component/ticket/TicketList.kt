@@ -1,4 +1,4 @@
-package com.fttx.partner.ui.component.ticket
+package com.fttx.partner.ui.compose.component.ticket
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.mock.getTickets
-import com.fttx.partner.ui.theme.FTTXPartnerTheme
+import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 
 @Composable
 fun TicketList(

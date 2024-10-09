@@ -1,6 +1,7 @@
 package com.fttx.partner.ui.compose.component.ticket
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
@@ -23,7 +24,10 @@ fun TicketList(
     onCardClick: (Ticket) -> Unit = {}
 ) {
     LazyColumn(
-        contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+        contentPadding = PaddingValues(
+            top = 8.dp,
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        ),
         modifier = modifier.padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally

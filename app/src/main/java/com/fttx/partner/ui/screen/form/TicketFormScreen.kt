@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.fttx.partner.R
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
@@ -67,17 +68,13 @@ fun TicketFormScreen(
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
 
     Column {
-        TopAppBar(
-            title = {
-                Text(text = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
-                    R.string.add_ticket
-                ))
-            },
-            navigationIcon = { NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) }) },
-            colors = TopAppBarDefaults.topAppBarColors().copy(
-                titleContentColor = Color.Black,
-                navigationIconContentColor = Color.Black
-            )
+        FTTXTopAppBar(
+            title = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
+                R.string.add_ticket
+            ),
+            backIcon = {
+                NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) })
+            }
         )
         Column(
             modifier = Modifier

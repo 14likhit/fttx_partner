@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fttx.partner.R
 import com.fttx.partner.ui.compose.component.ticket.TicketList
+import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
 import com.fttx.partner.ui.mock.getTickets
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
@@ -69,9 +70,9 @@ fun HomeScreen(
                 firstVisibleWeekDate = currentDate,
             )
             val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
-            TopAppBar(
-                title = { Text(text = getWeekPageTitle(visibleWeek)) },
-                actions = {
+            FTTXTopAppBar(
+                title = "Home",
+                action = {
                     Icon(
                         imageVector = Icons.Rounded.AccountCircle,
                         contentDescription = "",
@@ -80,12 +81,7 @@ fun HomeScreen(
                             .clickable {
                                 onTriggerIntent(HomeIntent.AccountCta)
                             })
-                },
-                colors = TopAppBarDefaults.topAppBarColors().copy(
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black
-                )
-            )
+                })
             //todo -> if we have to use calendar need to evaluate calender crash.
 //            Column {
 //                WeekCalendar(

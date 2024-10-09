@@ -58,9 +58,6 @@ fun TicketFormScreen(
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
-    var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
-    var isNameError by rememberSaveable { mutableStateOf(false) }
-    var description by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
 
@@ -84,42 +81,10 @@ fun TicketFormScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = stringResource(R.string.title))
-            TextField(
-                value = title,
-                modifier = Modifier.fillMaxWidth(),
-                onValueChange = {
-                    if (it.length > 10) {
-                        isNameError = true
-                    } else {
-                        title = it
-                        isNameError = false
-                    }
-                },
-                trailingIcon = {
-                    if (isNameError) {
-                        Icon(
-                            imageVector = Icons.Filled.Info,
-                            contentDescription = "Error",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                },
-                placeholder = { Text(text = stringResource(R.string.repair_new_connection)) },
-                isError = isNameError,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
-            if (isNameError) {
-                Text(text = "Error Name")
-            }
+            TicketTitle(ticket = ticket)
             Spacer(modifier = Modifier.padding(8.dp))
-            Text(text = stringResource(R.string.description))
-            TextField(
-                value = description,
-                modifier = Modifier.fillMaxWidth(),
-                onValueChange = { description = it },
-                placeholder = { Text(text = stringResource(R.string.description)) })
-            DropDownSelector(
+            TicketDescription()
+            TicketPriority(
                 dropDownSelection = { priority = it },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -130,10 +95,58 @@ fun TicketFormScreen(
 
 }
 
+@Composable
+private fun TicketTitle(ticket: Ticket?,modifier: Modifier = Modifier) {
+    var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
+    var isNameError by rememberSaveable { mutableStateOf(false) }
+    Column {
+        Text(text = stringResource(R.string.title))
+        TextField(
+            value = title,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = {
+                if (it.length > 10) {
+                    isNameError = true
+                } else {
+                    title = it
+                    isNameError = false
+                }
+            },
+            trailingIcon = {
+                if (isNameError) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = "Error",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            placeholder = { Text(text = stringResource(R.string.repair_new_connection)) },
+            isError = isNameError,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+        )
+        if (isNameError) {
+            Text(text = "Error Name")
+        }
+    }
+}
+
+@Composable
+fun TicketDescription(modifier: Modifier = Modifier) {
+    var description by rememberSaveable { mutableStateOf("") }
+    Column {
+        Text(text = stringResource(R.string.description))
+        TextField(
+            value = description,
+            modifier = Modifier.fillMaxWidth(),
+            onValueChange = { description = it },
+            placeholder = { Text(text = stringResource(R.string.description)) })
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
         Text(text = stringResource(R.string.priority))
         val priorities = listOf("High", "Medium", "Low")
@@ -166,7 +179,7 @@ fun DropDownSelector(dropDownSelection: (String) -> Unit, modifier: Modifier = M
 }
 
 @Composable
-fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
+private fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(text = stringResource(R.string.estimated_completion_date))
         val interactionSource = remember { MutableInteractionSource() }

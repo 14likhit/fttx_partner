@@ -170,6 +170,13 @@ val Heading01Medium =
         fontWeight = FontWeightMedium,
     )
 
+val Heading01Bold =
+    FTTXText.copy(
+        fontSize = 32.sp,
+        lineHeight = 36.sp,
+        fontWeight = FontWeightBold,
+    )
+
 val Heading02Medium =
     FTTXText.copy(
         fontSize = 28.sp,

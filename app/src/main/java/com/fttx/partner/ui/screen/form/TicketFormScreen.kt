@@ -2,14 +2,19 @@ package com.fttx.partner.ui.screen.form
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -22,8 +27,10 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -44,6 +51,7 @@ import com.fttx.partner.R
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
+import com.fttx.partner.ui.compose.model.TicketStatusUiModel
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
@@ -54,7 +62,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketFormScreen(
     ticket: Ticket?,
@@ -64,6 +71,7 @@ fun TicketFormScreen(
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
+    var status by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
 
@@ -79,12 +87,19 @@ fun TicketFormScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = WindowInsets.navigationBars
+                        .asPaddingValues()
+                        .calculateBottomPadding()
+                ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Spacer(modifier = Modifier.padding(8.dp))
             ticket?.let {
-                TicketMetaInfo(ticket = it)
+                TicketMetaInfo(ticket = it, dropDownSelection = { status = it })
                 TicketCustomerDetail(customer = it.customer)
             } ?: run {
                 customer?.let {
@@ -97,18 +112,67 @@ fun TicketFormScreen(
                 dropDownSelection = { priority = it },
                 modifier = Modifier.fillMaxWidth(),
             )
-            EstimatedEndDateCompletion({ endDate = it }, modifier = Modifier.fillMaxWidth())
+            EstimatedEndDateCompletion(
+                { endDate = it }, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
         }
     }
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TicketMetaInfo(ticket: Ticket, modifier: Modifier = Modifier) {
+private fun TicketMetaInfo(
+    ticket: Ticket,
+    dropDownSelection: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column {
         Row {
-            Text(text = ticket.category, modifier = Modifier.weight(1f))
-            Text(text = ticket.status)
+//            Text(text = ticket.status)
+        }
+        Text(text = ticket.category, modifier = Modifier)
+        val statuses = TicketStatusUiModel.entries.toList()
+        var expanded by remember { mutableStateOf(false) }
+        var selectedStatus by remember { mutableStateOf(statuses[0]) }
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            modifier = Modifier.background(color = selectedStatus.backgroundColor),
+            onExpandedChange = { expanded = !expanded }) {
+            TextField(
+                modifier = Modifier
+                    .menuAnchor(),
+                readOnly = true,
+                value = selectedStatus.status,
+                onValueChange = {},
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = TextFieldDefaults.colors().copy(
+                    focusedTextColor = selectedStatus.textColor,
+                    unfocusedTextColor = selectedStatus.textColor,
+                    disabledTextColor = selectedStatus.textColor,
+                    errorTextColor = selectedStatus.textColor,
+                    focusedContainerColor = selectedStatus.backgroundColor,
+                    unfocusedContainerColor = selectedStatus.backgroundColor,
+                    disabledContainerColor = selectedStatus.backgroundColor,
+                    errorContainerColor = selectedStatus.backgroundColor,
+                )
+            )
+            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false },modifier=Modifier.background(color = Color.White)) {
+                statuses.forEach { status ->
+                    DropdownMenuItem(
+                        text = { Text(text = status.status) },
+                        colors = MenuDefaults.itemColors().copy(
+                            textColor = status.textColor,
+                        ),
+                        onClick = {
+                            selectedStatus = status
+                            dropDownSelection(selectedStatus.status)
+                            expanded = false
+                        })
+                }
+            }
         }
         Text(text = ticket.id)
     }

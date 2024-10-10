@@ -28,6 +28,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -74,52 +75,52 @@ fun TicketFormScreen(
     var status by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
-
-    Column {
-        FTTXTopAppBar(
-            title = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
-                R.string.add_ticket
-            ),
-            backIcon = {
-                NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) })
-            }
-        )
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 8.dp,
-                    bottom = WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
+    Surface(color = Color.White) {
+        Column {
+            FTTXTopAppBar(
+                title = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
+                    R.string.add_ticket
                 ),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.padding(8.dp))
-            ticket?.let {
-                TicketMetaInfo(ticket = it, dropDownSelection = { status = it })
-                TicketCustomerDetail(customer = it.customer)
-            } ?: run {
-                customer?.let {
-                    TicketCustomerDetail(customer = it)
+                backIcon = {
+                    NavigationIcon(onBackClick = { onTriggerIntent(TicketFormIntent.BackCta) })
                 }
+            )
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = WindowInsets.navigationBars
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+                    ),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Spacer(modifier = Modifier.padding(8.dp))
+                ticket?.let {
+                    TicketMetaInfo(ticket = it, dropDownSelection = { status = it })
+                    TicketCustomerDetail(customer = it.customer)
+                } ?: run {
+                    customer?.let {
+                        TicketCustomerDetail(customer = it)
+                    }
+                }
+                TicketTitle(ticket = ticket)
+                TicketDescription()
+                TicketPriority(
+                    dropDownSelection = { priority = it },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                EstimatedEndDateCompletion(
+                    { endDate = it }, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
             }
-            TicketTitle(ticket = ticket)
-            TicketDescription()
-            TicketPriority(
-                dropDownSelection = { priority = it },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            EstimatedEndDateCompletion(
-                { endDate = it }, modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            )
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -159,7 +160,11 @@ private fun TicketMetaInfo(
                     errorContainerColor = selectedStatus.backgroundColor,
                 )
             )
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false },modifier=Modifier.background(color = Color.White)) {
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.background(color = Color.White)
+            ) {
                 statuses.forEach { status ->
                     DropdownMenuItem(
                         text = { Text(text = status.status) },

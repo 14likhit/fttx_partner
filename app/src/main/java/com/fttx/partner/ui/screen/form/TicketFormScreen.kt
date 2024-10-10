@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -75,7 +76,7 @@ fun TicketFormScreen(
     var status by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
-    Surface(color = Color.White) {
+    Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         Column {
             FTTXTopAppBar(
                 title = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(

@@ -32,7 +32,7 @@ fun AccountScreen(
     modifier: Modifier = Modifier
 ) {
 
-    Surface(color = Color.White) {
+    Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

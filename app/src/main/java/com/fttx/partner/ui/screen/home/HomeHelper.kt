@@ -10,6 +10,7 @@ sealed class HomeIntent : IIntent {
     data object Init : HomeIntent()
     data object BackCta : HomeIntent()
     data class TicketCardCta(val ticket: Ticket) : HomeIntent()
+    data class PhoneCta(val ticket: Ticket) : HomeIntent()
     data object AddCta : HomeIntent()
     data object AccountCta: HomeIntent()
 }
@@ -19,6 +20,7 @@ sealed class HomeEffect : IEffect {
     data class NavigateToTicketDetails(val ticket: Ticket) : HomeEffect()
     data class NavigateToAddTicket(val customer: Customer) : HomeEffect()
     data object NavigateToAccount : HomeEffect()
+    data class NavigateToCall(val ticket: Ticket) : HomeEffect()
 }
 
 data class HomeState(

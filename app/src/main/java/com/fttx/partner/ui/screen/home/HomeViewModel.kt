@@ -54,6 +54,10 @@ class HomeViewModel @Inject constructor(
                     HomeIntent.AccountCta -> {
                         _uiEffect.send(HomeEffect.NavigateToAccount)
                     }
+
+                    is HomeIntent.PhoneCta -> {
+                        _uiEffect.send(HomeEffect.NavigateToCall(it.ticket))
+                    }
                 }
             }
         }

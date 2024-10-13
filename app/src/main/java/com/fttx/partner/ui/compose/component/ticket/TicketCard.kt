@@ -35,9 +35,15 @@ import com.fttx.partner.ui.compose.theme.Subheading03Bold
 import com.fttx.partner.ui.compose.theme.Text01Bold
 import com.fttx.partner.ui.compose.theme.Text01Medium
 import com.fttx.partner.ui.compose.theme.Text01Regular
+import com.fttx.partner.ui.utils.clickable
 
 @Composable
-fun TicketCard(ticket: Ticket, onCardClick: (Ticket) -> Unit = {}, modifier: Modifier = Modifier) {
+fun TicketCard(
+    ticket: Ticket,
+    onCardClick: (Ticket) -> Unit = {},
+    onCallClick: (Ticket) -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     OutlinedCard(
         onClick = { onCardClick(ticket) },
         modifier = modifier.fillMaxWidth(),
@@ -103,7 +109,11 @@ fun TicketCard(ticket: Ticket, onCardClick: (Ticket) -> Unit = {}, modifier: Mod
                     imageVector = Icons.Default.Call,
                     contentDescription = "call",
                     tint = Color.Black,
-                    modifier = Modifier.size(26.dp),
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clickable {
+                            onCallClick(ticket)
+                        },
                 )
             }
         }

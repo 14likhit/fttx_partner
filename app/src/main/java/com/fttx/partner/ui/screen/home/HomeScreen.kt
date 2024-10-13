@@ -47,7 +47,6 @@ import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onTriggerIntent: (HomeIntent) -> Unit,
@@ -105,6 +104,9 @@ fun HomeScreen(
                 onCardClick = {
                     onTriggerIntent(HomeIntent.TicketCardCta(it))
                 },
+                onCallClick = {
+                    onTriggerIntent(HomeIntent.PhoneCta(it))
+                }
             )
         }
         FloatingActionButton(

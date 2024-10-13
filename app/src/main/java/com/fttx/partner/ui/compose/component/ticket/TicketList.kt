@@ -21,7 +21,8 @@ import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 fun TicketList(
     tickets: List<Ticket>,
     modifier: Modifier = Modifier,
-    onCardClick: (Ticket) -> Unit = {}
+    onCardClick: (Ticket) -> Unit = {},
+    onCallClick: (Ticket) -> Unit = {},
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
@@ -33,7 +34,11 @@ fun TicketList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = tickets) { ticket ->
-            TicketCard(ticket = ticket, onCardClick = onCardClick)
+            TicketCard(
+                ticket = ticket,
+                onCardClick = onCardClick,
+                onCallClick = onCallClick,
+            )
         }
     }
 }

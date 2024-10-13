@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 fun HomeRoute(
     navigateToTicketFormActivity: (Ticket?, Customer?) -> Unit,
     navigateToAccountActivity: () -> Unit,
+    navigateToCallerActivity: (String) -> Unit,
     onBackPress: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -34,6 +35,7 @@ fun HomeRoute(
                 )
 
                 HomeEffect.NavigateToAccount -> navigateToAccountActivity()
+                is HomeEffect.NavigateToCall -> navigateToCallerActivity(it.ticket.customer.phone)
             }
         }.collect()
     }

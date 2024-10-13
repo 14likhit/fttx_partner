@@ -15,8 +15,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -45,36 +48,38 @@ fun LoginScreen(
     var credentials by remember { mutableStateOf(LoginUiModel()) }
     val context = LocalContext.current
 
-    if(uiState.isLoading){
-        onTriggerIntent(LoginIntent.Init)
-    }else if(uiState.isLoggedIn.not()){
-        Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            LoginField(
-                value = credentials.login,
-                onChange = { data ->
-                    credentials = credentials.copy(login = data)
-                }, modifier = Modifier.padding(16.dp)
-            )
-            PasswordField(
-                value = credentials.pwd,
-                onChange = { data ->
-                    credentials = credentials.copy(pwd = data)
-                },
-                submit = {},
-                modifier = Modifier.padding(16.dp)
-            )
-            Button(
-                modifier = Modifier.padding(16.dp),
-                onClick = {
-                    onTriggerIntent(LoginIntent.LoginCta(credentials))
-                },
-                enabled = credentials.isNotEmpty(),
+    Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
+        if (uiState.isLoading) {
+            onTriggerIntent(LoginIntent.Init)
+        } else if (uiState.isLoggedIn.not()) {
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Login")
+                LoginField(
+                    value = credentials.login,
+                    onChange = { data ->
+                        credentials = credentials.copy(login = data)
+                    }, modifier = Modifier.padding(16.dp)
+                )
+                PasswordField(
+                    value = credentials.pwd,
+                    onChange = { data ->
+                        credentials = credentials.copy(pwd = data)
+                    },
+                    submit = {},
+                    modifier = Modifier.padding(16.dp)
+                )
+                Button(
+                    modifier = Modifier.padding(16.dp),
+                    onClick = {
+                        onTriggerIntent(LoginIntent.LoginCta(credentials))
+                    },
+                    enabled = credentials.isNotEmpty(),
+                ) {
+                    Text(text = "Login")
+                }
             }
         }
     }
@@ -103,6 +108,12 @@ fun LoginField(
         onValueChange = onChange,
         modifier = modifier,
         leadingIcon = leadingIcon,
+        colors = TextFieldDefaults.colors().copy(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            errorContainerColor = Color.White,
+        ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(
             onNext = { focusManager.moveFocus(FocusDirection.Down) }
@@ -150,6 +161,12 @@ fun PasswordField(
         modifier = modifier,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
+        colors = TextFieldDefaults.colors().copy(
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
+            errorContainerColor = Color.White,
+        ),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Done,
             keyboardType = KeyboardType.Password
@@ -168,6 +185,6 @@ fun PasswordField(
 @Composable
 private fun LoginScreenPreview() {
     FTTXPartnerTheme {
-        LoginScreen(onTriggerIntent = {}, uiState = LoginState())
+        LoginScreen(onTriggerIntent = {}, uiState = LoginState().copy(isLoading = false))
     }
 }

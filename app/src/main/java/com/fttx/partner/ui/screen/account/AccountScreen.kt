@@ -3,12 +3,17 @@ package com.fttx.partner.ui.screen.account
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,7 +41,15 @@ fun AccountScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = WindowInsets.navigationBars
+                        .asPaddingValues()
+                        .calculateBottomPadding()
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Profile section
@@ -45,12 +58,10 @@ fun AccountScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Settings section
-            SettingsSection()
-
-            Spacer(modifier = Modifier.weight(1f))
+            // SettingsSection()
 
             // Logout button
-            LogoutButton(onLogout = {
+            LogoutButton(modifier = Modifier.padding(16.dp), onLogout = {
                 onTriggerIntent(AccountIntent.LogoutCta)
             })
         }
@@ -63,7 +74,7 @@ fun ProfileSection() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "Profile picture",
             modifier = Modifier
                 .size(120.dp)
@@ -104,10 +115,10 @@ fun SettingsItem(title: String) {
 }
 
 @Composable
-fun LogoutButton(onLogout: () -> Unit) {
+fun LogoutButton(onLogout: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = { onLogout() },
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Text("Logout")
     }

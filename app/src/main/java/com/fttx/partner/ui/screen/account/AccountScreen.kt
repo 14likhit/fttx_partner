@@ -26,9 +26,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.R
+import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
+import com.fttx.partner.ui.screen.form.TicketFormIntent
+import com.fttx.partner.ui.utils.NavigationIcon
 
 @Composable
 fun AccountScreen(
@@ -38,32 +42,42 @@ fun AccountScreen(
 ) {
 
     Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Profile section
-            ProfileSection()
+        Column {
+            FTTXTopAppBar(
+                title = "Account",
+                backIcon = {
+                    NavigationIcon(onBackClick = {
+                        onTriggerIntent(AccountIntent.BackCta)
+                    })
+                }
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = WindowInsets.navigationBars
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Profile section
+                ProfileSection()
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Settings section
-            // SettingsSection()
+                // Settings section
+                // SettingsSection()
 
-            // Logout button
-            LogoutButton(modifier = Modifier.padding(16.dp), onLogout = {
-                onTriggerIntent(AccountIntent.LogoutCta)
-            })
+                // Logout button
+                LogoutButton(modifier = Modifier.padding(16.dp), onLogout = {
+                    onTriggerIntent(AccountIntent.LogoutCta)
+                })
+            }
         }
     }
 }

@@ -39,6 +39,9 @@ class AccountViewModel @Inject constructor(
             intents.receiveAsFlow().collect {
                 when (it) {
                     AccountIntent.LogoutCta -> handleLogout()
+                    AccountIntent.BackCta -> {
+                        _uiEffect.send(AccountEffect.NavigateBack)
+                    }
                 }
             }
         }

@@ -18,13 +18,14 @@ class AccountActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                AccountRoute(onLogout = {
-                    startActivity(Intent(this, LoginActivity::class.java).apply {
-                        addFlags(
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        )
-                    })
-                },
+                AccountRoute(
+                    onLogout = {
+                        startActivity(Intent(this, LoginActivity::class.java).apply {
+                            addFlags(
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            )
+                        })
+                    },
                     onBackPress = { finish() })
             }
         }

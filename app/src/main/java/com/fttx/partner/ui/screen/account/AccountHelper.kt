@@ -6,10 +6,12 @@ import com.fttx.partner.ui.mvicore.IState
 
 sealed class AccountIntent : IIntent {
     data object LogoutCta : AccountIntent()
+    data object BackCta : AccountIntent()
 }
 
 sealed class AccountEffect : IEffect {
     data object NavigateToLoginScreen : AccountEffect()
+    data object NavigateBack: AccountEffect()
 }
 
 data class AccountState(

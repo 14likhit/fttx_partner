@@ -3,6 +3,7 @@ package com.fttx.partner.ui.screen.form
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -15,13 +16,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -29,12 +30,11 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -54,9 +54,10 @@ import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
 import com.fttx.partner.ui.compose.model.TicketStatusUiModel
+import com.fttx.partner.ui.compose.theme.CoolGray05
+import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
-import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.NavigationIcon
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
@@ -101,14 +102,20 @@ fun TicketFormScreen(
             ) {
                 Spacer(modifier = Modifier.padding(8.dp))
                 ticket?.let {
-                    TicketMetaInfo(ticket = it, dropDownSelection = { status = it })
+                    Row {
+                        Text(text = ticket.id, modifier = Modifier.weight(1f))
+                        Text(text = ticket.category)
+                    }
+                }
+                TicketTitle(ticket = ticket)
+                ticket?.let {
+                    TicketStatus(ticket = it, dropDownSelection = { status = it })
                     TicketCustomerDetail(customer = it.customer)
                 } ?: run {
                     customer?.let {
                         TicketCustomerDetail(customer = it)
                     }
                 }
-                TicketTitle(ticket = ticket)
                 TicketDescription()
                 TicketPriority(
                     dropDownSelection = { priority = it },
@@ -126,26 +133,26 @@ fun TicketFormScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TicketMetaInfo(
+private fun TicketStatus(
     ticket: Ticket,
     dropDownSelection: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
-        Row {
-//            Text(text = ticket.status)
-        }
-        Text(text = ticket.category, modifier = Modifier)
         val statuses = TicketStatusUiModel.entries.toList()
         var expanded by remember { mutableStateOf(false) }
         var selectedStatus by remember { mutableStateOf(statuses[0]) }
+        Text(text = stringResource(R.string.status))
         ExposedDropdownMenuBox(
             expanded = expanded,
-            modifier = Modifier.background(color = selectedStatus.backgroundColor),
+            modifier = Modifier
+                .background(color = selectedStatus.backgroundColor)
+                .fillMaxWidth(),
             onExpandedChange = { expanded = !expanded }) {
             TextField(
                 modifier = Modifier
-                    .menuAnchor(),
+                    .menuAnchor()
+                    .fillMaxWidth(),
                 readOnly = true,
                 value = selectedStatus.status,
                 onValueChange = {},
@@ -180,15 +187,21 @@ private fun TicketMetaInfo(
                 }
             }
         }
-        Text(text = ticket.id)
     }
 }
 
 @Composable
 private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
-    Column {
-        Text(text = customer.name)
-        Text(text = customer.address)
+    OutlinedCard(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.White
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Text(text = customer.name)
+            Text(text = customer.address)
+        }
     }
 }
 
@@ -200,7 +213,9 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.title))
         TextField(
             value = title,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(2.dp, color = CoolGray05),
             onValueChange = {
                 if (it.length > 10) {
                     isNameError = true
@@ -220,6 +235,12 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
             },
             placeholder = { Text(text = stringResource(R.string.repair_new_connection)) },
             isError = isNameError,
+            colors = TextFieldDefaults.colors().copy(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White,
+                errorContainerColor = Color.White,
+            ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
         if (isNameError) {
@@ -235,7 +256,15 @@ fun TicketDescription(modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.description))
         TextField(
             value = description,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(2.dp, color = CoolGray05),
+            colors = TextFieldDefaults.colors().copy(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White,
+                errorContainerColor = Color.White,
+            ),
             onValueChange = { description = it },
             placeholder = { Text(text = stringResource(R.string.description)) })
     }

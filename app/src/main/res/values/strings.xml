@@ -7,6 +7,7 @@
     <string name="edit_ticket">Edit Ticket</string>
     <string name="add_ticket">Add Ticket</string>
     <string name="title">Title</string>
+    <string name="status">Status</string>
     <string name="repair_new_connection">Repair/New Connection</string>
     <string name="description">Description</string>
     <string name="priority">Priority</string>

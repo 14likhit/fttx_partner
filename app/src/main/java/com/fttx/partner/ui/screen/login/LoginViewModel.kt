@@ -3,7 +3,7 @@ package com.fttx.partner.ui.screen.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
-import com.fttx.partner.domain.usecase.GetTicketUseCase
+import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

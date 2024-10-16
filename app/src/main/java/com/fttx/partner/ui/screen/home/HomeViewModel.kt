@@ -2,7 +2,7 @@ package com.fttx.partner.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fttx.partner.domain.usecase.GetTicketUseCase
+import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel

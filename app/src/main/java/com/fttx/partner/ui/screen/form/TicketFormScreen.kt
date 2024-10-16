@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +17,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +45,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -108,8 +112,8 @@ fun TicketFormScreen(
                     }
                 }
                 TicketTitle(ticket = ticket)
+                TicketStatus(ticket = ticket, dropDownSelection = { status = it })
                 ticket?.let {
-                    TicketStatus(ticket = it, dropDownSelection = { status = it })
                     TicketCustomerDetail(customer = it.customer)
                 } ?: run {
                     customer?.let {
@@ -126,6 +130,12 @@ fun TicketFormScreen(
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                 )
+                Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = { }) {
+                    Text(text = ticket?.let { stringResource(R.string.edit_ticket) }
+                        ?: stringResource(
+                            R.string.add_ticket
+                        ))
+                }
             }
         }
     }
@@ -134,7 +144,7 @@ fun TicketFormScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TicketStatus(
-    ticket: Ticket,
+    ticket: Ticket?,
     dropDownSelection: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -278,7 +288,10 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
         val priorities = listOf("High", "Medium", "Low")
         var expanded by remember { mutableStateOf(false) }
         var selectedPriority by remember { mutableStateOf(priorities[0]) }
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            modifier = Modifier.background(color = Color.White),
+            onExpandedChange = { expanded = !expanded }) {
             TextField(
                 modifier = Modifier
                     .menuAnchor()
@@ -286,13 +299,27 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
                 readOnly = true,
                 value = selectedPriority,
                 onValueChange = {},
+                leadingIcon = {
+                    Box(modifier = Modifier.background(Color.Red).size(8.dp))
+                },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
+                colors = ExposedDropdownMenuDefaults.textFieldColors().copy(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    errorContainerColor = Color.White,
+                )
             )
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            ExposedDropdownMenu(
+                expanded = expanded,
+                modifier = Modifier.background(color = Color.White),
+                onDismissRequest = { expanded = false }) {
                 priorities.forEach { priority ->
                     DropdownMenuItem(
                         text = { Text(text = priority) },
+                        leadingIcon = {
+                            Box(modifier = Modifier.background(Color.Red).size(8.dp))
+                        },
                         onClick = {
                             selectedPriority = priority
                             dropDownSelection(selectedPriority)
@@ -340,7 +367,13 @@ private fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifi
             value = selectedDate,
             onValueChange = {},
             trailingIcon = { Icons.Default.DateRange },
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
+            colors = TextFieldDefaults.colors().copy(
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                disabledContainerColor = Color.White,
+                errorContainerColor = Color.White,
+            )
         )
 
         if (isPressed) {

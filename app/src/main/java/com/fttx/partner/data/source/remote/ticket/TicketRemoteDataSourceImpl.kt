@@ -1,4 +1,4 @@
-package com.fttx.partner.data.source.remote
+package com.fttx.partner.data.source.remote.ticket
 
 import com.fttx.partner.data.network.service.ApiCallerService
 import com.fttx.partner.data.network.util.NetworkResultWrapper

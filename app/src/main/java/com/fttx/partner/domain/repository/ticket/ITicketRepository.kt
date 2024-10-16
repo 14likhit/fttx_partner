@@ -1,4 +1,4 @@
-package com.fttx.partner.domain.repository
+package com.fttx.partner.domain.repository.ticket
 
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 

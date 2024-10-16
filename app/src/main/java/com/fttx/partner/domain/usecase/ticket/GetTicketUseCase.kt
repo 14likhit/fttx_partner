@@ -1,8 +1,8 @@
-package com.fttx.partner.domain.usecase
+package com.fttx.partner.domain.usecase.ticket
 
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.data.network.util.SemaaiResult
-import com.fttx.partner.domain.repository.ITicketRepository
+import com.fttx.partner.domain.repository.ticket.ITicketRepository
 import com.fttx.partner.domain.util.coroutine.CoroutineDispatcherProvider
 import com.fttx.partner.domain.util.coroutine.UiText
 import com.fttx.partner.domain.util.coroutine.executeSafeCall

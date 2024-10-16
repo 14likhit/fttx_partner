@@ -1,8 +1,8 @@
-package com.fttx.partner.data.repository
+package com.fttx.partner.data.repository.ticket
 
 import com.fttx.partner.data.network.util.NetworkResultWrapper
-import com.fttx.partner.data.source.remote.ITicketRemoteDataSource
-import com.fttx.partner.domain.repository.ITicketRepository
+import com.fttx.partner.data.source.remote.ticket.ITicketRemoteDataSource
+import com.fttx.partner.domain.repository.ticket.ITicketRepository
 import javax.inject.Inject
 
 class TicketRepositoryImpl @Inject constructor(

@@ -2,7 +2,9 @@ package com.fttx.partner.ui.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
+import com.fttx.partner.domain.usecase.login.LoginUseCase
 import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val getTicketUseCase: GetTicketUseCase,
+    private val loginUseCase: LoginUseCase,
     private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel(), IModel<LoginState, LoginIntent, LoginEffect> {
 
@@ -62,8 +64,17 @@ class LoginViewModel @Inject constructor(
 
     private suspend fun checkCredentials(loginUiModel: LoginUiModel) {
         if (loginUiModel.isNotEmpty()) {
-            dataStorePreferences.setUserLoggedIn(true)
-            _uiEffect.send(LoginEffect.NavigateToHome)
+            viewModelScope.launch {
+                when(val result = loginUseCase(loginUiModel.login,loginUiModel.pwd)){
+                    is SemaaiResult.Error -> {
+                        _uiState.value = _uiState.value.copy(errorLogin = "Invalid Credential")
+                    }
+                    is SemaaiResult.Success -> {
+                        dataStorePreferences.setUserLoggedIn(true)
+                        _uiEffect.send(LoginEffect.NavigateToHome)
+                    }
+                }
+            }
         } else {
             _uiState.value = _uiState.value.copy(errorLogin = "Invalid Credential")
         }

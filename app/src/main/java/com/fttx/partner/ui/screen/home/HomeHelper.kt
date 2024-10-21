@@ -12,7 +12,10 @@ sealed class HomeIntent : IIntent {
     data class TicketCardCta(val ticket: Ticket) : HomeIntent()
     data class PhoneCta(val ticket: Ticket) : HomeIntent()
     data object AddCta : HomeIntent()
-    data object AccountCta: HomeIntent()
+    data object AccountCta : HomeIntent()
+    data object LocationPermissionGranted : HomeIntent()
+    data object LocationPermissionDenied : HomeIntent()
+    data object LocationPermissionRevoked : HomeIntent()
 }
 
 sealed class HomeEffect : IEffect {
@@ -21,8 +24,10 @@ sealed class HomeEffect : IEffect {
     data class NavigateToAddTicket(val customer: Customer) : HomeEffect()
     data object NavigateToAccount : HomeEffect()
     data class NavigateToCall(val ticket: Ticket) : HomeEffect()
+    data object NavigateToLocationPermissionRequiredPopUp : HomeEffect()
 }
 
 data class HomeState(
-    val id: Int = -1
+    val id: Int = -1,
+    val isLocationPermissionGranted: Boolean = false
 ) : IState

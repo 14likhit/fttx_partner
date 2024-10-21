@@ -58,6 +58,18 @@ class HomeViewModel @Inject constructor(
                     is HomeIntent.PhoneCta -> {
                         _uiEffect.send(HomeEffect.NavigateToCall(it.ticket))
                     }
+
+                    is HomeIntent.LocationPermissionGranted -> {
+
+                    }
+
+                    is HomeIntent.LocationPermissionDenied -> {
+
+                    }
+
+                    is HomeIntent.LocationPermissionRevoked -> {
+
+                    }
                 }
             }
         }

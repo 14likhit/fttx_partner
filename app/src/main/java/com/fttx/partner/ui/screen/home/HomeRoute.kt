@@ -8,6 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.utils.location.RequestLocationPermission
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -36,16 +37,40 @@ fun HomeRoute(
 
                 HomeEffect.NavigateToAccount -> navigateToAccountActivity()
                 is HomeEffect.NavigateToCall -> navigateToCallerActivity(it.ticket.customer.phone)
+                HomeEffect.NavigateToLocationPermissionRequiredPopUp -> {
+                    // Handle the case when location permission is required
+                }
             }
         }.collect()
     }
 
-    HomeScreen(
-        onTriggerIntent = {
-            coroutineScope.launch {
-                homeViewModel.intents.send(it)
-            }
-        },
-        uiState = uiState
-    )
+    if(uiState.isLocationPermissionGranted) {
+        HomeScreen(
+            onTriggerIntent = {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(it)
+                }
+            },
+            uiState = uiState
+        )
+    } else{
+        LocationScreen()
+    }
+
+//    RequestLocationPermission(
+//        onPermissionGranted = {
+//            coroutineScope.launch {
+//                homeViewModel.intents.send(HomeIntent.LocationPermissionGranted)
+//            }
+//        },
+//        onPermissionDenied = {
+//            coroutineScope.launch {
+//                homeViewModel.intents.send(HomeIntent.LocationPermissionDenied)
+//            }
+//        },
+//        onPermissionsRevoked = {
+//            coroutineScope.launch {
+//                homeViewModel.intents.send(HomeIntent.LocationPermissionRevoked)
+//            }
+//        })
 }

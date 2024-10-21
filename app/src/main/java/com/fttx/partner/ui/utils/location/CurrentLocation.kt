@@ -3,6 +3,7 @@ package com.fttx.partner.ui.utils.location
 import android.annotation.SuppressLint
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 
@@ -19,11 +20,13 @@ import com.google.android.gms.tasks.CancellationTokenSource
 @SuppressLint("MissingPermission")
 private fun getCurrentLocation(
     context: Context,
-    fusedLocationProviderClient: FusedLocationProviderClient,
     onGetCurrentLocationSuccess: (Pair<Double, Double>) -> Unit,
     onGetCurrentLocationFailed: (Exception) -> Unit,
+    onGetLastLocationIsNull: () -> Unit,
     priority: Boolean = true
 ) {
+    val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
     // Determine the accuracy priority based on the 'priority' parameter
     val accuracy = if (priority) Priority.PRIORITY_HIGH_ACCURACY
     else Priority.PRIORITY_BALANCED_POWER_ACCURACY
@@ -37,6 +40,8 @@ private fun getCurrentLocation(
             location?.let {
                 // If location is not null, invoke the success callback with latitude and longitude
                 onGetCurrentLocationSuccess(Pair(it.latitude, it.longitude))
+            } ?: run {
+                onGetLastLocationIsNull()
             }
         }.addOnFailureListener { exception ->
             // If an error occurs, invoke the failure callback with the exception

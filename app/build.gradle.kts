@@ -78,6 +78,8 @@ dependencies {
     implementation (libs.logging.interceptor)
     implementation (libs.hilt.android)
     implementation (libs.hilt.navigation.compose)
+    implementation(libs.play.service.location)
+    implementation(libs.accompanist.permissions)
     ksp(libs.hilt.compiler)
 }
 

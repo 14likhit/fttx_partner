@@ -26,6 +26,7 @@ import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 
 @Composable
 fun LocationScreen(
+    onTriggerIntent: (HomeIntent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -63,7 +64,9 @@ fun LocationScreen(
 
             // Primary Button to grant permission
             Button(
-                onClick = { },
+                onClick = {
+                    onTriggerIntent(HomeIntent.RequestLocationPermission)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Request Location Permission")
@@ -76,6 +79,6 @@ fun LocationScreen(
 @Composable
 private fun LocationScreenPreview() {
     FTTXPartnerTheme {
-        LocationScreen()
+        LocationScreen(onTriggerIntent = {})
     }
 }

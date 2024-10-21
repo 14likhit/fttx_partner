@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
@@ -25,6 +27,8 @@ fun HomeRoute(
     val uiState by homeViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
+    val isPermissionAsked = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         homeViewModel.uiEffect.onEach {
             when (it) {
@@ -38,13 +42,13 @@ fun HomeRoute(
                 HomeEffect.NavigateToAccount -> navigateToAccountActivity()
                 is HomeEffect.NavigateToCall -> navigateToCallerActivity(it.ticket.customer.phone)
                 HomeEffect.NavigateToLocationPermissionRequiredPopUp -> {
-                    // Handle the case when location permission is required
+                    isPermissionAsked.value = true
                 }
             }
         }.collect()
     }
 
-    if(uiState.isLocationPermissionGranted) {
+    if (uiState.isLocationPermissionGranted) {
         HomeScreen(
             onTriggerIntent = {
                 coroutineScope.launch {
@@ -53,24 +57,35 @@ fun HomeRoute(
             },
             uiState = uiState
         )
-    } else{
-        LocationScreen()
+    } else {
+        LocationScreen(
+            onTriggerIntent = {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(it)
+                }
+            },
+        )
     }
 
-//    RequestLocationPermission(
-//        onPermissionGranted = {
-//            coroutineScope.launch {
-//                homeViewModel.intents.send(HomeIntent.LocationPermissionGranted)
-//            }
-//        },
-//        onPermissionDenied = {
-//            coroutineScope.launch {
-//                homeViewModel.intents.send(HomeIntent.LocationPermissionDenied)
-//            }
-//        },
-//        onPermissionsRevoked = {
-//            coroutineScope.launch {
-//                homeViewModel.intents.send(HomeIntent.LocationPermissionRevoked)
-//            }
-//        })
+    if (isPermissionAsked.value) {
+        RequestLocationPermission(
+            onPermissionGranted = {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(HomeIntent.LocationPermissionGranted)
+                }
+                isPermissionAsked.value = false
+            },
+            onPermissionDenied = {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(HomeIntent.LocationPermissionDenied)
+                }
+                isPermissionAsked.value = false
+            },
+            onPermissionsRevoked = {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(HomeIntent.LocationPermissionRevoked)
+                }
+                isPermissionAsked.value = false
+            })
+    }
 }

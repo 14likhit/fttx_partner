@@ -59,16 +59,20 @@ class HomeViewModel @Inject constructor(
                         _uiEffect.send(HomeEffect.NavigateToCall(it.ticket))
                     }
 
-                    is HomeIntent.LocationPermissionGranted -> {
+                    is HomeIntent.RequestLocationPermission -> {
+                        _uiEffect.send(HomeEffect.NavigateToLocationPermissionRequiredPopUp)
+                    }
 
+                    is HomeIntent.LocationPermissionGranted -> {
+                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = true)
                     }
 
                     is HomeIntent.LocationPermissionDenied -> {
-
+                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = false)
                     }
 
                     is HomeIntent.LocationPermissionRevoked -> {
-
+                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = false)
                     }
                 }
             }

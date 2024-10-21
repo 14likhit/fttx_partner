@@ -13,6 +13,7 @@ sealed class HomeIntent : IIntent {
     data class PhoneCta(val ticket: Ticket) : HomeIntent()
     data object AddCta : HomeIntent()
     data object AccountCta : HomeIntent()
+    data object RequestLocationPermission: HomeIntent()
     data object LocationPermissionGranted : HomeIntent()
     data object LocationPermissionDenied : HomeIntent()
     data object LocationPermissionRevoked : HomeIntent()

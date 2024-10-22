@@ -64,15 +64,19 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is HomeIntent.LocationPermissionGranted -> {
-                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = true)
+                        _uiState.value =
+                            _uiState.value.copy(locationPermissionState = LocationPermissionState.LocationPermissionGranted)
                     }
 
                     is HomeIntent.LocationPermissionDenied -> {
-                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = false)
+                        _uiState.value =
+                            _uiState.value.copy(locationPermissionState = LocationPermissionState.LocationPermissionDenied)
                     }
 
                     is HomeIntent.LocationPermissionRevoked -> {
-                        _uiState.value = _uiState.value.copy(isLocationPermissionGranted = false)
+                        _uiState.value =
+                            _uiState.value.copy(locationPermissionState = LocationPermissionState.LocationPermissionRevoked)
+                        _uiEffect.send(HomeEffect.NavigateToLocationPermissionRequiredSettingsPopUp)
                     }
                 }
             }

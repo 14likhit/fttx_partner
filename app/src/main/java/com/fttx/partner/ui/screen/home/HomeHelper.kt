@@ -13,7 +13,7 @@ sealed class HomeIntent : IIntent {
     data class PhoneCta(val ticket: Ticket) : HomeIntent()
     data object AddCta : HomeIntent()
     data object AccountCta : HomeIntent()
-    data object RequestLocationPermission: HomeIntent()
+    data object RequestLocationPermission : HomeIntent()
     data object LocationPermissionGranted : HomeIntent()
     data object LocationPermissionDenied : HomeIntent()
     data object LocationPermissionRevoked : HomeIntent()
@@ -26,9 +26,16 @@ sealed class HomeEffect : IEffect {
     data object NavigateToAccount : HomeEffect()
     data class NavigateToCall(val ticket: Ticket) : HomeEffect()
     data object NavigateToLocationPermissionRequiredPopUp : HomeEffect()
+    data object NavigateToLocationPermissionRequiredSettingsPopUp : HomeEffect()
 }
 
 data class HomeState(
     val id: Int = -1,
-    val isLocationPermissionGranted: Boolean = false
+    val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionDenied
 ) : IState
+
+enum class LocationPermissionState() {
+    LocationPermissionGranted,
+    LocationPermissionDenied,
+    LocationPermissionRevoked
+}

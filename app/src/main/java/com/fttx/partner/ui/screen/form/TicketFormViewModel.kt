@@ -2,7 +2,6 @@ package com.fttx.partner.ui.screen.form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -15,9 +14,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TicketFormViewModel @Inject constructor(
-    private val getTicketUseCase: GetTicketUseCase
-) : ViewModel(), IModel<TicketFormState, TicketFormIntent, TicketFormEffect> {
+class TicketFormViewModel @Inject constructor() : ViewModel(),
+    IModel<TicketFormState, TicketFormIntent, TicketFormEffect> {
 
     override val intents: Channel<TicketFormIntent> = Channel(Channel.UNLIMITED)
 

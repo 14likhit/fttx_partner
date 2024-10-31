@@ -26,16 +26,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.R
+import com.fttx.partner.domain.model.User
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
-import com.fttx.partner.ui.screen.form.TicketFormIntent
 import com.fttx.partner.ui.utils.NavigationIcon
 
 @Composable
 fun AccountScreen(
+    user: User,
     onTriggerIntent: (AccountIntent) -> Unit,
     uiState: AccountState,
     modifier: Modifier = Modifier
@@ -66,7 +66,7 @@ fun AccountScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Profile section
-                ProfileSection()
+                ProfileSection(user)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -83,7 +83,7 @@ fun AccountScreen(
 }
 
 @Composable
-fun ProfileSection() {
+fun ProfileSection(user: User) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -97,7 +97,7 @@ fun ProfileSection() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "John Doe",
+            text = user.name,
             style = MaterialTheme.typography.headlineMedium
         )
     }
@@ -142,6 +142,8 @@ fun LogoutButton(onLogout: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 fun AccountScreenPreview() {
     MaterialTheme {
-        AccountScreen(onTriggerIntent = {}, uiState = AccountState())
+        AccountScreen(
+            user = User(-1, "John Doe", "", ""),
+            onTriggerIntent = {}, uiState = AccountState())
     }
 }

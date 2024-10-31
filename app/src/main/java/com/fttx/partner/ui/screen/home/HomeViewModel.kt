@@ -1,7 +1,10 @@
 package com.fttx.partner.ui.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fttx.partner.data.network.util.SemaaiResult
+import com.fttx.partner.data.source.local.datastore.DataStorePreferences
 import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mvicore.IModel
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getTicketUseCase: GetTicketUseCase
+    private val getTicketUseCase: GetTicketUseCase,
+    private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel(), IModel<HomeState, HomeIntent, HomeEffect> {
 
     override val intents: Channel<HomeIntent> = Channel(Channel.UNLIMITED)
@@ -38,7 +42,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             intents.receiveAsFlow().collect {
                 when (it) {
-                    is HomeIntent.Init -> {}
+                    is HomeIntent.Init -> {
+                        getTickets()
+                    }
+
                     HomeIntent.AddCta -> {
                         _uiEffect.send(HomeEffect.NavigateToAddTicket(getCustomer()))
                     }
@@ -52,7 +59,7 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeIntent.AccountCta -> {
-                        _uiEffect.send(HomeEffect.NavigateToAccount)
+                        _uiEffect.send(HomeEffect.NavigateToAccount(uiState.value.user))
                     }
 
                     is HomeIntent.PhoneCta -> {
@@ -78,6 +85,20 @@ class HomeViewModel @Inject constructor(
                             _uiState.value.copy(locationPermissionState = LocationPermissionState.LocationPermissionRevoked)
                         _uiEffect.send(HomeEffect.NavigateToLocationPermissionRequiredSettingsPopUp)
                     }
+                }
+            }
+        }
+    }
+
+    private suspend fun getTickets() {
+        dataStorePreferences.getUserId()?.let { userId ->
+            when (val result = getTicketUseCase(userId)) {
+                is SemaaiResult.Error -> {
+                    Log.e("Test","Error")
+                }
+                is SemaaiResult.Success -> {
+                    _uiState.value =
+                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user)
                 }
             }
         }

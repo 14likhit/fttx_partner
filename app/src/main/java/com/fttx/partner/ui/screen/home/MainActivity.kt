@@ -15,6 +15,7 @@ import com.fttx.partner.ui.screen.form.TicketFormActivity
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.Constants.BundleKey.CUSTOMER
 import com.fttx.partner.ui.utils.Constants.BundleKey.TICKET
+import com.fttx.partner.ui.utils.Constants.BundleKey.USER
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +34,9 @@ class MainActivity : ComponentActivity() {
                             })
                         },
                         navigateToAccountActivity = {
-                            startActivity(Intent(this, AccountActivity::class.java))
+                            startActivity(Intent(this, AccountActivity::class.java).apply {
+                                putExtra(USER,it)
+                            })
                         },
                         navigateToCallerActivity = {
                             try {

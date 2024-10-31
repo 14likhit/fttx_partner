@@ -6,12 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fttx.partner.domain.model.User
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Composable
 fun AccountRoute(
+    user: User,
     onLogout: () -> Unit,
     onBackPress: () -> Unit,
     accountViewModel: AccountViewModel = hiltViewModel()
@@ -30,6 +32,7 @@ fun AccountRoute(
     }
 
     AccountScreen(
+        user = user,
         onTriggerIntent = {
             coroutineScope.launch {
                 accountViewModel.intents.send(it)

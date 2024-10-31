@@ -2,6 +2,7 @@ package com.fttx.partner.domain.usecase.login
 
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.data.network.util.SemaaiResult
+import com.fttx.partner.domain.model.Login
 import com.fttx.partner.domain.repository.login.ILoginRepository
 import com.fttx.partner.domain.repository.ticket.ITicketRepository
 import com.fttx.partner.domain.util.coroutine.CoroutineDispatcherProvider
@@ -14,7 +15,7 @@ class LoginUseCase @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider
 ) {
 
-    suspend operator fun invoke(username: String, password: String): SemaaiResult<Any, UiText> =
+    suspend operator fun invoke(username: String, password: String): SemaaiResult<Login, UiText> =
         coroutineDispatcherProvider.switchToIO {
             executeSafeCall(
                 block = {

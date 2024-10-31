@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
 import com.fttx.partner.domain.usecase.login.LoginUseCase
-import com.fttx.partner.domain.usecase.ticket.GetTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -71,6 +70,7 @@ class LoginViewModel @Inject constructor(
                     }
                     is SemaaiResult.Success -> {
                         dataStorePreferences.setUserLoggedIn(true)
+                        dataStorePreferences.saveUserId(result.data.userId)
                         _uiEffect.send(LoginEffect.NavigateToHome)
                     }
                 }

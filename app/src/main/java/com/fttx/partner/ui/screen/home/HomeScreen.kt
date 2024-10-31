@@ -100,7 +100,7 @@ fun HomeScreen(
 //                )
 //            }
             TicketList(
-                tickets = getTickets(),
+                tickets = uiState.tickets,
                 onCardClick = {
                     onTriggerIntent(HomeIntent.TicketCardCta(it))
                 },

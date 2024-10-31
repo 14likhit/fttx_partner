@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,8 +59,11 @@ import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
 import com.fttx.partner.ui.compose.model.TicketStatusUiModel
+import com.fttx.partner.ui.compose.theme.Caption01Regular
 import com.fttx.partner.ui.compose.theme.CoolGray05
+import com.fttx.partner.ui.compose.theme.CoolGray50
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
+import com.fttx.partner.ui.compose.theme.Text01Bold
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.utils.NavigationIcon
@@ -107,8 +111,8 @@ fun TicketFormScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
                 ticket?.let {
                     Row {
-                        Text(text = ticket.id, modifier = Modifier.weight(1f))
-                        Text(text = ticket.category)
+                        Text(text = ticket.id, style = Text01Bold, modifier = Modifier.weight(1f))
+                        Text(text = ticket.category, style = Text01Bold)
                     }
                 }
                 TicketTitle(ticket = ticket)
@@ -243,7 +247,12 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
                     )
                 }
             },
-            placeholder = { Text(text = stringResource(R.string.repair_new_connection)) },
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.repair_new_connection),
+                    color = CoolGray50
+                )
+            },
             isError = isNameError,
             colors = TextFieldDefaults.colors().copy(
                 focusedContainerColor = Color.White,
@@ -251,7 +260,10 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
                 disabledContainerColor = Color.White,
                 errorContainerColor = Color.White,
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            )
         )
         if (isNameError) {
             Text(text = "Error Name")
@@ -276,7 +288,7 @@ fun TicketDescription(modifier: Modifier = Modifier) {
                 errorContainerColor = Color.White,
             ),
             onValueChange = { description = it },
-            placeholder = { Text(text = stringResource(R.string.description)) })
+            placeholder = { Text(text = stringResource(R.string.description), color = CoolGray50) })
     }
 }
 
@@ -300,7 +312,11 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
                 value = selectedPriority,
                 onValueChange = {},
                 leadingIcon = {
-                    Box(modifier = Modifier.background(Color.Red).size(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Red)
+                            .size(24.dp)
+                    )
                 },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors().copy(
@@ -318,7 +334,11 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
                     DropdownMenuItem(
                         text = { Text(text = priority) },
                         leadingIcon = {
-                            Box(modifier = Modifier.background(Color.Red).size(8.dp))
+                            Box(
+                                modifier = Modifier
+                                    .background(Color.Red)
+                                    .size(8.dp)
+                            )
                         },
                         onClick = {
                             selectedPriority = priority

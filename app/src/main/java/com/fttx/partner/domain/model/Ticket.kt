@@ -10,5 +10,7 @@ data class Ticket(
     val time: String,
     val category: String,
     val status: String,
+    val priority: String,
+    val customerName: String,
     val customer: Customer,
 ) : Parcelable

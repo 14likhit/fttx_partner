@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.domain.model.User
 import com.fttx.partner.ui.compose.theme.Caption01Bold
 import com.fttx.partner.ui.compose.theme.Caption01Regular
 import com.fttx.partner.ui.utils.location.RequestLocationPermission
@@ -29,7 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeRoute(
     navigateToTicketFormActivity: (Ticket?, Customer?) -> Unit,
-    navigateToAccountActivity: () -> Unit,
+    navigateToAccountActivity: (User) -> Unit,
     navigateToCallerActivity: (String) -> Unit,
     onBackPress: () -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
@@ -53,7 +54,7 @@ fun HomeRoute(
                     null
                 )
 
-                HomeEffect.NavigateToAccount -> navigateToAccountActivity()
+                is HomeEffect.NavigateToAccount -> navigateToAccountActivity(it.user)
                 is HomeEffect.NavigateToCall -> navigateToCallerActivity(it.ticket.customer.phone)
                 HomeEffect.NavigateToLocationPermissionRequiredPopUp -> {
                     isPermissionAsked.value = true
@@ -142,5 +143,10 @@ fun HomeRoute(
                     Text("Cancel", style = Caption01Regular)
                 }
             })
+    }
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            homeViewModel.intents.send(HomeIntent.Init)
+        }
     }
 }

@@ -94,7 +94,7 @@ class HomeViewModel @Inject constructor(
         dataStorePreferences.getUserId()?.let { userId ->
             when (val result = getTicketUseCase(userId)) {
                 is SemaaiResult.Error -> {
-                    Log.e("Test","Error")
+
                 }
                 is SemaaiResult.Success -> {
                     _uiState.value =

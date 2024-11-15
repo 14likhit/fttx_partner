@@ -11,5 +11,8 @@ object EndPoints {
     object Ticket {
         const val USER_TICKET = "gettickets"
         const val QUERY_USER_ID = "user_id"
+        const val UPDATE_TICKET = "updateticket"
+        const val QUERY_TICKET_ID = "ticket_id"
+        const val QUERY_STATUS = "status"
     }
 }

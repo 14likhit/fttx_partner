@@ -157,7 +157,7 @@ private fun TicketStatus(
     Column {
         val statuses = TicketStatusUiModel.entries.toList()
         var expanded by remember { mutableStateOf(false) }
-        var selectedStatus by remember { mutableStateOf(statuses[0]) }
+        var selectedStatus by remember { mutableStateOf(TicketStatusUiModel.fromStatus(ticket?.status ?: "")) }
         Text(text = stringResource(R.string.status))
         ExposedDropdownMenuBox(
             expanded = expanded,

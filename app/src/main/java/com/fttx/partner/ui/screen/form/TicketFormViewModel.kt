@@ -2,6 +2,8 @@ package com.fttx.partner.ui.screen.form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fttx.partner.data.network.util.SemaaiResult
+import com.fttx.partner.domain.usecase.ticket.UpdateTicketUseCase
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -14,7 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TicketFormViewModel @Inject constructor() : ViewModel(),
+class TicketFormViewModel @Inject constructor(
+    private val updateTicketUseCase: UpdateTicketUseCase,
+) : ViewModel(),
     IModel<TicketFormState, TicketFormIntent, TicketFormEffect> {
 
     override val intents: Channel<TicketFormIntent> = Channel(Channel.UNLIMITED)
@@ -47,7 +51,20 @@ class TicketFormViewModel @Inject constructor() : ViewModel(),
                     is TicketFormIntent.TicketCardCta -> {
                         _uiEffect.send(TicketFormEffect.NavigateToTicketDetails(it.ticket))
                     }
+
+                    is TicketFormIntent.UpdateTicketCta -> {
+                        updateTicket(it.ticketId,it.ticketStatus)
+                    }
                 }
+            }
+        }
+    }
+
+    private suspend fun updateTicket(ticketId: Int, status: String) {
+        when(val result = updateTicketUseCase(ticketId, status)){
+            is SemaaiResult.Error -> {}
+            is SemaaiResult.Success -> {
+
             }
         }
     }

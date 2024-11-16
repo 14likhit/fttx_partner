@@ -59,7 +59,7 @@ fun TicketCard(
                     color = Purple80,
                     modifier = Modifier.weight(1f)
                 )
-                val ticketStatus = TicketStatusUiModel.valueOf(ticket.status)
+                val ticketStatus = TicketStatusUiModel.fromStatus(ticket.status)
                 Text(
                     text = ticketStatus.status,
                     style = Text01Bold,

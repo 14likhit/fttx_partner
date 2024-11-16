@@ -10,6 +10,7 @@ sealed class TicketFormIntent : IIntent {
     data object BackCta : TicketFormIntent()
     data class TicketCardCta(val ticket: Ticket) : TicketFormIntent()
     data object AddCta : TicketFormIntent()
+    data class UpdateTicketCta(val ticketId: Int, val ticketStatus: String) : TicketFormIntent()
 }
 
 sealed class TicketFormEffect : IEffect {
@@ -22,7 +23,7 @@ data class TicketFormState(
     val id: Int = -1
 ) : IState
 
-enum class TicketFormScreenType(val type: String){
+enum class TicketFormScreenType(val type: String) {
     AddTicket("add_ticket"),
     EditTicket("edit_ticket")
 }

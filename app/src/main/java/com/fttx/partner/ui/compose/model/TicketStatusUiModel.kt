@@ -16,7 +16,13 @@ enum class TicketStatusUiModel(
     val textColor: Color
 ) {
     Assigned("Assigned", Teal10, Teal50),
-    InProgress("In Progress", YellowAmber10, YellowAmber50),
-    Complete("Close", Green10, Green50),
-    Invalid("Invalid", Red10, Red50),
+    InProgress("In-Progress", YellowAmber10, YellowAmber50),
+    Complete("Complete", Green10, Green50),
+    Invalid("Invalid", Red10, Red50);
+
+    companion object {
+        fun fromStatus(status: String): TicketStatusUiModel {
+            return values().find { it.status == status } ?: Assigned
+        }
+    }
 }

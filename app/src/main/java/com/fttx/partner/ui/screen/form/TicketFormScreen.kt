@@ -134,7 +134,9 @@ fun TicketFormScreen(
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                 )
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = { }) {
+                Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+                    onTriggerIntent(TicketFormIntent.UpdateTicketCta(ticket?.id?.toInt() ?: -1, status))
+                }) {
                     Text(text = ticket?.let { stringResource(R.string.edit_ticket) }
                         ?: stringResource(
                             R.string.add_ticket

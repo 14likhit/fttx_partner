@@ -34,7 +34,8 @@ data class HomeState(
     val id: Int = -1,
     val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionDenied,
     val user: User = User(-1, "", "", "", false),
-    val tickets: List<Ticket> = emptyList()
+    val tickets: List<Ticket> = emptyList(),
+    val isLoading : Boolean = false
 ) : IState
 
 enum class LocationPermissionState() {

@@ -21,7 +21,8 @@ sealed class TicketFormEffect : IEffect {
 }
 
 data class TicketFormState(
-    val id: Int = -1
+    val id: Int = -1,
+    val isLoading: Boolean = false
 ) : IState
 
 enum class TicketFormScreenType(val type: String) {

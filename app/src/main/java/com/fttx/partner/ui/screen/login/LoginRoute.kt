@@ -6,10 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fttx.partner.domain.model.Ticket
-import com.fttx.partner.ui.screen.home.HomeEffect
-import com.fttx.partner.ui.screen.home.HomeScreen
-import com.fttx.partner.ui.screen.home.HomeViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

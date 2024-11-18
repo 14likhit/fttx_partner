@@ -61,10 +61,14 @@ class TicketFormViewModel @Inject constructor(
     }
 
     private suspend fun updateTicket(ticketId: Int, status: String) {
+        _uiState.value = _uiState.value.copy(isLoading = true)
         when(val result = updateTicketUseCase(ticketId, status)){
-            is SemaaiResult.Error -> {}
+            is SemaaiResult.Error -> {
+                _uiState.value = _uiState.value.copy(isLoading = false)
+            }
             is SemaaiResult.Success -> {
                 _uiEffect.send(TicketFormEffect.NavigateToTicketList)
+                _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
     }

@@ -92,13 +92,14 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun getTickets() {
         dataStorePreferences.getUserId()?.let { userId ->
+            _uiState.value = _uiState.value.copy(isLoading = true)
             when (val result = getTicketUseCase(userId)) {
                 is SemaaiResult.Error -> {
-
+                    _uiState.value = _uiState.value.copy(isLoading = false)
                 }
                 is SemaaiResult.Success -> {
                     _uiState.value =
-                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user)
+                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user, isLoading = false)
                 }
             }
         }

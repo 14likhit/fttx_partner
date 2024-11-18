@@ -6,7 +6,12 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -16,7 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
@@ -24,11 +35,8 @@ import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.domain.model.User
 import com.fttx.partner.ui.compose.theme.Caption01Bold
 import com.fttx.partner.ui.compose.theme.Caption01Regular
-import com.fttx.partner.ui.screen.account.AccountActivity
 import com.fttx.partner.ui.screen.form.TicketFormActivity
-import com.fttx.partner.ui.utils.Constants.BundleKey.CUSTOMER
 import com.fttx.partner.ui.utils.Constants.BundleKey.TICKET
-import com.fttx.partner.ui.utils.Constants.BundleKey.USER
 import com.fttx.partner.ui.utils.location.RequestLocationPermission
 import com.fttx.partner.ui.utils.location.areLocationPermissionsGranted
 import kotlinx.coroutines.flow.collect
@@ -52,14 +60,15 @@ fun HomeRoute(
     val isPermissionAsked = remember { mutableStateOf(areLocationPermissionsGranted(context)) }
     val isPermissionRevoked = remember { mutableStateOf(false) }
 
-    val ticketFormUpdate = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { activityResult ->
-        if(activityResult.resultCode == Activity.RESULT_OK){
-            coroutineScope.launch {
-                homeViewModel.intents.send(HomeIntent.Init)
+    val ticketFormUpdate =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                coroutineScope.launch {
+                    homeViewModel.intents.send(HomeIntent.Init)
+                }
             }
-        }
 
-    }
+        }
 
     LaunchedEffect(Unit) {
         homeViewModel.uiEffect.onEach {
@@ -95,6 +104,21 @@ fun HomeRoute(
                 },
                 uiState = uiState
             )
+            if (uiState.isLoading) {
+                Dialog(
+                    onDismissRequest = { },
+                    DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(Color.White, shape = RoundedCornerShape(8.dp))
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
         }
 
         LocationPermissionState.LocationPermissionDenied,

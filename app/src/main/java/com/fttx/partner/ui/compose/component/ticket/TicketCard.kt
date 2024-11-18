@@ -1,6 +1,7 @@
 package com.fttx.partner.ui.compose.component.ticket
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +56,7 @@ fun TicketCard(
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Row {
                 Text(
-                    text = ticket.priority,
+                    text = ticket.category,
                     style = Caption01Bold,
                     color = Purple80,
                     modifier = Modifier.weight(1f)
@@ -65,11 +67,17 @@ fun TicketCard(
                     style = Text01Bold,
                     color = ticketStatus.textColor,
                     modifier = Modifier
+                        .padding(horizontal = 16.dp)
                         .background(
                             ticketStatus.backgroundColor,
                             shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(horizontal = 16.dp)
+                        ).padding(horizontal = 16.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .background(Color.Red)
+                        .size(12.dp)
+                        .align(Alignment.CenterVertically)
                 )
             }
             Row(

@@ -32,7 +32,7 @@ object UserTicketMapper {
             id = ticketDto?.id ?: "",
             title = ticketDto?.title ?: "",
             time = ticketDto?.time ?: "",
-            category = ticketDto?.category ?: "",
+            category = ticketDto?.category ?: "New Connection",
             status = ticketDto?.status ?: "",
             priority = ticketDto?.priority ?: "",
             customerName = ticketDto?.customerName ?: "",

@@ -27,7 +27,10 @@ class TicketFormActivity : ComponentActivity() {
                     TicketFormRoute(
                         ticket = ticket,
                         customer = customer,
-                        onBackPress = {
+                        onBackPress = { isUpdated ->
+                            if (isUpdated) {
+                                setResult(RESULT_OK)
+                            }
                             finish()
                         })
                 }

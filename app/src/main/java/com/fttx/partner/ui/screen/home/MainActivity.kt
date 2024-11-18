@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.home
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,6 +8,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -57,4 +60,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private val startForTicketUpdateResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+
+            }
+        }
 }

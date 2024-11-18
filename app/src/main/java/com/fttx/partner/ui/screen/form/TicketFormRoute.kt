@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 fun TicketFormRoute(
     ticket: Ticket?,
     customer: Customer?,
-    onBackPress: () -> Unit,
+    onBackPress: (Boolean) -> Unit,
     ticketFormViewModel: TicketFormViewModel = hiltViewModel()
 ) {
 
@@ -26,9 +26,10 @@ fun TicketFormRoute(
     LaunchedEffect(Unit) {
         ticketFormViewModel.uiEffect.onEach {
             when (it) {
-                TicketFormEffect.NavigateBack -> onBackPress()
+                TicketFormEffect.NavigateBack -> onBackPress(false)
                 TicketFormEffect.NavigateToAddTicket -> {}
                 is TicketFormEffect.NavigateToTicketDetails -> {}
+                TicketFormEffect.NavigateToTicketList -> onBackPress(true)
             }
         }.collect()
     }

@@ -17,6 +17,7 @@ sealed class TicketFormEffect : IEffect {
     data object NavigateBack : TicketFormEffect()
     data class NavigateToTicketDetails(val ticket: Ticket) : TicketFormEffect()
     data object NavigateToAddTicket : TicketFormEffect()
+    data object NavigateToTicketList : TicketFormEffect()
 }
 
 data class TicketFormState(

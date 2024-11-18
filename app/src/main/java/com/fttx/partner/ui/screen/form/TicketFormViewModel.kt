@@ -64,7 +64,7 @@ class TicketFormViewModel @Inject constructor(
         when(val result = updateTicketUseCase(ticketId, status)){
             is SemaaiResult.Error -> {}
             is SemaaiResult.Success -> {
-
+                _uiEffect.send(TicketFormEffect.NavigateToTicketList)
             }
         }
     }

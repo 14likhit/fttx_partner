@@ -22,7 +22,8 @@ object UserTicketMapper {
             userId = userDto?.userId ?: 0,
             name = userDto?.name ?: "",
             mobile = userDto?.mobile ?: "",
-            email = userDto?.email ?: ""
+            email = userDto?.email ?: "",
+            isAdmin = userDto?.isAdmin ?: false
         )
     }
 

@@ -166,7 +166,7 @@ fun LogoutButton(onLogout: () -> Unit, modifier: Modifier = Modifier) {
 fun AccountScreenPreview() {
     MaterialTheme {
         AccountScreen(
-            user = User(-1, "John Doe", "", ""),
+            user = User(-1, "John Doe", "", "",false),
             onTriggerIntent = {}, uiState = AccountState()
         )
     }

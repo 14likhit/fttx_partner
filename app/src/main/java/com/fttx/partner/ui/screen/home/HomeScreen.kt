@@ -109,14 +109,16 @@ fun HomeScreen(
                 }
             )
         }
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 64.dp),
-            onClick = {
-                onTriggerIntent(HomeIntent.AddCta)
-            }) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = "FAB")
+        if(uiState.user.isAdmin) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 64.dp),
+                onClick = {
+                    onTriggerIntent(HomeIntent.AddCta)
+                }) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "FAB")
+            }
         }
     }
 }

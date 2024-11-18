@@ -7,4 +7,5 @@ data class UserDto(
     @SerializedName("name") val name: String?,
     @SerializedName("mobile") val mobile: String?,
     @SerializedName("email") val email: String?,
+    @SerializedName("is_admin") val isAdmin: Boolean?,
 )

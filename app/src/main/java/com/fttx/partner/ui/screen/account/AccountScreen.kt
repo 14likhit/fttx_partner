@@ -2,6 +2,7 @@ package com.fttx.partner.ui.screen.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -63,7 +64,6 @@ fun AccountScreen(
                             .asPaddingValues()
                             .calculateBottomPadding()
                     ),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Profile section
                 ProfileSection(user)
@@ -74,9 +74,13 @@ fun AccountScreen(
                 // SettingsSection()
 
                 // Logout button
-                LogoutButton(modifier = Modifier.padding(16.dp), onLogout = {
-                    onTriggerIntent(AccountIntent.LogoutCta)
-                })
+                LogoutButton(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally), onLogout = {
+                        onTriggerIntent(AccountIntent.LogoutCta)
+                    })
             }
         }
     }
@@ -85,19 +89,38 @@ fun AccountScreen(
 @Composable
 fun ProfileSection(user: User) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth()
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "Profile picture",
             modifier = Modifier
                 .size(120.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .fillMaxSize()
+                .align(Alignment.CenterHorizontally),
             contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.height(16.dp))
+        MenuItem("Name:", user.name)
+        MenuItem("Mobile:", user.mobile)
+        MenuItem("Email:", user.email)
+    }
+}
+
+@Composable
+fun MenuItem(
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Row {
         Text(
-            text = user.name,
+            text = title,
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Text(
+            text = value,
             style = MaterialTheme.typography.headlineMedium
         )
     }
@@ -144,6 +167,7 @@ fun AccountScreenPreview() {
     MaterialTheme {
         AccountScreen(
             user = User(-1, "John Doe", "", ""),
-            onTriggerIntent = {}, uiState = AccountState())
+            onTriggerIntent = {}, uiState = AccountState()
+        )
     }
 }

@@ -54,7 +54,7 @@ fun TicketCard(
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Row {
                 Text(
-                    text = ticket.category,
+                    text = ticket.priority,
                     style = Caption01Bold,
                     color = Purple80,
                     modifier = Modifier.weight(1f)
@@ -99,7 +99,7 @@ fun TicketCard(
             )
             HorizontalDivider()
             Text(
-                text = ticket.customer.name,
+                text = ticket.customerName,
                 style = Text01Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
             )

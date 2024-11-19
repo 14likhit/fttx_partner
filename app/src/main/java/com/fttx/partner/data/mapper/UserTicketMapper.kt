@@ -44,6 +44,7 @@ object UserTicketMapper {
                 lat = ticketDto?.customer?.lat ?: 0.0,
                 long = ticketDto?.customer?.long ?: 0.0,
             ),
+            description = ticketDto?.description ?: "",
         )
     }
 }

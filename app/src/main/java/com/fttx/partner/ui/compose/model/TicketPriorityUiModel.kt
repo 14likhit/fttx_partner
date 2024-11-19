@@ -15,7 +15,7 @@ enum class TicketPriorityUiModel(
 
     companion object {
         fun fromPriority(priority: String): TicketPriorityUiModel {
-            return entries.find { it.priority == priority } ?: LOW
+            return entries.find { it.priority.equals(priority, ignoreCase = true) } ?: LOW
         }
     }
 }

@@ -11,4 +11,5 @@ data class TicketDto(
     @SerializedName("priority") val priority: String?,
     @SerializedName("customer_name") val customerName: String?,
     val customer: CustomerDto?,
+    val description: String?,
 )

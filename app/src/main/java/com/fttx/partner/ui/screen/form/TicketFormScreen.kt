@@ -128,10 +128,10 @@ fun TicketFormScreen(
                 TicketStatus(ticket = ticket, dropDownSelection = { status = it })
                 TicketDescription(ticket = ticket)
                 ticket?.let {
-                    TicketCustomerDetail(customer = it.customer)
+                    TicketCustomerDetail(it)
                 } ?: run {
                     customer?.let {
-                        TicketCustomerDetail(customer = it)
+                        TicketCustomerDetail(null)
                     }
                 }
                 TicketPriority(
@@ -306,7 +306,8 @@ private fun TicketStatus(
 
 @Composable
 fun TicketDescription(ticket: Ticket?, modifier: Modifier = Modifier) {
-    var description by rememberSaveable { mutableStateOf("") }
+    if (ticket != null && ticket.description.isEmpty()) return
+    var description by rememberSaveable { mutableStateOf(ticket?.description ?: "") }
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.description),
@@ -341,7 +342,8 @@ fun TicketDescription(ticket: Ticket?, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
+private fun TicketCustomerDetail(ticket: Ticket?, modifier: Modifier = Modifier) {
+    if (ticket != null && ticket.customerName.isEmpty()) return
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.customer_details),
@@ -360,8 +362,8 @@ private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifi
                 .padding(top = 4.dp)
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text(text = customer.name)
-                Text(text = customer.address)
+                Text(text = ticket?.customerName ?: "")
+                Text(text = ticket?.customerName ?: "")
             }
         }
     }

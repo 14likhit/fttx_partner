@@ -14,5 +14,6 @@ fun getTicket() = Ticket(
     status = "Assigned",
     customer = getCustomer(),
     priority = "High",
-    customerName = "John Doe"
+    customerName = "John Doe",
+    description = "Test"
 )

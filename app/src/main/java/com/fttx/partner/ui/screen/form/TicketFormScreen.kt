@@ -1,6 +1,7 @@
 package com.fttx.partner.ui.screen.form
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -84,14 +85,14 @@ fun TicketFormScreen(
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
-    var status by rememberSaveable { mutableStateOf("") }
+    var status by rememberSaveable { mutableStateOf(ticket?.status ?: TicketStatusUiModel.Assigned.status) }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
     val context = LocalContext.current
     Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         Column {
             FTTXTopAppBar(
-                title = ticket?.let { stringResource(R.string.edit_ticket) } ?: stringResource(
+                title = ticket?.let { stringResource(R.string.update_ticket) } ?: stringResource(
                     R.string.add_ticket
                 ),
                 backIcon = {
@@ -139,15 +140,22 @@ fun TicketFormScreen(
                             .padding(bottom = 8.dp)
                     )
                 }
-                Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                    onTriggerIntent(
-                        TicketFormIntent.UpdateTicketCta(
-                            ticket?.id?.toInt() ?: -1,
-                            status
+                Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                    enabled = if (ticket != null) {
+                        Log.e("Test","${ticket.status} $status")
+                        ticket.status != status
+                    } else {
+                        true
+                    },
+                    onClick = {
+                        onTriggerIntent(
+                            TicketFormIntent.UpdateTicketCta(
+                                ticket?.id?.toInt() ?: -1,
+                                status
+                            )
                         )
-                    )
-                }) {
-                    Text(text = ticket?.let { stringResource(R.string.edit_ticket) }
+                    }) {
+                    Text(text = ticket?.let { stringResource(R.string.update_ticket) }
                         ?: stringResource(
                             R.string.add_ticket
                         ))

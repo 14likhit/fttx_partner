@@ -2,6 +2,8 @@ package com.fttx.partner.data.source.remote.ticket
 
 import com.fttx.partner.data.model.TicketUpdateDto
 import com.fttx.partner.data.model.UserTicketDto
+import com.fttx.partner.data.network.util.EndPoints.Ticket.QUERY_LATITUDE
+import com.fttx.partner.data.network.util.EndPoints.Ticket.QUERY_LONGITUDE
 import com.fttx.partner.data.network.util.EndPoints.Ticket.QUERY_STATUS
 import com.fttx.partner.data.network.util.EndPoints.Ticket.QUERY_TICKET_ID
 import com.fttx.partner.data.network.util.EndPoints.Ticket.QUERY_USER_ID
@@ -22,5 +24,7 @@ interface TicketApiServices {
     suspend fun updateTicket(
         @Query(QUERY_TICKET_ID) ticketId: Int,
         @Query(QUERY_STATUS) status: String,
+        @Query(QUERY_LATITUDE) latitude: Double,
+        @Query(QUERY_LONGITUDE) longitude: Double
     ): Response<TicketUpdateDto>
 }

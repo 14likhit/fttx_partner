@@ -13,12 +13,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.utils.location.getCurrentLocation
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ fun TicketFormRoute(
 
     val uiState by ticketFormViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         ticketFormViewModel.uiEffect.onEach {
@@ -41,6 +44,26 @@ fun TicketFormRoute(
                 TicketFormEffect.NavigateToAddTicket -> {}
                 is TicketFormEffect.NavigateToTicketDetails -> {}
                 TicketFormEffect.NavigateToTicketList -> onBackPress(true)
+                is TicketFormEffect.FetchLocation -> {
+                    getCurrentLocation(context,
+                        onGetCurrentLocationSuccess = { location ->
+                            coroutineScope.launch {
+                                ticketFormViewModel.intents.send(
+                                    TicketFormIntent.UpdateTicket(
+                                        it.ticketId,
+                                        it.ticketStatus,
+                                        location
+                                    )
+                                )
+                            }
+                        },
+                        onGetLastLocationIsNull = {
+
+                        },
+                        onGetCurrentLocationFailed = {
+
+                        })
+                }
             }
         }.collect()
     }

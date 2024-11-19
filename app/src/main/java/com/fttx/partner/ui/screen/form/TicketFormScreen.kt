@@ -87,6 +87,7 @@ fun TicketFormScreen(
     var status by rememberSaveable { mutableStateOf("") }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
+    val context = LocalContext.current
     Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         Column {
             FTTXTopAppBar(
@@ -160,13 +161,17 @@ fun TicketFormScreen(
 private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
     var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
     var isNameError by rememberSaveable { mutableStateOf(false) }
-    Column {
-        Text(text = stringResource(R.string.title))
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.title),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
         TextField(
             value = title,
             enabled = ticket == null,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 4.dp)
                 .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
             onValueChange = {
                 if (it.length > 10) {
@@ -220,16 +225,20 @@ private fun TicketStatus(
     dropDownSelection: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         val currentStatus = TicketStatusUiModel.fromStatus(ticket?.status ?: "")
         val statuses = TicketStatusUiModel.entries.filter { it.order > currentStatus.order }
         var expanded by remember { mutableStateOf(false) }
         var selectedStatus by remember { mutableStateOf(currentStatus) }
-        Text(text = stringResource(R.string.status))
+        Text(
+            text = stringResource(R.string.status),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
         ExposedDropdownMenuBox(
             expanded = expanded,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 4.dp),
             onExpandedChange = { expanded = !expanded }) {
             TextField(
                 modifier = Modifier
@@ -285,44 +294,62 @@ private fun TicketStatus(
 @Composable
 fun TicketDescription(ticket: Ticket?, modifier: Modifier = Modifier) {
     var description by rememberSaveable { mutableStateOf("") }
-    Column {
-        Text(text = stringResource(R.string.description))
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.description),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
         TextField(
             value = description,
             enabled = ticket == null,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 4.dp)
                 .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
+            onValueChange = { description = it },
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.description),
+                    color = if (ticket != null) Color.Black else CoolGray50
+                )
+            },
             colors = TextFieldDefaults.colors().copy(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
                 disabledContainerColor = Color.White,
                 errorContainerColor = Color.White,
+                disabledTextColor = Color.Black,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
             ),
-            onValueChange = { description = it },
-            placeholder = { Text(text = stringResource(R.string.description), color = CoolGray50) },
         )
     }
 }
 
 @Composable
 private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
-    OutlinedCard(
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.White,
-        ),
-        border = BorderStroke(
-            width = 2.dp,
-            color = CoolGray05
-        ),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Text(text = customer.name)
-            Text(text = customer.address)
+    Column(modifier = modifier) {
+        Text(
+            text = stringResource(R.string.customer_details),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
+        OutlinedCard(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.White,
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = CoolGray05
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                Text(text = customer.name)
+                Text(text = customer.address)
+            }
         }
     }
 }

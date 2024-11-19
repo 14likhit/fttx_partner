@@ -1,6 +1,5 @@
 package com.fttx.partner.data.source.remote.ticket
 
-import android.util.Log
 import com.fttx.partner.data.mapper.TicketUpdateMapper
 import com.fttx.partner.data.mapper.UserTicketMapper
 import com.fttx.partner.data.network.service.ApiCallerService
@@ -26,10 +25,11 @@ class TicketRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun updateTicket(
         ticketId: Int,
-        status: String
+        status: String,
+        location: Pair<Double, Double>
     ): NetworkResultWrapper<TicketUpdate> {
         apiCallerService.safeApiCall {
-            apiServices.updateTicket(ticketId, status)
+            apiServices.updateTicket(ticketId, status, location.first, location.second)
         }.onSuccess {
             return NetworkResultWrapper.Success(
                 TicketUpdateMapper.mapTicketUpdateDtoToTicketUpdate(

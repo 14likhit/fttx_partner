@@ -11,6 +11,11 @@ sealed class TicketFormIntent : IIntent {
     data class TicketCardCta(val ticket: Ticket) : TicketFormIntent()
     data object AddCta : TicketFormIntent()
     data class UpdateTicketCta(val ticketId: Int, val ticketStatus: String) : TicketFormIntent()
+    data class UpdateTicket(
+        val ticketId: Int,
+        val ticketStatus: String,
+        val location: Pair<Double, Double>
+    ) : TicketFormIntent()
 }
 
 sealed class TicketFormEffect : IEffect {
@@ -18,6 +23,7 @@ sealed class TicketFormEffect : IEffect {
     data class NavigateToTicketDetails(val ticket: Ticket) : TicketFormEffect()
     data object NavigateToAddTicket : TicketFormEffect()
     data object NavigateToTicketList : TicketFormEffect()
+    data class FetchLocation(val ticketId: Int, val ticketStatus: String) : TicketFormEffect()
 }
 
 data class TicketFormState(

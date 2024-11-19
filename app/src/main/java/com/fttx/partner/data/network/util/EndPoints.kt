@@ -14,5 +14,7 @@ object EndPoints {
         const val UPDATE_TICKET = "updateticket"
         const val QUERY_TICKET_ID = "ticket_id"
         const val QUERY_STATUS = "status"
+        const val QUERY_LATITUDE = "latitude"
+        const val QUERY_LONGITUDE = "longitude"
     }
 }

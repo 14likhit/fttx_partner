@@ -53,19 +53,33 @@ class TicketFormViewModel @Inject constructor(
                     }
 
                     is TicketFormIntent.UpdateTicketCta -> {
-                        updateTicket(it.ticketId,it.ticketStatus)
+                        getLocation(it.ticketId, it.ticketStatus)
+                    }
+
+                    is TicketFormIntent.UpdateTicket -> {
+                        updateTicket(it.ticketId, it.ticketStatus, it.location)
                     }
                 }
             }
         }
     }
 
-    private suspend fun updateTicket(ticketId: Int, status: String) {
+    private suspend fun getLocation(ticketId: Int, ticketStatus: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        when(val result = updateTicketUseCase(ticketId, status)){
+        _uiEffect.send(TicketFormEffect.FetchLocation(ticketId, ticketStatus))
+    }
+
+    private suspend fun updateTicket(
+        ticketId: Int,
+        status: String,
+        location: Pair<Double, Double>
+    ) {
+        _uiState.value = _uiState.value.copy(isLoading = true)
+        when (val result = updateTicketUseCase(ticketId, status, location)) {
             is SemaaiResult.Error -> {
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
+
             is SemaaiResult.Success -> {
                 _uiEffect.send(TicketFormEffect.NavigateToTicketList)
                 _uiState.value = _uiState.value.copy(isLoading = false)

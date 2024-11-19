@@ -16,8 +16,9 @@ class TicketRepositoryImpl @Inject constructor(
 
     override suspend fun updateTicket(
         ticketId: Int,
-        status: String
+        status: String,
+        location: Pair<Double, Double>
     ): NetworkResultWrapper<TicketUpdate> {
-        return ticketRemoteDataSource.updateTicket(ticketId, status)
+        return ticketRemoteDataSource.updateTicket(ticketId, status, location)
     }
 }

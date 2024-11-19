@@ -12,4 +12,5 @@
     <string name="description">Description</string>
     <string name="priority">Priority</string>
     <string name="estimated_completion_date">Estimated Completion Date</string>
+    <string name="customer_details">Customer Details</string>
 </resources>

@@ -7,6 +7,6 @@ import com.fttx.partner.domain.model.UserTicket
 interface ITicketRepository {
 
     suspend fun getTicket(userId: Int): NetworkResultWrapper<UserTicket>
-    suspend fun updateTicket(ticketId: Int, status: String): NetworkResultWrapper<TicketUpdate>
+    suspend fun updateTicket(ticketId: Int, status: String,location: Pair<Double, Double>): NetworkResultWrapper<TicketUpdate>
 
 }

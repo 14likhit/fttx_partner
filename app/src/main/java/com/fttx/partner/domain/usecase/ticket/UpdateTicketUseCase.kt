@@ -14,11 +14,13 @@ class UpdateTicketUseCase @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider
 ) {
 
-    suspend operator fun invoke(ticketId: Int, status: String): SemaaiResult<TicketUpdate, UiText> =
+    suspend operator fun invoke(
+        ticketId: Int, status: String, location: Pair<Double, Double>
+    ): SemaaiResult<TicketUpdate, UiText> =
         coroutineDispatcherProvider.switchToIO {
             executeSafeCall(
                 block = {
-                    when (val result = ticketRepository.updateTicket(ticketId, status)) {
+                    when (val result = ticketRepository.updateTicket(ticketId, status, location)) {
                         is NetworkResultWrapper.Error -> {
                             SemaaiResult.Error(UiText.DynamicString(result.message.orEmpty()))
                         }

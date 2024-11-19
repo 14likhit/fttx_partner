@@ -85,10 +85,13 @@ fun TicketFormScreen(
     modifier: Modifier = Modifier
 ) {
     val maxLength = 10
-    var status by rememberSaveable { mutableStateOf(ticket?.status ?: TicketStatusUiModel.Assigned.status) }
+    var status by rememberSaveable {
+        mutableStateOf(
+            ticket?.status ?: TicketStatusUiModel.Assigned.status
+        )
+    }
     var priority by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableLongStateOf(0L) }
-    val context = LocalContext.current
     Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         Column {
             FTTXTopAppBar(
@@ -129,20 +132,20 @@ fun TicketFormScreen(
                         TicketCustomerDetail(customer = it)
                     }
                 }
-                if (ticket == null) {
-                    TicketPriority(
-                        dropDownSelection = { priority = it },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    EstimatedEndDateCompletion(
-                        { endDate = it }, modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    )
-                }
+                TicketPriority(
+                    ticket = ticket,
+                    dropDownSelection = { priority = it },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                EstimatedEndDateCompletion(
+                    ticket = ticket,
+                    { endDate = it }, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally),
                     enabled = if (ticket != null) {
-                        Log.e("Test","${ticket.status} $status")
+                        Log.e("Test", "${ticket.status} $status")
                         ticket.status != status
                     } else {
                         true
@@ -364,12 +367,19 @@ private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifier = Modifier) {
+private fun TicketPriority(
+    ticket: Ticket?,
+    dropDownSelection: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
-        Text(text = stringResource(R.string.priority))
+        Text(
+            text = stringResource(R.string.priority),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
         val priorities = listOf("High", "Medium", "Low")
         var expanded by remember { mutableStateOf(false) }
-        var selectedPriority by remember { mutableStateOf(priorities[0]) }
+        var selectedPriority by remember { mutableStateOf(ticket?.priority ?: priorities[0]) }
         ExposedDropdownMenuBox(
             expanded = expanded,
             modifier = Modifier.background(color = Color.White),
@@ -377,7 +387,8 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
             TextField(
                 modifier = Modifier
                     .menuAnchor()
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
                 readOnly = true,
                 value = selectedPriority,
                 onValueChange = {},
@@ -388,33 +399,42 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
                             .size(24.dp)
                     )
                 },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors().copy(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-                    errorContainerColor = Color.White,
+                trailingIcon = {
+                    if (ticket == null) {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                },
+                colors = TextFieldDefaults.colors().copy(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
                 )
             )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                modifier = Modifier.background(color = Color.White),
-                onDismissRequest = { expanded = false }) {
-                priorities.forEach { priority ->
-                    DropdownMenuItem(
-                        text = { Text(text = priority) },
-                        leadingIcon = {
-                            Box(
-                                modifier = Modifier
-                                    .background(Color.Red)
-                                    .size(8.dp)
-                            )
-                        },
-                        onClick = {
-                            selectedPriority = priority
-                            dropDownSelection(selectedPriority)
-                            expanded = false
-                        })
+            if (ticket == null) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    modifier = Modifier.background(color = Color.White),
+                    onDismissRequest = { expanded = false }) {
+                    priorities.forEach { priority ->
+                        DropdownMenuItem(
+                            text = { Text(text = priority) },
+                            leadingIcon = {
+                                Box(
+                                    modifier = Modifier
+                                        .background(Color.Red)
+                                        .size(8.dp)
+                                )
+                            },
+                            onClick = {
+                                selectedPriority = priority
+                                dropDownSelection(selectedPriority)
+                                expanded = false
+                            })
+                    }
                 }
             }
         }
@@ -422,9 +442,15 @@ private fun TicketPriority(dropDownSelection: (String) -> Unit, modifier: Modifi
 }
 
 @Composable
-private fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifier = Modifier) {
+private fun EstimatedEndDateCompletion(
+    ticket: Ticket?,
+    endDate: (Long) -> Unit, modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
-        Text(text = stringResource(R.string.estimated_completion_date))
+        Text(
+            text = stringResource(R.string.estimated_completion_date),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed: Boolean by interactionSource.collectIsPressedAsState()
         val currentDate = Date().toFormattedString()
@@ -452,17 +478,23 @@ private fun EstimatedEndDateCompletion(endDate: (Long) -> Unit, modifier: Modifi
         )
 
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+                .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
             readOnly = true,
             value = selectedDate,
             onValueChange = {},
             trailingIcon = { Icons.Default.DateRange },
-            interactionSource = interactionSource,
+            interactionSource = if (ticket == null) interactionSource else null,
             colors = TextFieldDefaults.colors().copy(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                disabledContainerColor = Color.White,
-                errorContainerColor = Color.White,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
             )
         )
 

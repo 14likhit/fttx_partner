@@ -135,7 +135,12 @@ fun TicketFormScreen(
                         .padding(bottom = 8.dp)
                 )
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                    onTriggerIntent(TicketFormIntent.UpdateTicketCta(ticket?.id?.toInt() ?: -1, status))
+                    onTriggerIntent(
+                        TicketFormIntent.UpdateTicketCta(
+                            ticket?.id?.toInt() ?: -1,
+                            status
+                        )
+                    )
                 }) {
                     Text(text = ticket?.let { stringResource(R.string.edit_ticket) }
                         ?: stringResource(
@@ -155,9 +160,10 @@ private fun TicketStatus(
     modifier: Modifier = Modifier
 ) {
     Column {
-        val statuses = TicketStatusUiModel.entries.toList()
+        val currentStatus = TicketStatusUiModel.fromStatus(ticket?.status ?: "")
+        val statuses = TicketStatusUiModel.entries.filter { it.order > currentStatus.order }
         var expanded by remember { mutableStateOf(false) }
-        var selectedStatus by remember { mutableStateOf(TicketStatusUiModel.fromStatus(ticket?.status ?: "")) }
+        var selectedStatus by remember { mutableStateOf(currentStatus) }
         Text(text = stringResource(R.string.status))
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -172,7 +178,11 @@ private fun TicketStatus(
                 readOnly = true,
                 value = selectedStatus.status,
                 onValueChange = {},
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                trailingIcon = {
+                    if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                },
                 colors = TextFieldDefaults.colors().copy(
                     focusedTextColor = selectedStatus.textColor,
                     unfocusedTextColor = selectedStatus.textColor,
@@ -184,22 +194,24 @@ private fun TicketStatus(
                     errorContainerColor = selectedStatus.backgroundColor,
                 )
             )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.background(color = Color.White)
-            ) {
-                statuses.forEach { status ->
-                    DropdownMenuItem(
-                        text = { Text(text = status.status) },
-                        colors = MenuDefaults.itemColors().copy(
-                            textColor = status.textColor,
-                        ),
-                        onClick = {
-                            selectedStatus = status
-                            dropDownSelection(selectedStatus.status)
-                            expanded = false
-                        })
+            if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(color = Color.White)
+                ) {
+                    statuses.forEach { status ->
+                        DropdownMenuItem(
+                            text = { Text(text = status.status) },
+                            colors = MenuDefaults.itemColors().copy(
+                                textColor = status.textColor,
+                            ),
+                            onClick = {
+                                selectedStatus = status
+                                dropDownSelection(selectedStatus.status)
+                                expanded = false
+                            })
+                    }
                 }
             }
         }

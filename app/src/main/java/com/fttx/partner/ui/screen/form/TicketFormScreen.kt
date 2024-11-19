@@ -50,6 +50,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -61,6 +62,7 @@ import com.fttx.partner.R
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
+import com.fttx.partner.ui.compose.model.TicketPriorityUiModel
 import com.fttx.partner.ui.compose.model.TicketStatusUiModel
 import com.fttx.partner.ui.compose.theme.Caption01Regular
 import com.fttx.partner.ui.compose.theme.CoolGray05
@@ -377,9 +379,10 @@ private fun TicketPriority(
             text = stringResource(R.string.priority),
             style = Caption01Regular.copy(color = CoolGray50)
         )
-        val priorities = listOf("High", "Medium", "Low")
+        val currentPriority = TicketPriorityUiModel.fromPriority(ticket?.priority ?: "")
+        val priorities = TicketPriorityUiModel.entries
         var expanded by remember { mutableStateOf(false) }
-        var selectedPriority by remember { mutableStateOf(ticket?.priority ?: priorities[0]) }
+        var selectedPriority by remember { mutableStateOf(currentPriority) }
         ExposedDropdownMenuBox(
             expanded = expanded,
             modifier = Modifier.background(color = Color.White),
@@ -390,13 +393,14 @@ private fun TicketPriority(
                     .fillMaxWidth()
                     .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
                 readOnly = true,
-                value = selectedPriority,
+                value = selectedPriority.priority,
                 onValueChange = {},
                 leadingIcon = {
                     Box(
                         modifier = Modifier
-                            .background(Color.Red)
                             .size(24.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(selectedPriority.backgroundColor),
                     )
                 },
                 trailingIcon = {
@@ -421,17 +425,17 @@ private fun TicketPriority(
                     onDismissRequest = { expanded = false }) {
                     priorities.forEach { priority ->
                         DropdownMenuItem(
-                            text = { Text(text = priority) },
+                            text = { Text(text = priority.priority) },
                             leadingIcon = {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color.Red)
+                                        .background(priority.backgroundColor)
                                         .size(8.dp)
                                 )
                             },
                             onClick = {
                                 selectedPriority = priority
-                                dropDownSelection(selectedPriority)
+                                dropDownSelection(selectedPriority.priority)
                                 expanded = false
                             })
                     }

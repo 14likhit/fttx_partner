@@ -2,6 +2,7 @@ package com.fttx.partner.ui.screen.form
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -117,6 +119,7 @@ fun TicketFormScreen(
                 }
                 TicketTitle(ticket = ticket)
                 TicketStatus(ticket = ticket, dropDownSelection = { status = it })
+                TicketDescription(ticket = ticket)
                 ticket?.let {
                     TicketCustomerDetail(customer = it.customer)
                 } ?: run {
@@ -124,16 +127,17 @@ fun TicketFormScreen(
                         TicketCustomerDetail(customer = it)
                     }
                 }
-                TicketDescription()
-                TicketPriority(
-                    dropDownSelection = { priority = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                EstimatedEndDateCompletion(
-                    { endDate = it }, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                )
+                if (ticket == null) {
+                    TicketPriority(
+                        dropDownSelection = { priority = it },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    EstimatedEndDateCompletion(
+                        { endDate = it }, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    )
+                }
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
                     onTriggerIntent(
                         TicketFormIntent.UpdateTicketCta(
@@ -152,87 +156,6 @@ fun TicketFormScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TicketStatus(
-    ticket: Ticket?,
-    dropDownSelection: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column {
-        val currentStatus = TicketStatusUiModel.fromStatus(ticket?.status ?: "")
-        val statuses = TicketStatusUiModel.entries.filter { it.order > currentStatus.order }
-        var expanded by remember { mutableStateOf(false) }
-        var selectedStatus by remember { mutableStateOf(currentStatus) }
-        Text(text = stringResource(R.string.status))
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            modifier = Modifier
-                .background(color = selectedStatus.backgroundColor)
-                .fillMaxWidth(),
-            onExpandedChange = { expanded = !expanded }) {
-            TextField(
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                readOnly = true,
-                value = selectedStatus.status,
-                onValueChange = {},
-                trailingIcon = {
-                    if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    }
-                },
-                colors = TextFieldDefaults.colors().copy(
-                    focusedTextColor = selectedStatus.textColor,
-                    unfocusedTextColor = selectedStatus.textColor,
-                    disabledTextColor = selectedStatus.textColor,
-                    errorTextColor = selectedStatus.textColor,
-                    focusedContainerColor = selectedStatus.backgroundColor,
-                    unfocusedContainerColor = selectedStatus.backgroundColor,
-                    disabledContainerColor = selectedStatus.backgroundColor,
-                    errorContainerColor = selectedStatus.backgroundColor,
-                )
-            )
-            if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(color = Color.White)
-                ) {
-                    statuses.forEach { status ->
-                        DropdownMenuItem(
-                            text = { Text(text = status.status) },
-                            colors = MenuDefaults.itemColors().copy(
-                                textColor = status.textColor,
-                            ),
-                            onClick = {
-                                selectedStatus = status
-                                dropDownSelection(selectedStatus.status)
-                                expanded = false
-                            })
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
-    OutlinedCard(
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.White
-        ),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-            Text(text = customer.name)
-            Text(text = customer.address)
-        }
-    }
-}
-
 @Composable
 private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
     var title by rememberSaveable { mutableStateOf(ticket?.title ?: "") }
@@ -241,9 +164,10 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.title))
         TextField(
             value = title,
+            enabled = ticket == null,
             modifier = Modifier
                 .fillMaxWidth()
-                .border(2.dp, color = CoolGray05),
+                .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
             onValueChange = {
                 if (it.length > 10) {
                     isNameError = true
@@ -273,6 +197,10 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
                 unfocusedContainerColor = Color.White,
                 disabledContainerColor = Color.White,
                 errorContainerColor = Color.White,
+                disabledTextColor = Color.Black,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -285,24 +213,117 @@ private fun TicketTitle(ticket: Ticket?, modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TicketDescription(modifier: Modifier = Modifier) {
+private fun TicketStatus(
+    ticket: Ticket?,
+    dropDownSelection: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column {
+        val currentStatus = TicketStatusUiModel.fromStatus(ticket?.status ?: "")
+        val statuses = TicketStatusUiModel.entries.filter { it.order > currentStatus.order }
+        var expanded by remember { mutableStateOf(false) }
+        var selectedStatus by remember { mutableStateOf(currentStatus) }
+        Text(text = stringResource(R.string.status))
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            modifier = Modifier
+                .fillMaxWidth(),
+            onExpandedChange = { expanded = !expanded }) {
+            TextField(
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+                    .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
+                readOnly = true,
+                value = selectedStatus.status,
+                onValueChange = {},
+                trailingIcon = {
+                    if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                },
+                colors = TextFieldDefaults.colors().copy(
+                    focusedTextColor = selectedStatus.textColor,
+                    unfocusedTextColor = selectedStatus.textColor,
+                    disabledTextColor = selectedStatus.textColor,
+                    errorTextColor = selectedStatus.textColor,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                )
+            )
+            if ((currentStatus != TicketStatusUiModel.Complete) && (currentStatus != TicketStatusUiModel.Invalid)) {
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.background(color = Color.White)
+                ) {
+                    statuses.forEach { status ->
+                        DropdownMenuItem(
+                            text = { Text(text = status.status) },
+                            colors = MenuDefaults.itemColors().copy(
+                                textColor = status.textColor,
+                            ),
+                            onClick = {
+                                selectedStatus = status
+                                dropDownSelection(selectedStatus.status)
+                                expanded = false
+                            })
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TicketDescription(ticket: Ticket?, modifier: Modifier = Modifier) {
     var description by rememberSaveable { mutableStateOf("") }
     Column {
         Text(text = stringResource(R.string.description))
         TextField(
             value = description,
+            enabled = ticket == null,
             modifier = Modifier
                 .fillMaxWidth()
-                .border(2.dp, color = CoolGray05),
+                .border(2.dp, color = CoolGray05, shape = RoundedCornerShape(8.dp)),
             colors = TextFieldDefaults.colors().copy(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White,
                 disabledContainerColor = Color.White,
                 errorContainerColor = Color.White,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
             ),
             onValueChange = { description = it },
-            placeholder = { Text(text = stringResource(R.string.description), color = CoolGray50) })
+            placeholder = { Text(text = stringResource(R.string.description), color = CoolGray50) },
+        )
+    }
+}
+
+@Composable
+private fun TicketCustomerDetail(customer: Customer, modifier: Modifier = Modifier) {
+    OutlinedCard(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.White,
+        ),
+        border = BorderStroke(
+            width = 2.dp,
+            color = CoolGray05
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            Text(text = customer.name)
+            Text(text = customer.address)
+        }
     }
 }
 

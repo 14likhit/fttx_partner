@@ -27,24 +27,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.model.TicketStatusUiModel
-import com.fttx.partner.ui.compose.theme.Caption01Bold
-import com.fttx.partner.ui.compose.theme.Caption01Regular
-import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
-import com.fttx.partner.ui.compose.theme.Heading01Medium
-import com.fttx.partner.ui.compose.theme.Purple80
-import com.fttx.partner.ui.compose.theme.Subheading03Bold
+import com.fttx.partner.ui.compose.theme.Grape70
+import com.fttx.partner.ui.compose.theme.Subheading01Bold
 import com.fttx.partner.ui.compose.theme.Text01Bold
-import com.fttx.partner.ui.compose.theme.Text01Medium
 import com.fttx.partner.ui.compose.theme.Text01Regular
+import com.fttx.partner.ui.mock.getTicket
 import com.fttx.partner.ui.utils.clickable
 
 @Composable
 fun TicketCard(
     ticket: Ticket,
+    modifier: Modifier = Modifier,
     onCardClick: (Ticket) -> Unit = {},
     onCallClick: (Ticket) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     OutlinedCard(
         onClick = { onCardClick(ticket) },
@@ -57,8 +53,8 @@ fun TicketCard(
             Row {
                 Text(
                     text = ticket.category,
-                    style = Caption01Bold,
-                    color = Purple80,
+                    style = Subheading01Bold,
+                    color = Grape70,
                     modifier = Modifier.weight(1f)
                 )
                 val ticketStatus = TicketStatusUiModel.fromStatus(ticket.status)
@@ -71,7 +67,8 @@ fun TicketCard(
                         .background(
                             ticketStatus.backgroundColor,
                             shape = RoundedCornerShape(16.dp)
-                        ).padding(horizontal = 16.dp)
+                        )
+                        .padding(horizontal = 16.dp)
                 )
                 Box(
                     modifier = Modifier

@@ -68,6 +68,8 @@ import com.fttx.partner.ui.compose.theme.Caption01Regular
 import com.fttx.partner.ui.compose.theme.CoolGray05
 import com.fttx.partner.ui.compose.theme.CoolGray50
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
+import com.fttx.partner.ui.compose.theme.Grape70
+import com.fttx.partner.ui.compose.theme.Subheading01Bold
 import com.fttx.partner.ui.compose.theme.Text01Bold
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
@@ -121,7 +123,11 @@ fun TicketFormScreen(
                 ticket?.let {
                     Row {
                         Text(text = ticket.id, style = Text01Bold, modifier = Modifier.weight(1f))
-                        Text(text = ticket.category, style = Text01Bold)
+                        Text(
+                            text = ticket.category,
+                            style = Subheading01Bold,
+                            color = Grape70,
+                        )
                     }
                 }
                 TicketTitle(ticket = ticket)

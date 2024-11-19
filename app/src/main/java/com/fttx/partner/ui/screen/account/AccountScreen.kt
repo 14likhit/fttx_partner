@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.account
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,11 +30,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fttx.partner.R
 import com.fttx.partner.domain.model.User
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
+import com.fttx.partner.ui.compose.theme.Caption01Regular
+import com.fttx.partner.ui.compose.theme.CoolGray05
+import com.fttx.partner.ui.compose.theme.CoolGray50
 import com.fttx.partner.ui.utils.NavigationIcon
 
 @Composable
@@ -114,15 +121,30 @@ fun MenuItem(
     value: String,
     modifier: Modifier = Modifier
 ) {
-    Row {
+    Column(modifier = modifier.padding(vertical = 4.dp)) {
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineMedium
+            style = Caption01Regular.copy(color = CoolGray50)
         )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.headlineMedium
-        )
+        OutlinedCard(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.White,
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = CoolGray05
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+        }
     }
 }
 
@@ -166,7 +188,7 @@ fun LogoutButton(onLogout: () -> Unit, modifier: Modifier = Modifier) {
 fun AccountScreenPreview() {
     MaterialTheme {
         AccountScreen(
-            user = User(-1, "John Doe", "", "",false),
+            user = User(-1, "John Doe", "", "", false),
             onTriggerIntent = {}, uiState = AccountState()
         )
     }

@@ -153,7 +153,6 @@ fun TicketFormScreen(
                 )
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally),
                     enabled = if (ticket != null) {
-                        Log.e("Test", "${ticket.status} $status")
                         ticket.status != status
                     } else {
                         true

@@ -54,21 +54,13 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val currentDate = remember { LocalDate.now() }
-    val startDate = remember { currentDate.minusDays(500) }
-    val endDate = remember { currentDate.plusDays(500) }
-    var selection by remember { mutableStateOf(currentDate) }
+
     Box {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White),
         ) {
-            val state = rememberWeekCalendarState(
-                startDate = startDate,
-                endDate = endDate,
-                firstVisibleWeekDate = currentDate,
-            )
-            val visibleWeek = rememberFirstVisibleWeekAfterScroll(state)
             FTTXTopAppBar(
                 title = "Home",
                 action = {
@@ -81,24 +73,6 @@ fun HomeScreen(
                                 onTriggerIntent(HomeIntent.AccountCta)
                             })
                 })
-            //todo -> if we have to use calendar need to evaluate calender crash.
-//            Column {
-//                WeekCalendar(
-//                    modifier = Modifier.background(color = colorResource(R.color.purple_700)),
-//                    state = state,
-//                    dayContent = { day ->
-//                        Day(day.date, isSelected = selection == day.date) { clicked ->
-//                            if (selection != clicked) {
-//                                selection = clicked
-//                            }
-//                        }
-//                    },
-//                )
-//                TicketList(
-//                    tickets = getTickets(),
-//                    onCardClick = onCardClick
-//                )
-//            }
             TicketList(
                 tickets = uiState.tickets,
                 onCardClick = {
@@ -123,50 +97,9 @@ fun HomeScreen(
     }
 }
 
-private val dateFormatter = DateTimeFormatter.ofPattern("dd")
-
-@Composable
-private fun Day(date: LocalDate, isSelected: Boolean, onClick: (LocalDate) -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable { onClick(date) },
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            modifier = Modifier.padding(vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            Text(
-                text = date.dayOfWeek.displayText(),
-                fontSize = 12.sp,
-                color = Color.White,
-                fontWeight = FontWeight.Light,
-            )
-            Text(
-                text = dateFormatter.format(date),
-                fontSize = 14.sp,
-                color = if (isSelected) colorResource(R.color.teal_200) else Color.White,
-                fontWeight = FontWeight.Bold,
-            )
-        }
-        if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(5.dp)
-                    .background(colorResource(R.color.teal_200))
-                    .align(Alignment.BottomCenter),
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
-private fun CalenderScreenPreview() {
+private fun HomeScreenPreview() {
     FTTXPartnerTheme {
         HomeScreen({}, HomeState())
     }

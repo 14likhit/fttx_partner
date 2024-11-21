@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -117,6 +118,22 @@ fun HomeRoute(
                     ) {
                         CircularProgressIndicator()
                     }
+                }
+            }
+        }
+
+        LocationPermissionState.LocationPermissionUnknown -> {
+            Dialog(
+                onDismissRequest = { },
+                DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(Color.White, shape = RoundedCornerShape(8.dp))
+                ) {
+                    CircularProgressIndicator()
                 }
             }
         }

@@ -55,6 +55,7 @@ class LoginViewModel @Inject constructor(
 
     private suspend fun checkLogin() {
         if (dataStorePreferences.isUserLoggedIn()) {
+            _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true)
             _uiEffect.send(LoginEffect.NavigateToHome)
         } else {
             _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = false)
@@ -67,7 +68,10 @@ class LoginViewModel @Inject constructor(
             viewModelScope.launch {
                 when (val result = loginUseCase(loginUiModel.login, loginUiModel.pwd)) {
                     is SemaaiResult.Error -> {
-                        _uiState.value = _uiState.value.copy(isLoading = false, errorLogin = "Invalid Credential")
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorLogin = "Invalid Credential"
+                        )
                     }
 
                     is SemaaiResult.Success -> {
@@ -77,13 +81,17 @@ class LoginViewModel @Inject constructor(
                             _uiState.value = _uiState.value.copy(isLoading = true)
                             _uiEffect.send(LoginEffect.NavigateToHome)
                         } else {
-                            _uiState.value = _uiState.value.copy(isLoading = false,errorLogin = "Invalid Credential")
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                errorLogin = "Invalid Credential"
+                            )
                         }
                     }
                 }
             }
         } else {
-            _uiState.value = _uiState.value.copy(isLoading = false,errorLogin = "Invalid Credential")
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, errorLogin = "Invalid Credential")
         }
     }
 }

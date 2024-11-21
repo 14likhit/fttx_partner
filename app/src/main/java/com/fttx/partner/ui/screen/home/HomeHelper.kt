@@ -32,7 +32,7 @@ sealed class HomeEffect : IEffect {
 
 data class HomeState(
     val id: Int = -1,
-    val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionDenied,
+    val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionUnknown,
     val user: User = User(-1, "", "", "", false),
     val tickets: List<Ticket> = emptyList(),
     val isLoading : Boolean = false
@@ -41,5 +41,6 @@ data class HomeState(
 enum class LocationPermissionState() {
     LocationPermissionGranted,
     LocationPermissionDenied,
-    LocationPermissionRevoked
+    LocationPermissionRevoked,
+    LocationPermissionUnknown
 }

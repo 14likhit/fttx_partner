@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.login
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -81,7 +82,11 @@ fun LoginScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = "Logo", modifier = Modifier.padding(bottom = 16.dp))
+                Image(
+                    painter = painterResource(id = R.drawable.ic_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
                 LoginField(
                     value = credentials.login,
                     onChange = { data ->
@@ -104,6 +109,9 @@ fun LoginScreen(
                 ) {
                     Text(text = "Login")
                 }
+            }
+            if (uiState.errorLogin.isNotEmpty()) {
+                Toast.makeText(context, uiState.errorLogin, Toast.LENGTH_SHORT).show()
             }
         }
     }

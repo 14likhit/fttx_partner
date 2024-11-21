@@ -95,11 +95,11 @@ class HomeViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true)
             when (val result = getTicketUseCase(userId)) {
                 is SemaaiResult.Error -> {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    _uiState.value = _uiState.value.copy(isLoading = false, error = "Something Went Wrong")
                 }
                 is SemaaiResult.Success -> {
                     _uiState.value =
-                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user, isLoading = false)
+                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user, isLoading = false, error = "")
                 }
             }
         }

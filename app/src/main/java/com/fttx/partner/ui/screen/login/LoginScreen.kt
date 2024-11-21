@@ -105,12 +105,12 @@ fun LoginScreen(
                     onClick = {
                         onTriggerIntent(LoginIntent.LoginCta(credentials))
                     },
-                    enabled = credentials.isNotEmpty(),
+                    enabled = credentials.isNotBlank(),
                 ) {
                     Text(text = "Login")
                 }
             }
-            if (uiState.errorLogin.isNotEmpty()) {
+            if (uiState.errorLogin.isNotBlank()) {
                 Toast.makeText(context, uiState.errorLogin, Toast.LENGTH_SHORT).show()
             }
         }

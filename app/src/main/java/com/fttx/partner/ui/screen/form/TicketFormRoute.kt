@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.form
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -93,5 +94,8 @@ fun TicketFormRoute(
                 CircularProgressIndicator()
             }
         }
+    }
+    if (uiState.error.isNotBlank()) {
+        Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
     }
 }

@@ -28,7 +28,8 @@ sealed class TicketFormEffect : IEffect {
 
 data class TicketFormState(
     val id: Int = -1,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val error: String = "",
 ) : IState
 
 enum class TicketFormScreenType(val type: String) {

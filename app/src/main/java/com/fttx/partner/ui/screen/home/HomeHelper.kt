@@ -35,7 +35,8 @@ data class HomeState(
     val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionUnknown,
     val user: User = User(-1, "", "", "", false),
     val tickets: List<Ticket> = emptyList(),
-    val isLoading : Boolean = false
+    val isLoading : Boolean = false,
+    val error: String = "",
 ) : IState
 
 enum class LocationPermissionState() {

@@ -5,7 +5,7 @@ data class LoginUiModel(
     var pwd: String = "",
     var remember: Boolean = false
 ) {
-    fun isNotEmpty(): Boolean {
-        return login.isNotEmpty() && pwd.isNotEmpty()
+    fun isNotBlank(): Boolean {
+        return login.isNotBlank() && pwd.isNotBlank()
     }
 }

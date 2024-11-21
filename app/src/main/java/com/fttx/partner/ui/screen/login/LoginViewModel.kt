@@ -63,7 +63,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private suspend fun checkCredentials(loginUiModel: LoginUiModel) {
-        if (loginUiModel.isNotEmpty()) {
+        if (loginUiModel.isNotBlank()) {
             _uiState.value = _uiState.value.copy(isLoading = true)
             viewModelScope.launch {
                 when (val result = loginUseCase(loginUiModel.login, loginUiModel.pwd)) {

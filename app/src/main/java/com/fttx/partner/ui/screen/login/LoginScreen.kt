@@ -1,10 +1,14 @@
 package com.fttx.partner.ui.screen.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -13,6 +17,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +36,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,6 +44,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.fttx.partner.R
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 
@@ -53,7 +61,19 @@ fun LoginScreen(
 
     Surface(color = Color.White, modifier = modifier.fillMaxSize()) {
         if (uiState.isLoading) {
-            onTriggerIntent(LoginIntent.Init)
+            Dialog(
+                onDismissRequest = { },
+                DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .background(Color.White, shape = RoundedCornerShape(8.dp))
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
         } else if (uiState.isLoggedIn.not()) {
             Column(
                 modifier = modifier.fillMaxSize(),
@@ -72,7 +92,6 @@ fun LoginScreen(
                     onChange = { data ->
                         credentials = credentials.copy(pwd = data)
                     },
-                    submit = {},
                     modifier = Modifier.padding(16.dp)
                 )
                 Button(
@@ -133,13 +152,13 @@ fun LoginField(
 fun PasswordField(
     value: String,
     onChange: (String) -> Unit,
-    submit: () -> Unit,
     modifier: Modifier = Modifier,
     label: String = "Password",
     placeholder: String = "Enter your Password"
 ) {
 
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val leadingIcon = @Composable {
         Icon(
@@ -176,7 +195,9 @@ fun PasswordField(
             keyboardType = KeyboardType.Password
         ),
         keyboardActions = KeyboardActions(
-            onDone = { submit() }
+            onDone = {
+                keyboardController?.hide()
+            }
         ),
         placeholder = { Text(placeholder) },
         label = { Text(label) },

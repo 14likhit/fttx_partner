@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.dagger.hilt)
     id("kotlin-parcelize")
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -63,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.datastore.android)
+    implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

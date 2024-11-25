@@ -124,7 +124,7 @@ fun TicketFormScreen(
                     Row {
                         Text(text = ticket.id, style = Text01Bold, modifier = Modifier.weight(1f))
                         Text(
-                            text = ticket.category,
+                            text = ticket.ticketType,
                             style = Subheading01Bold,
                             color = Grape70,
                         )
@@ -368,7 +368,7 @@ private fun TicketCustomerDetail(ticket: Ticket?, modifier: Modifier = Modifier)
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 Text(text = ticket?.customerName ?: "")
-                Text(text = ticket?.customerName ?: "")
+                Text(text = ticket?.customerAddress ?: "")
             }
         }
     }

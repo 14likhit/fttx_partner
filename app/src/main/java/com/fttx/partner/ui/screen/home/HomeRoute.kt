@@ -83,7 +83,7 @@ fun HomeRoute(
                 }
 
                 is HomeEffect.NavigateToAccount -> navigateToAccountActivity(it.user)
-                is HomeEffect.NavigateToCall -> navigateToCallerActivity(it.ticket.customer.phone)
+                is HomeEffect.NavigateToCall -> navigateToCallerActivity("+91${it.ticket.customerMobile}")
                 HomeEffect.NavigateToLocationPermissionRequiredPopUp -> {
                     isPermissionAsked.value = true
                 }

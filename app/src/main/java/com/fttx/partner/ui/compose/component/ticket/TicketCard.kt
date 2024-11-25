@@ -52,9 +52,8 @@ fun TicketCard(
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Row {
                 Text(
-                    text = ticket.category,
-                    style = Subheading01Bold,
-                    color = Grape70,
+                    text = ticket.id,
+                    style = Text01Bold,
                     modifier = Modifier.weight(1f)
                 )
                 val ticketStatus = TicketStatusUiModel.fromStatus(ticket.status)
@@ -84,17 +83,10 @@ fun TicketCard(
                     .height(IntrinsicSize.Min)
             ) {
                 Text(
-                    text = ticket.id,
-                    style = Text01Bold
-                )
-                VerticalDivider(
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    thickness = 2.dp,
-                    color = Color.Black
-                )
-                Text(
-                    text = ticket.time,
-                    style = Text01Bold
+                    text = ticket.ticketType,
+                    style = Subheading01Bold,
+                    color = Grape70,
+                    modifier = Modifier.weight(1f)
                 )
             }
             Text(
@@ -109,7 +101,7 @@ fun TicketCard(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             Row {
-                Text(text = ticket.customer.address, modifier = Modifier.weight(1f))
+                Text(text = ticket.customerAddress, modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.Call,
                     contentDescription = "call",

@@ -7,11 +7,11 @@ import kotlinx.parcelize.Parcelize
 data class Ticket(
     val id: String,
     val title: String,
-    val time: String,
-    val category: String,
+    val description: String,
+    val ticketType: String,
     val status: String,
     val priority: String,
     val customerName: String,
-    val customer: Customer,
-    val description: String,
+    val customerMobile: String,
+    val customerAddress: String
 ) : Parcelable

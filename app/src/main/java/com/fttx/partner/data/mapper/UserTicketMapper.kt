@@ -31,20 +31,13 @@ object UserTicketMapper {
         return Ticket(
             id = ticketDto?.id ?: "",
             title = ticketDto?.title ?: "",
-            time = ticketDto?.time ?: "",
-            category = ticketDto?.category ?: "New Connection",
+            description = ticketDto?.description ?: "",
+            ticketType = ticketDto?.ticketType ?: "",
             status = ticketDto?.status ?: "",
             priority = ticketDto?.priority ?: "",
             customerName = ticketDto?.customerName ?: "",
-            customer = Customer(
-                id = ticketDto?.customer?.id ?: 0,
-                name = ticketDto?.customer?.name ?: "",
-                address = ticketDto?.customer?.address ?: "",
-                phone = ticketDto?.customer?.phone ?: "",
-                lat = ticketDto?.customer?.lat ?: 0.0,
-                long = ticketDto?.customer?.long ?: 0.0,
-            ),
-            description = ticketDto?.description ?: "",
+            customerAddress = ticketDto?.customerAddress ?: "",
+            customerMobile = ticketDto?.customerMobile ?: "",
         )
     }
 }

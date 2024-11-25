@@ -9,11 +9,11 @@ fun getTickets() = List(12) {
 fun getTicket() = Ticket(
     id = "7109287789",
     title = "Dual Play- Repair",
-    time = "10am",
-    category = "Retail",
+    description = "Test",
+    ticketType = "Retail",
     status = "Assigned",
-    customer = getCustomer(),
     priority = "High",
     customerName = "John Doe",
-    description = "Test"
+    customerAddress = "address",
+    customerMobile = "9405941144"
 )

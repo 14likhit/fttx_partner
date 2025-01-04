@@ -1,6 +1,7 @@
 package com.fttx.partner.ui.screen.form
 
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.compose.model.UserUiModel
 import com.fttx.partner.ui.mvicore.IEffect
 import com.fttx.partner.ui.mvicore.IIntent
 import com.fttx.partner.ui.mvicore.IState
@@ -16,6 +17,9 @@ sealed class TicketFormIntent : IIntent {
         val ticketStatus: String,
         val location: Pair<Double, Double>
     ) : TicketFormIntent()
+    data object NavigateToAgentBottomSheet : TicketFormIntent()
+    data object DismissAgentBottomSheet : TicketFormIntent()
+    data class SaveAssociateCta(val selectedAgents: List<UserUiModel>): TicketFormIntent()
 }
 
 sealed class TicketFormEffect : IEffect {
@@ -30,6 +34,9 @@ data class TicketFormState(
     val id: Int = -1,
     val isLoading: Boolean = false,
     val error: String = "",
+    val showAgentBottomSheet: Boolean = false,
+    val allAgents: List<UserUiModel> = emptyList(),
+    val selectedAgents: List<UserUiModel> = emptyList(),
 ) : IState
 
 enum class TicketFormScreenType(val type: String) {

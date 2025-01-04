@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,11 +23,13 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fttx.partner.domain.model.Customer
 import com.fttx.partner.domain.model.Ticket
+import com.fttx.partner.ui.screen.employee.EmployeeSelectionScreen
 import com.fttx.partner.ui.utils.location.getCurrentLocation
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketFormRoute(
     ticket: Ticket?,
@@ -97,5 +101,25 @@ fun TicketFormRoute(
     }
     if (uiState.error.isNotBlank()) {
         Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
+    }
+    if (uiState.showAgentBottomSheet) {
+        ModalBottomSheet(onDismissRequest = {
+            coroutineScope.launch {
+                ticketFormViewModel.intents.send(TicketFormIntent.DismissAgentBottomSheet)
+            }
+        }) {
+            EmployeeSelectionScreen(
+                users = uiState.allAgents,
+                onClick = { selectedAgents ->
+                    coroutineScope.launch {
+                        ticketFormViewModel.intents.send(
+                            TicketFormIntent.SaveAssociateCta(
+                                selectedAgents
+                            )
+                        )
+                    }
+                }
+            )
+        }
     }
 }

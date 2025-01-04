@@ -1,6 +1,5 @@
 package com.fttx.partner.ui.screen.home
 
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,9 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.screen.account.AccountActivity
 import com.fttx.partner.ui.screen.form.TicketFormActivity
-import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.utils.Constants.BundleKey.CUSTOMER
 import com.fttx.partner.ui.utils.Constants.BundleKey.TICKET
 import com.fttx.partner.ui.utils.Constants.BundleKey.USER

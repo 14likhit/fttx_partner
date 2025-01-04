@@ -34,6 +34,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedCard
@@ -64,6 +65,7 @@ import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.ui.compose.component.toolbar.FTTXTopAppBar
 import com.fttx.partner.ui.compose.model.TicketPriorityUiModel
 import com.fttx.partner.ui.compose.model.TicketStatusUiModel
+import com.fttx.partner.ui.compose.model.UserUiModel
 import com.fttx.partner.ui.compose.theme.Caption01Regular
 import com.fttx.partner.ui.compose.theme.CoolGray05
 import com.fttx.partner.ui.compose.theme.CoolGray50
@@ -73,7 +75,9 @@ import com.fttx.partner.ui.compose.theme.Subheading01Bold
 import com.fttx.partner.ui.compose.theme.Text01Bold
 import com.fttx.partner.ui.mock.getCustomer
 import com.fttx.partner.ui.mock.getTicket
+import com.fttx.partner.ui.mock.getUsers
 import com.fttx.partner.ui.utils.NavigationIcon
+import com.fttx.partner.ui.utils.clickable
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -144,6 +148,11 @@ fun TicketFormScreen(
                     ticket = ticket,
                     dropDownSelection = { priority = it },
                     modifier = Modifier.fillMaxWidth(),
+                )
+                AssociateAgents(
+                    selectedAgents = uiState.selectedAgents,
+                    onClick = { onTriggerIntent(TicketFormIntent.NavigateToAgentBottomSheet) },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 EstimatedEndDateCompletion(
                     ticket = ticket,
@@ -515,6 +524,38 @@ private fun EstimatedEndDateCompletion(
     }
 }
 
+@Composable
+private fun AssociateAgents(
+    selectedAgents: List<UserUiModel>,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.clickable { onClick() }) {
+        Text(
+            text = stringResource(R.string.associates),
+            style = Caption01Regular.copy(color = CoolGray50)
+        )
+        OutlinedCard(
+            colors = CardDefaults.cardColors().copy(
+                containerColor = Color.White,
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = CoolGray05
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                selectedAgents.forEach {
+                    Text(text = it.name)
+                }
+            }
+        }
+    }
+}
+
 private fun Int.toMonthName(): String {
     return DateFormatSymbols().months[this]
 }
@@ -528,6 +569,6 @@ private fun Date.toFormattedString(): String {
 @Composable
 private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
     FTTXPartnerTheme {
-        TicketFormScreen(getTicket(), getCustomer(), { }, TicketFormState())
+        TicketFormScreen(getTicket(), getCustomer(), { }, TicketFormState(selectedAgents = getUsers()), modifier)
     }
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.domain.usecase.ticket.UpdateTicketUseCase
+import com.fttx.partner.ui.compose.model.UserUiModel
+import com.fttx.partner.ui.mock.getUsers
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -39,7 +41,7 @@ class TicketFormViewModel @Inject constructor(
         viewModelScope.launch {
             intents.receiveAsFlow().collect {
                 when (it) {
-                    is TicketFormIntent.Init -> {}
+                    is TicketFormIntent.Init -> { getAgents()}
                     TicketFormIntent.AddCta -> {
                         _uiEffect.send(TicketFormEffect.NavigateToAddTicket)
                     }
@@ -59,9 +61,29 @@ class TicketFormViewModel @Inject constructor(
                     is TicketFormIntent.UpdateTicket -> {
                         updateTicket(it.ticketId, it.ticketStatus, it.location)
                     }
+
+                    is TicketFormIntent.SaveAssociateCta -> {
+                        updateForm(it.selectedAgents)
+                    }
+
+                    is TicketFormIntent.NavigateToAgentBottomSheet -> {
+                        _uiState.value = _uiState.value.copy(showAgentBottomSheet = true,allAgents = getUsers())
+                    }
+
+                    is TicketFormIntent.DismissAgentBottomSheet -> {
+                        _uiState.value = _uiState.value.copy(showAgentBottomSheet = false)
+                    }
                 }
             }
         }
+    }
+
+    private fun getAgents() {
+
+    }
+
+    private fun updateForm(selectedAgents: List<UserUiModel>) {
+        _uiState.value = _uiState.value.copy(selectedAgents = selectedAgents,showAgentBottomSheet = false)
     }
 
     private suspend fun getLocation(ticketId: Int, ticketStatus: String) {

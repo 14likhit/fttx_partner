@@ -1,7 +1,6 @@
 package com.fttx.partner.ui.screen.form
 
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -34,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedCard
@@ -43,6 +41,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -181,6 +180,9 @@ fun TicketFormScreen(
                 }
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        onTriggerIntent(TicketFormIntent.Init)
     }
 }
 
@@ -569,6 +571,12 @@ private fun Date.toFormattedString(): String {
 @Composable
 private fun AddTicketFormScreenPreview(modifier: Modifier = Modifier) {
     FTTXPartnerTheme {
-        TicketFormScreen(getTicket(), getCustomer(), { }, TicketFormState(selectedAgents = getUsers()), modifier)
+        TicketFormScreen(
+            getTicket(),
+            getCustomer(),
+            { },
+            TicketFormState(selectedAgents = getUsers()),
+            modifier
+        )
     }
 }

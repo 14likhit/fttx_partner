@@ -3,6 +3,8 @@ package com.fttx.partner.ui.screen.form
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.network.util.SemaaiResult
+import com.fttx.partner.data.source.local.datastore.DataStorePreferences
+import com.fttx.partner.domain.usecase.agents.GetAgentsUseCase
 import com.fttx.partner.domain.usecase.ticket.UpdateTicketUseCase
 import com.fttx.partner.ui.compose.model.UserUiModel
 import com.fttx.partner.ui.mock.getUsers
@@ -20,6 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TicketFormViewModel @Inject constructor(
     private val updateTicketUseCase: UpdateTicketUseCase,
+    private val getAgentsUseCase: GetAgentsUseCase,
+    private val dataStorePreferences: DataStorePreferences,
 ) : ViewModel(),
     IModel<TicketFormState, TicketFormIntent, TicketFormEffect> {
 
@@ -41,7 +45,10 @@ class TicketFormViewModel @Inject constructor(
         viewModelScope.launch {
             intents.receiveAsFlow().collect {
                 when (it) {
-                    is TicketFormIntent.Init -> { getAgents()}
+                    is TicketFormIntent.Init -> {
+                        getAgents()
+                    }
+
                     TicketFormIntent.AddCta -> {
                         _uiEffect.send(TicketFormEffect.NavigateToAddTicket)
                     }
@@ -67,7 +74,8 @@ class TicketFormViewModel @Inject constructor(
                     }
 
                     is TicketFormIntent.NavigateToAgentBottomSheet -> {
-                        _uiState.value = _uiState.value.copy(showAgentBottomSheet = true,allAgents = getUsers())
+                        _uiState.value =
+                            _uiState.value.copy(showAgentBottomSheet = true)
                     }
 
                     is TicketFormIntent.DismissAgentBottomSheet -> {
@@ -79,11 +87,23 @@ class TicketFormViewModel @Inject constructor(
     }
 
     private fun getAgents() {
+        viewModelScope.launch {
+            when (val result = getAgentsUseCase(dataStorePreferences.getUserId() ?: 0)) {
+                is SemaaiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(error = "Something went wrong")
+                }
 
+                is SemaaiResult.Success -> {
+                    _uiState.value =
+                        _uiState.value.copy(allAgents = result.data.agents.map { it.toUserUiModel() })
+                }
+            }
+        }
     }
 
     private fun updateForm(selectedAgents: List<UserUiModel>) {
-        _uiState.value = _uiState.value.copy(selectedAgents = selectedAgents,showAgentBottomSheet = false)
+        _uiState.value =
+            _uiState.value.copy(selectedAgents = selectedAgents, showAgentBottomSheet = false)
     }
 
     private suspend fun getLocation(ticketId: Int, ticketStatus: String) {
@@ -99,7 +119,8 @@ class TicketFormViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isLoading = true)
         when (val result = updateTicketUseCase(ticketId, status, location)) {
             is SemaaiResult.Error -> {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = "Something went wrong")
+                _uiState.value =
+                    _uiState.value.copy(isLoading = false, error = "Something went wrong")
             }
 
             is SemaaiResult.Success -> {

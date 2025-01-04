@@ -17,4 +17,9 @@ object EndPoints {
         const val QUERY_LATITUDE = "latitude"
         const val QUERY_LONGITUDE = "longitude"
     }
+
+    object Agents {
+        const val GET_AGENTS = "getagents"
+        const val QUERY_AGENT_ID = "agent_id"
+    }
 }

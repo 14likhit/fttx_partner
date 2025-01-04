@@ -17,7 +17,8 @@ object UserTicketMapper {
         )
     }
 
-    private fun mapUserDtoToUser(userDto: UserDto?): User {
+
+    fun mapUserDtoToUser(userDto: UserDto?): User {
         return User(
             userId = userDto?.userId ?: 0,
             name = userDto?.name ?: "",

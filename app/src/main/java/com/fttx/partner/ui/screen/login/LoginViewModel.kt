@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
                 when (it) {
                     is LoginIntent.Init -> checkLogin()
                     is LoginIntent.LoginCta -> {
-                        checkCredentials(it.loginUiModel)
+                        checkCredentials(it.loginUiModel, it.deviceId)
                     }
 
                     LoginIntent.BackCta -> {
@@ -62,11 +62,12 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkCredentials(loginUiModel: LoginUiModel) {
+    private suspend fun checkCredentials(loginUiModel: LoginUiModel, deviceId: String) {
         if (loginUiModel.isNotBlank()) {
             _uiState.value = _uiState.value.copy(isLoading = true)
             viewModelScope.launch {
-                when (val result = loginUseCase(loginUiModel.login, loginUiModel.pwd)) {
+                when (val result =
+                    loginUseCase(loginUiModel.login, loginUiModel.pwd, deviceId)) {
                     is SemaaiResult.Error -> {
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,

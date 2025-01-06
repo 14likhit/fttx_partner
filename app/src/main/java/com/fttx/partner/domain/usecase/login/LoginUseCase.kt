@@ -15,11 +15,15 @@ class LoginUseCase @Inject constructor(
     private val coroutineDispatcherProvider: CoroutineDispatcherProvider
 ) {
 
-    suspend operator fun invoke(username: String, password: String): SemaaiResult<Login, UiText> =
+    suspend operator fun invoke(
+        username: String,
+        password: String,
+        deviceId: String
+    ): SemaaiResult<Login, UiText> =
         coroutineDispatcherProvider.switchToIO {
             executeSafeCall(
                 block = {
-                    when (val result = loginRepository.login(username, password)) {
+                    when (val result = loginRepository.login(username, password, deviceId)) {
                         is NetworkResultWrapper.Error -> {
                             SemaaiResult.Error(UiText.DynamicString(result.message.orEmpty()))
                         }

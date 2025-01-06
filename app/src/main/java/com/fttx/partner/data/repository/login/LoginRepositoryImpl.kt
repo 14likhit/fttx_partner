@@ -10,7 +10,11 @@ class LoginRepositoryImpl @Inject constructor(
     private val loginRemoteDataSource: ILoginRemoteDataSource,
 ) : ILoginRepository {
 
-    override suspend fun login(userName: String, password: String): NetworkResultWrapper<Login> {
-        return loginRemoteDataSource.login(userName, password)
+    override suspend fun login(
+        userName: String,
+        password: String,
+        deviceId: String
+    ): NetworkResultWrapper<Login> {
+        return loginRemoteDataSource.login(userName, password, deviceId)
     }
 }

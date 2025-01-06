@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.login
 
+import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -103,7 +104,14 @@ fun LoginScreen(
                 Button(
                     modifier = Modifier.padding(16.dp),
                     onClick = {
-                        onTriggerIntent(LoginIntent.LoginCta(credentials))
+                        onTriggerIntent(
+                            LoginIntent.LoginCta(
+                                credentials, Settings.Secure.getString(
+                                    context.contentResolver,
+                                    Settings.Secure.ANDROID_ID
+                                )
+                            )
+                        )
                     },
                     enabled = credentials.isNotBlank(),
                 ) {

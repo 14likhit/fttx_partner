@@ -6,6 +6,7 @@ object EndPoints {
         const val LOGIN = "login"
         const val FORM_KEY_USERNAME = "username"
         const val FORM_KEY_PASSWORD = "password"
+        const val FORM_KEY_DEVICE_ID = "device_id"
     }
 
     object Ticket {

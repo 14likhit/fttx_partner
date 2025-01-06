@@ -14,4 +14,5 @@
     <string name="estimated_completion_date">Estimated Completion Date</string>
     <string name="customer_details">Customer Details</string>
     <string name="associates">Associates</string>
+    <string name="select_associate">Select Associate</string>
 </resources>

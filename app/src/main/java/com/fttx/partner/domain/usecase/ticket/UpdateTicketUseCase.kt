@@ -3,6 +3,7 @@ package com.fttx.partner.domain.usecase.ticket
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.domain.model.TicketUpdate
+import com.fttx.partner.domain.model.TicketUpdateRequestBody
 import com.fttx.partner.domain.repository.ticket.ITicketRepository
 import com.fttx.partner.domain.util.coroutine.CoroutineDispatcherProvider
 import com.fttx.partner.domain.util.coroutine.UiText
@@ -15,12 +16,21 @@ class UpdateTicketUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
-        ticketId: Int, status: String, location: Pair<Double, Double>
+        ticketId: Int, status: String, location: Pair<Double, Double>, selectedAgents: List<Int>
     ): SemaaiResult<TicketUpdate, UiText> =
         coroutineDispatcherProvider.switchToIO {
             executeSafeCall(
                 block = {
-                    when (val result = ticketRepository.updateTicket(ticketId, status, location)) {
+                    when (val result =
+                        ticketRepository.updateTicket(
+                            TicketUpdateRequestBody(
+                                ticketId,
+                                status,
+                                location.first,
+                                location.second,
+                                selectedAgents
+                            )
+                        )) {
                         is NetworkResultWrapper.Error -> {
                             SemaaiResult.Error(UiText.DynamicString(result.message.orEmpty()))
                         }

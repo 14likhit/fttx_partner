@@ -5,6 +5,7 @@ import com.fttx.partner.data.mapper.UserTicketMapper
 import com.fttx.partner.data.network.service.ApiCallerService
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.domain.model.TicketUpdate
+import com.fttx.partner.domain.model.TicketUpdateRequestBody
 import com.fttx.partner.domain.model.UserTicket
 import javax.inject.Inject
 
@@ -24,12 +25,10 @@ class TicketRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun updateTicket(
-        ticketId: Int,
-        status: String,
-        location: Pair<Double, Double>
+        ticketUpdateRequestBody: TicketUpdateRequestBody
     ): NetworkResultWrapper<TicketUpdate> {
         apiCallerService.safeApiCall {
-            apiServices.updateTicket(ticketId, status, location.first, location.second)
+            apiServices.updateTicket(ticketUpdateRequestBody)
         }.onSuccess {
             return NetworkResultWrapper.Success(
                 TicketUpdateMapper.mapTicketUpdateDtoToTicketUpdate(

@@ -161,7 +161,7 @@ fun TicketFormScreen(
                 )
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally),
                     enabled = if (ticket != null) {
-                        ticket.status != status
+                        ticket.status != status || uiState.selectedAgents.isNotEmpty()
                     } else {
                         true
                     },
@@ -552,6 +552,9 @@ private fun AssociateAgents(
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 selectedAgents.forEach {
                     Text(text = it.name)
+                }
+                if(selectedAgents.isEmpty()) {
+                    Text(text = stringResource(R.string.select_associate))
                 }
             }
         }

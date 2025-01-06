@@ -26,10 +26,10 @@ import com.fttx.partner.ui.utils.clickable
 @Composable
 fun EmployeeSelectionScreen(
     users: List<UserUiModel>,
-    onClick : (List<UserUiModel>)->Unit,
+    onClick: (List<UserUiModel>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         LazyColumn(
             modifier = Modifier.padding(16.dp)
         ) {
@@ -56,7 +56,10 @@ fun EmployeeSelectionScreen(
                 employee.isSelected = isSelected.value
             }
         }
-        Button(modifier = Modifier.align(Alignment.BottomCenter), onClick = { onClick(users.filter { it.isSelected }) }) {
+        Button(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            onClick = { onClick(users.filter { it.isSelected }) },
+        ) {
             Text(text = "Save")
         }
     }

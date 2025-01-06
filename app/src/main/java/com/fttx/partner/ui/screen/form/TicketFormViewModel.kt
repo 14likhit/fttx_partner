@@ -117,7 +117,11 @@ class TicketFormViewModel @Inject constructor(
         location: Pair<Double, Double>
     ) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        when (val result = updateTicketUseCase(ticketId, status, location)) {
+        when (val result = updateTicketUseCase(
+            ticketId,
+            status,
+            location,
+            uiState.value.selectedAgents.map { it.userId })) {
             is SemaaiResult.Error -> {
                 _uiState.value =
                     _uiState.value.copy(isLoading = false, error = "Something went wrong")

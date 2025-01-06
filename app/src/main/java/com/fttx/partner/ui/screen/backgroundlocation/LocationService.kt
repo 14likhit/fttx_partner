@@ -1,25 +1,45 @@
 package com.fttx.partner.ui.screen.backgroundlocation
 
 // LocationService.kt
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.content.Intent
 import android.location.Location
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.google.android.gms.location.*
-import kotlinx.coroutines.*
+import com.fttx.partner.data.source.local.datastore.DataStorePreferences
+import com.fttx.partner.domain.usecase.location.UpdateLocationUseCase
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LocationService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private var isTracking = false
-    private val scheduler = Executors.newSingleThreadScheduledExecutor()
+
+    @Inject
+    lateinit var dataStorePreferences: DataStorePreferences
+
+    @Inject
+    lateinit var updateLocationUseCase: UpdateLocationUseCase
 
     override fun onCreate() {
         super.onCreate()
@@ -80,7 +100,7 @@ class LocationService : Service() {
         val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
         val currentMinute = calendar.get(Calendar.MINUTE)
 
-        Log.e("Test","check time $currentHour $currentMinute")
+        Log.e("Test", "check time $currentHour $currentMinute")
 
         if (currentHour == 21 && currentMinute == 0) { // 9:00 PM
             stopTracking()
@@ -108,14 +128,18 @@ class LocationService : Service() {
                 "Test",
                 "Location ${locationData.latitude} ${locationData.longitude} ${locationData.timestamp}"
             )
+            updateLocationUseCase(
+                dataStorePreferences.getUserId() ?: 0,
+                locationData.latitude to locationData.longitude
+            )
         } catch (e: Exception) {
             // Handle error, maybe store locally for retry
-            Log.e("Test", "Error")
+            Log.e("Test", "Error ${e.toString()}")
         }
     }
 
     private fun createNotificationChannel() {
-        Log.e("Test","createNotificationChannel")
+        Log.e("Test", "createNotificationChannel")
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Location Service Channel",
@@ -126,7 +150,7 @@ class LocationService : Service() {
     }
 
     private fun createNotification(): Notification {
-        Log.e("Test","createNotification")
+        Log.e("Test", "createNotification")
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Location Tracking Active")
             .setContentText("Tracking your location for attendance")

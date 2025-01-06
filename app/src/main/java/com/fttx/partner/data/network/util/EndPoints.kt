@@ -24,4 +24,8 @@ object EndPoints {
         const val GET_AGENTS = "getagents"
         const val QUERY_AGENT_ID = "agent_id"
     }
+
+    object Location {
+        const val UPDATE_LOCATION_LOG = "locationlog"
+    }
 }

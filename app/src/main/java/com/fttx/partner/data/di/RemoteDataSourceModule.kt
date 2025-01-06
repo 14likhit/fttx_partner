@@ -4,6 +4,9 @@ import com.fttx.partner.data.network.service.ApiCallerService
 import com.fttx.partner.data.source.remote.agents.AgentRemoteDataSourceImpl
 import com.fttx.partner.data.source.remote.agents.AgentsApiServices
 import com.fttx.partner.data.source.remote.agents.IAgentRemoteDataSource
+import com.fttx.partner.data.source.remote.location.ILocationRemoteDataSource
+import com.fttx.partner.data.source.remote.location.LocationApiServices
+import com.fttx.partner.data.source.remote.location.LocationRemoteDataSourceImpl
 import com.fttx.partner.data.source.remote.login.ILoginRemoteDataSource
 import com.fttx.partner.data.source.remote.login.LoginApiServices
 import com.fttx.partner.data.source.remote.login.LoginRemoteDataSourceImpl
@@ -45,5 +48,14 @@ object RemoteDataSourceModule {
         apiCallerService: ApiCallerService,
     ): IAgentRemoteDataSource {
         return AgentRemoteDataSourceImpl(api, apiCallerService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationRemoteDataSource(
+        api: LocationApiServices,
+        apiCallerService: ApiCallerService,
+    ): ILocationRemoteDataSource {
+        return LocationRemoteDataSourceImpl(api, apiCallerService)
     }
 }

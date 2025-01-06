@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
+import java.util.Calendar
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class LocationService : Service() {
@@ -17,6 +19,7 @@ class LocationService : Service() {
     private lateinit var locationCallback: LocationCallback
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private var isTracking = false
+    private val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     override fun onCreate() {
         super.onCreate()
@@ -68,6 +71,19 @@ class LocationService : Service() {
             )
         } catch (e: SecurityException) {
             // Handle permission error
+        }
+        checkTime()
+    }
+
+    private fun checkTime() {
+        val calendar = Calendar.getInstance()
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
+
+        Log.e("Test","check time $currentHour $currentMinute")
+
+        if (currentHour == 21 && currentMinute == 0) { // 9:00 PM
+            stopTracking()
         }
     }
 

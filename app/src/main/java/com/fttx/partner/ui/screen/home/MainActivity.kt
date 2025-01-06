@@ -59,13 +59,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private val startForTicketUpdateResult =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) { result: ActivityResult ->
-            if (result.resultCode == RESULT_OK) {
-
-            }
-        }
 }

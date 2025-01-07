@@ -72,6 +72,9 @@ class LocationService : Service() {
         if (isTracking) return
 
         isTracking = true
+        serviceScope.launch {
+            dataStorePreferences.saveUserCheckedIn(true)
+        }
         startForeground(NOTIFICATION_ID, createNotification())
         requestLocationUpdates()
     }
@@ -109,6 +112,10 @@ class LocationService : Service() {
 
     private fun stopTracking() {
         isTracking = false
+        serviceScope.launch {
+            // Save the check-in status in DataStorePreferences
+            dataStorePreferences.saveUserCheckedIn(false)
+        }
         fusedLocationClient.removeLocationUpdates(locationCallback)
         stopForeground(true)
         stopSelf()

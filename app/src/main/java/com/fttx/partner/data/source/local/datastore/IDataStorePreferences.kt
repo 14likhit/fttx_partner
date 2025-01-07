@@ -10,5 +10,7 @@ interface IDataStorePreferences {
     suspend fun saveAuthToken(authToken: String)
     suspend fun setUserLoggedIn(isLoggedIn: Boolean)
     suspend fun isUserLoggedIn(): Boolean
+    suspend fun saveUserCheckedIn(isCheckedIn: Boolean)
+    suspend fun isUserCheckedIn(): Boolean
     suspend fun clearDataStore()
 }

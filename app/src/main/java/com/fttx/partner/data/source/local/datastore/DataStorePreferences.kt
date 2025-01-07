@@ -85,6 +85,14 @@ constructor(
         return getValue(Keys.isUserLoggedIn) ?: false
     }
 
+    override suspend fun saveUserCheckedIn(isCheckedIn: Boolean) {
+        setValue(Keys.isCheckedIn, isCheckedIn)
+    }
+
+    override suspend fun isUserCheckedIn(): Boolean {
+        return getValue(Keys.isCheckedIn) ?: false
+    }
+
     override suspend fun clearDataStore() {
         clearData()
     }

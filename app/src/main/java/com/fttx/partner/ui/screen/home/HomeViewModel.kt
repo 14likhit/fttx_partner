@@ -1,6 +1,5 @@
 package com.fttx.partner.ui.screen.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.network.util.SemaaiResult
@@ -85,6 +84,14 @@ class HomeViewModel @Inject constructor(
                             _uiState.value.copy(locationPermissionState = LocationPermissionState.LocationPermissionRevoked)
                         _uiEffect.send(HomeEffect.NavigateToLocationPermissionRequiredSettingsPopUp)
                     }
+
+                    HomeIntent.CheckIn -> {
+                        _uiState.value = _uiState.value.copy(isCheckedIn = true)
+                    }
+
+                    HomeIntent.CheckOut -> {
+                        _uiState.value = _uiState.value.copy(isCheckedIn = false)
+                    }
                 }
             }
         }
@@ -95,11 +102,18 @@ class HomeViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true)
             when (val result = getTicketUseCase(userId)) {
                 is SemaaiResult.Error -> {
-                    _uiState.value = _uiState.value.copy(isLoading = false, error = "Something Went Wrong")
+                    _uiState.value =
+                        _uiState.value.copy(isLoading = false, error = "Something Went Wrong")
                 }
+
                 is SemaaiResult.Success -> {
                     _uiState.value =
-                        _uiState.value.copy(tickets = result.data.tickets, user = result.data.user, isLoading = false, error = "")
+                        _uiState.value.copy(
+                            tickets = result.data.tickets,
+                            user = result.data.user,
+                            isLoading = false,
+                            error = ""
+                        )
                 }
             }
         }

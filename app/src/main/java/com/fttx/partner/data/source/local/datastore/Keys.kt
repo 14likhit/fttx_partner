@@ -14,4 +14,5 @@ internal object Keys {
     val longitude = stringPreferencesKey("longitude")
     val city = stringPreferencesKey("city")
     val accessToken = stringPreferencesKey("access_token")
+    val isCheckedIn = booleanPreferencesKey("is_checked_in")
 }

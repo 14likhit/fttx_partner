@@ -2,7 +2,7 @@ package com.fttx.partner.ui.mock
 
 import com.fttx.partner.ui.compose.model.UserUiModel
 
-fun getUsers(): List<UserUiModel> = List(10) {
+fun getUsers(): List<UserUiModel> = List(4) {
     getUser()
 }
 

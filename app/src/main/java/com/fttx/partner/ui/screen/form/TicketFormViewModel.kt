@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
+import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.domain.usecase.agents.GetAgentsUseCase
 import com.fttx.partner.domain.usecase.ticket.UpdateTicketUseCase
 import com.fttx.partner.ui.compose.model.UserUiModel
-import com.fttx.partner.ui.mock.getUsers
 import com.fttx.partner.ui.mvicore.IModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -46,7 +46,7 @@ class TicketFormViewModel @Inject constructor(
             intents.receiveAsFlow().collect {
                 when (it) {
                     is TicketFormIntent.Init -> {
-                        getAgents()
+                        getAgents(it.ticket)
                     }
 
                     TicketFormIntent.AddCta -> {
@@ -90,7 +90,7 @@ class TicketFormViewModel @Inject constructor(
         }
     }
 
-    private fun getAgents() {
+    private fun getAgents(ticket: Ticket?) {
         viewModelScope.launch {
             when (val result = getAgentsUseCase(dataStorePreferences.getUserId() ?: 0)) {
                 is SemaaiResult.Error -> {
@@ -98,8 +98,12 @@ class TicketFormViewModel @Inject constructor(
                 }
 
                 is SemaaiResult.Success -> {
+                    val selectedAgents =
+                        ticket?.associatedAgents ?: emptyList()
                     _uiState.value =
-                        _uiState.value.copy(allAgents = result.data.agents.map { it.toUserUiModel() })
+                        _uiState.value.copy(
+                            allAgents = result.data.agents.map { it.toUserUiModel() },
+                            selectedAgents = selectedAgents.map { it.toUserUiModel() })
                 }
             }
         }

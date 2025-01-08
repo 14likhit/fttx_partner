@@ -100,6 +100,11 @@ fun TicketCard(
                 style = Text01Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
+            Text(
+                text = ticket.customerPhone,
+                style = Text01Bold,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
             Row {
                 Text(text = ticket.customerAddress, modifier = Modifier.weight(1f))
                 Icon(

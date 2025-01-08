@@ -7,7 +7,7 @@ import com.fttx.partner.ui.mvicore.IIntent
 import com.fttx.partner.ui.mvicore.IState
 
 sealed class TicketFormIntent : IIntent {
-    data object Init : TicketFormIntent()
+    data class Init(val ticket: Ticket?) : TicketFormIntent()
     data object BackCta : TicketFormIntent()
     data class TicketCardCta(val ticket: Ticket) : TicketFormIntent()
     data object AddCta : TicketFormIntent()

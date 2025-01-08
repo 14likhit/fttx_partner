@@ -39,6 +39,8 @@ object UserTicketMapper {
             customerName = ticketDto?.customerName ?: "",
             customerAddress = ticketDto?.customerAddress ?: "",
             customerMobile = ticketDto?.customerMobile ?: "",
+            customerPhone = ticketDto?.customerPhone ?: "",
+            associatedAgents = ticketDto?.associatedAgents?.map { mapUserDtoToUser(it) }.orEmpty()
         )
     }
 }

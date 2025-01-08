@@ -182,7 +182,7 @@ fun TicketFormScreen(
         }
     }
     LaunchedEffect(Unit) {
-        onTriggerIntent(TicketFormIntent.Init)
+        onTriggerIntent(TicketFormIntent.Init(ticket))
     }
 }
 
@@ -379,6 +379,7 @@ private fun TicketCustomerDetail(ticket: Ticket?, modifier: Modifier = Modifier)
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 Text(text = ticket?.customerName ?: "")
+                Text(text = ticket?.customerPhone ?: "")
                 Text(text = ticket?.customerAddress ?: "")
             }
         }
@@ -553,7 +554,7 @@ private fun AssociateAgents(
                 selectedAgents.forEach {
                     Text(text = it.name)
                 }
-                if(selectedAgents.isEmpty()) {
+                if (selectedAgents.isEmpty()) {
                     Text(text = stringResource(R.string.select_associate))
                 }
             }

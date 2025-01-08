@@ -117,6 +117,7 @@ fun TicketFormRoute(
         }) {
             EmployeeSelectionScreen(
                 users = uiState.allAgents,
+                selectedUsers = uiState.selectedAgents,
                 onClick = { selectedAgents ->
                     coroutineScope.launch {
                         ticketFormViewModel.intents.send(

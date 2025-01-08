@@ -1,6 +1,7 @@
 package com.fttx.partner.domain.model
 
 import android.os.Parcelable
+import com.fttx.partner.data.model.AgentsDto
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -13,5 +14,7 @@ data class Ticket(
     val priority: String,
     val customerName: String,
     val customerMobile: String,
-    val customerAddress: String
+    val customerPhone: String,
+    val customerAddress: String,
+    val associatedAgents: List<User>,
 ) : Parcelable

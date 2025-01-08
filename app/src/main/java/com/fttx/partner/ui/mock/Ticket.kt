@@ -15,5 +15,7 @@ fun getTicket() = Ticket(
     priority = "High",
     customerName = "John Doe",
     customerAddress = "address",
-    customerMobile = "9405941144"
+    customerMobile = "9405941144",
+    customerPhone = "9405941144",
+    associatedAgents = emptyList()
 )

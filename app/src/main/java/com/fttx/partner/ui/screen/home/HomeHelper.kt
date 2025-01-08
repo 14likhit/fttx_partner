@@ -20,6 +20,7 @@ sealed class HomeIntent : IIntent {
     data object LocationPermissionRevoked : HomeIntent()
     data object CheckIn : HomeIntent()
     data object CheckOut : HomeIntent()
+    data object EmptyError: HomeIntent()
 }
 
 sealed class HomeEffect : IEffect {

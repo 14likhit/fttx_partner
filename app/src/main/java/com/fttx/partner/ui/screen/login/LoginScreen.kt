@@ -120,6 +120,7 @@ fun LoginScreen(
             }
             if (uiState.errorLogin.isNotBlank()) {
                 Toast.makeText(context, uiState.errorLogin, Toast.LENGTH_SHORT).show()
+                onTriggerIntent(LoginIntent.EmptyError)
             }
         }
     }

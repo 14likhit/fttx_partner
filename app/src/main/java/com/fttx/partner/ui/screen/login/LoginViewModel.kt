@@ -48,6 +48,10 @@ class LoginViewModel @Inject constructor(
                     LoginIntent.BackCta -> {
                         _uiEffect.send(LoginEffect.NavigateBack)
                     }
+
+                    LoginIntent.EmptyError -> {
+                        _uiState.value = _uiState.value.copy(errorLogin = "")
+                    }
                 }
             }
         }
@@ -55,16 +59,18 @@ class LoginViewModel @Inject constructor(
 
     private suspend fun checkLogin() {
         if (dataStorePreferences.isUserLoggedIn()) {
-            _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = true)
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, isLoggedIn = true, errorLogin = "")
             _uiEffect.send(LoginEffect.NavigateToHome)
         } else {
-            _uiState.value = _uiState.value.copy(isLoading = false, isLoggedIn = false)
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, isLoggedIn = false, errorLogin = "")
         }
     }
 
     private suspend fun checkCredentials(loginUiModel: LoginUiModel, deviceId: String) {
         if (loginUiModel.isNotBlank()) {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(isLoading = true, errorLogin = "")
             viewModelScope.launch {
                 when (val result =
                     loginUseCase(loginUiModel.login, loginUiModel.pwd, deviceId)) {
@@ -79,7 +85,7 @@ class LoginViewModel @Inject constructor(
                         if (result.data.userId > 0) {
                             dataStorePreferences.setUserLoggedIn(true)
                             dataStorePreferences.saveUserId(result.data.userId)
-                            _uiState.value = _uiState.value.copy(isLoading = true)
+                            _uiState.value = _uiState.value.copy(isLoading = true, errorLogin = "")
                             _uiEffect.send(LoginEffect.NavigateToHome)
                         } else {
                             _uiState.value = _uiState.value.copy(

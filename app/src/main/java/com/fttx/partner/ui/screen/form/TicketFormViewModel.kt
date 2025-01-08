@@ -81,6 +81,10 @@ class TicketFormViewModel @Inject constructor(
                     is TicketFormIntent.DismissAgentBottomSheet -> {
                         _uiState.value = _uiState.value.copy(showAgentBottomSheet = false)
                     }
+
+                    is TicketFormIntent.EmptyError -> {
+                        _uiState.value = _uiState.value.copy(error = "")
+                    }
                 }
             }
         }

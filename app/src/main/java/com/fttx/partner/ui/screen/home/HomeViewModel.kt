@@ -94,11 +94,15 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeIntent.CheckIn -> {
-                        _uiState.value = _uiState.value.copy(isCheckedIn = true)
+                        _uiState.value = _uiState.value.copy(isCheckedIn = true, error = "")
                     }
 
                     HomeIntent.CheckOut -> {
-                        _uiState.value = _uiState.value.copy(isCheckedIn = false)
+                        _uiState.value = _uiState.value.copy(isCheckedIn = false, error = "")
+                    }
+
+                    HomeIntent.EmptyError -> {
+                        _uiState.value = _uiState.value.copy(error = "")
                     }
                 }
             }

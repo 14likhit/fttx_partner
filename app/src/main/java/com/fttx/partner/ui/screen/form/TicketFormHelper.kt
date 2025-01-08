@@ -20,6 +20,7 @@ sealed class TicketFormIntent : IIntent {
     data object NavigateToAgentBottomSheet : TicketFormIntent()
     data object DismissAgentBottomSheet : TicketFormIntent()
     data class SaveAssociateCta(val selectedAgents: List<UserUiModel>): TicketFormIntent()
+    data object EmptyError : TicketFormIntent()
 }
 
 sealed class TicketFormEffect : IEffect {

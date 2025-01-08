@@ -101,6 +101,13 @@ fun TicketFormRoute(
     }
     if (uiState.error.isNotBlank()) {
         Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                ticketFormViewModel.intents.send(
+                    TicketFormIntent.EmptyError
+                )
+            }
+        }
     }
     if (uiState.showAgentBottomSheet) {
         ModalBottomSheet(onDismissRequest = {

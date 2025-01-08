@@ -8,6 +8,7 @@ sealed class LoginIntent : IIntent {
     data object Init : LoginIntent()
     data object BackCta : LoginIntent()
     data class LoginCta(val loginUiModel: LoginUiModel, val deviceId: String) : LoginIntent()
+    data object EmptyError: LoginIntent()
 }
 
 sealed class LoginEffect : IEffect {

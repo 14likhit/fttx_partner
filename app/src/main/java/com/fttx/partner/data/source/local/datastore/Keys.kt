@@ -2,6 +2,7 @@ package com.fttx.partner.data.source.local.datastore
 
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 internal object Keys {
@@ -15,4 +16,5 @@ internal object Keys {
     val city = stringPreferencesKey("city")
     val accessToken = stringPreferencesKey("access_token")
     val isCheckedIn = booleanPreferencesKey("is_checked_in")
+    val checkedInTimeStamp = longPreferencesKey("checked_in_time_stamp")
 }

@@ -54,23 +54,40 @@ fun HomeScreen(
                                 onTriggerIntent(HomeIntent.AccountCta)
                             })
                 })
-            if (uiState.isCheckedIn) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Mark Check Out", modifier = Modifier.weight(1f))
-                    Button(onClick = {
-                        val intent = Intent(context, LocationService::class.java).apply {
-                            action = LocationService.ACTION_STOP_TRACKING
-                        }
-                        context.startService(intent)
-                        onTriggerIntent(HomeIntent.CheckOut)
-                    }) {
-                        Text(text = "Check Out")
-                    }
-                }
-            } else {
+//            if (uiState.isCheckedIn) {
+//                Row(
+//                    modifier = Modifier.padding(16.dp),
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text(text = "Mark Check Out", modifier = Modifier.weight(1f))
+//                    Button(onClick = {
+//                        val intent = Intent(context, LocationService::class.java).apply {
+//                            action = LocationService.ACTION_STOP_TRACKING
+//                        }
+//                        context.startService(intent)
+//                        onTriggerIntent(HomeIntent.CheckOut)
+//                    }) {
+//                        Text(text = "Check Out")
+//                    }
+//                }
+//            } else {
+//                Row(
+//                    modifier = Modifier.padding(16.dp),
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Text(text = "Mark Check In", modifier = Modifier.weight(1f))
+//                    Button(onClick = {
+//                        val intent = Intent(context, LocationService::class.java).apply {
+//                            action = LocationService.ACTION_START_TRACKING
+//                        }
+//                        context.startForegroundService(intent)
+//                        onTriggerIntent(HomeIntent.CheckIn)
+//                    }) {
+//                        Text(text = "Check In")
+//                    }
+//                }
+//            }
+            if (uiState.isCheckedIn.not()) {
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically

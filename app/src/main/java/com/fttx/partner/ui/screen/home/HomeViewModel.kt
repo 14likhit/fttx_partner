@@ -15,6 +15,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +58,11 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is HomeIntent.TicketCardCta -> {
-                        _uiEffect.send(HomeEffect.NavigateToTicketDetails(it.ticket))
+                        if (dataStorePreferences.isUserCheckedIn()) {
+                            _uiEffect.send(HomeEffect.NavigateToTicketDetails(it.ticket))
+                        } else {
+                            _uiState.value = _uiState.value.copy(error = "Please Check In")
+                        }
                     }
 
                     HomeIntent.AccountCta -> {
@@ -107,11 +115,22 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is SemaaiResult.Success -> {
+                    val lastCheckedInTimeStamp = dataStorePreferences.getCheckedInTimeStamp()
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DAY_OF_YEAR, -1)
+
+                    val yesterday = calendar.time
+                    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+
+                    if (sdf.format(Date(lastCheckedInTimeStamp)) == sdf.format(yesterday)) {
+                        dataStorePreferences.saveUserCheckedIn(false)
+                    }
                     _uiState.value =
                         _uiState.value.copy(
                             tickets = result.data.tickets,
                             user = result.data.user,
                             isLoading = false,
+                            isCheckedIn = dataStorePreferences.isUserCheckedIn(),
                             error = ""
                         )
                 }

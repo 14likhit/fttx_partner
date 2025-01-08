@@ -12,5 +12,7 @@ interface IDataStorePreferences {
     suspend fun isUserLoggedIn(): Boolean
     suspend fun saveUserCheckedIn(isCheckedIn: Boolean)
     suspend fun isUserCheckedIn(): Boolean
+    suspend fun saveCheckedInTimeStamp(timeStamp: Long)
+    suspend fun getCheckedInTimeStamp(): Long
     suspend fun clearDataStore()
 }

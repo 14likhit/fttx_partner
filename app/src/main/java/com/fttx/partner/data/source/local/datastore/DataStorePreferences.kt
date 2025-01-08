@@ -93,6 +93,14 @@ constructor(
         return getValue(Keys.isCheckedIn) ?: false
     }
 
+    override suspend fun saveCheckedInTimeStamp(timeStamp: Long) {
+        setValue(Keys.checkedInTimeStamp, timeStamp)
+    }
+
+    override suspend fun getCheckedInTimeStamp(): Long {
+        return getValue(Keys.checkedInTimeStamp) ?: 0
+    }
+
     override suspend fun clearDataStore() {
         clearData()
     }

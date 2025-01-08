@@ -74,6 +74,7 @@ class LocationService : Service() {
         isTracking = true
         serviceScope.launch {
             dataStorePreferences.saveUserCheckedIn(true)
+            dataStorePreferences.saveCheckedInTimeStamp(System.currentTimeMillis())
         }
         startForeground(NOTIFICATION_ID, createNotification())
         requestLocationUpdates()
@@ -81,8 +82,8 @@ class LocationService : Service() {
 
     private fun requestLocationUpdates() {
         val locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.MINUTES.toMillis(1) // Update every hour
-            fastestInterval = TimeUnit.SECONDS.toMillis(55) // Fastest update interval
+            interval = TimeUnit.HOURS.toMillis(1) // Update every hour
+            fastestInterval = TimeUnit.MINUTES.toMillis(55) // Fastest update interval
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         }
 

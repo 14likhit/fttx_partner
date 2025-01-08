@@ -4,6 +4,7 @@ import com.fttx.partner.data.mapper.LoginMapper
 import com.fttx.partner.data.network.service.ApiCallerService
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.domain.model.Login
+import com.fttx.partner.domain.model.LoginRequestBody
 import javax.inject.Inject
 
 class LoginRemoteDataSourceImpl @Inject constructor(
@@ -16,7 +17,7 @@ class LoginRemoteDataSourceImpl @Inject constructor(
         deviceId: String
     ): NetworkResultWrapper<Login> {
         apiCallerService.safeApiCall {
-            apiServices.login(userName, password, deviceId)
+            apiServices.login(LoginRequestBody(userName, password, deviceId))
         }.onSuccess {
             return NetworkResultWrapper.Success(LoginMapper.mapLoginDtoToLogin(it))
         }.onFailure {

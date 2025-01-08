@@ -161,7 +161,8 @@ fun TicketFormScreen(
                 )
                 Button(modifier = Modifier.align(Alignment.CenterHorizontally),
                     enabled = if (ticket != null) {
-                        ticket.status != status || (ticket.associatedAgents == uiState.selectedAgents)
+                        ticket.status != status || (ticket.matchAssociatedAgents(uiState.selectedAgents)
+                            .not())
                     } else {
                         true
                     },

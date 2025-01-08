@@ -89,6 +89,7 @@ fun TicketCard(
                     modifier = Modifier.weight(1f)
                 )
             }
+            
             Text(
                 text = ticket.title,
                 modifier = Modifier.padding(vertical = 8.dp),

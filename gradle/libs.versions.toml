@@ -23,6 +23,7 @@ accompanistPermissions = "0.36.0"
 firebaseCrashlytics = "19.2.1"
 googleGmsGoogleServices = "4.4.2"
 googleFirebaseCrashlytics = "3.0.2"
+firebaseAnalytics = "22.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ androidx-datastore-android = {module = "androidx.datastore:datastore-preferences
 play-service-location = {module="com.google.android.gms:play-services-location",version.ref = "playServiceLocation"}
 accompanist-permissions = {module = "com.google.accompanist:accompanist-permissions",version.ref = "accompanistPermissions"}
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

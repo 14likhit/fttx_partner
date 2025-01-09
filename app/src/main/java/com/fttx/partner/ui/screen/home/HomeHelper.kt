@@ -8,7 +8,7 @@ import com.fttx.partner.ui.mvicore.IIntent
 import com.fttx.partner.ui.mvicore.IState
 
 sealed class HomeIntent : IIntent {
-    data object Init : HomeIntent()
+    data class Init(val isLocationPermissionGranted: Boolean) : HomeIntent()
     data object BackCta : HomeIntent()
     data class TicketCardCta(val ticket: Ticket) : HomeIntent()
     data class PhoneCta(val ticket: Ticket) : HomeIntent()

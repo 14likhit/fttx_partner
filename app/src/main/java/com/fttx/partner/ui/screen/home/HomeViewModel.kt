@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor(
             intents.receiveAsFlow().collect {
                 when (it) {
                     is HomeIntent.Init -> {
-                        getTickets()
+                        getTickets(it.isLocationPermissionGranted)
                     }
 
                     HomeIntent.AddCta -> {
@@ -109,7 +109,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getTickets() {
+    private suspend fun getTickets(locationPermissionGranted: Boolean) {
         dataStorePreferences.getUserId()?.let { userId ->
             _uiState.value = _uiState.value.copy(isLoading = true)
             when (val result = getTicketUseCase(userId)) {
@@ -135,6 +135,7 @@ class HomeViewModel @Inject constructor(
                             user = result.data.user,
                             isLoading = false,
                             isCheckedIn = dataStorePreferences.isUserCheckedIn(),
+                            locationPermissionState = if (locationPermissionGranted) LocationPermissionState.LocationPermissionGranted else LocationPermissionState.LocationPermissionDenied,
                             error = ""
                         )
                 }

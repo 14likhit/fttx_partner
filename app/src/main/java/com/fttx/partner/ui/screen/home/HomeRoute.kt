@@ -66,7 +66,7 @@ fun HomeRoute(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (activityResult.resultCode == Activity.RESULT_OK) {
                 coroutineScope.launch {
-                    homeViewModel.intents.send(HomeIntent.Init)
+                    homeViewModel.intents.send(HomeIntent.Init(areLocationPermissionsGranted(context)))
                 }
             }
 
@@ -208,7 +208,7 @@ fun HomeRoute(
     }
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            homeViewModel.intents.send(HomeIntent.Init)
+            homeViewModel.intents.send(HomeIntent.Init(areLocationPermissionsGranted(context)))
         }
     }
 }

@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.shouldShowRationale
 
 /**
  * Composable function to request location permissions and handle different scenarios.
@@ -20,8 +21,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestLocationPermission(
+    shouldShowRational: Boolean,
     onPermissionGranted: () -> Unit,
-    onPermissionDenied: () -> Unit,
+    onPermissionDenied: (Boolean) -> Unit,
     onPermissionsRevoked: () -> Unit
 ) {
     // Initialize the state for managing multiple location permissions.
@@ -34,10 +36,6 @@ fun RequestLocationPermission(
 
     // Use LaunchedEffect to handle permissions logic when the composition is launched.
     LaunchedEffect(key1 = permissionState) {
-        // Check if all previously granted permissions are revoked.
-        val allPermissionsRevoked =
-            permissionState.permissions.size == permissionState.revokedPermissions.size
-
         // Filter permissions that need to be requested.
         val permissionsToRequest = permissionState.permissions.filter {
             !it.status.isGranted
@@ -47,14 +45,12 @@ fun RequestLocationPermission(
         if (permissionsToRequest.isNotEmpty()) permissionState.launchMultiplePermissionRequest()
 
         // Execute callbacks based on permission status.
-        if (allPermissionsRevoked) {
+        if (permissionState.allPermissionsGranted) {
+            onPermissionGranted()
+        } else if (shouldShowRational.not()) {
             onPermissionsRevoked()
         } else {
-            if (permissionState.allPermissionsGranted) {
-                onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
+            onPermissionDenied(permissionState.shouldShowRationale)
         }
     }
 }

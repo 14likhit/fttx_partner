@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1022276471309",
+    "project_id": "fttx-partner",
+    "storage_bucket": "fttx-partner.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022276471309:android:ff6677a4a7eb0f115de344",
+        "android_client_info": {
+          "package_name": "com.fttx.partner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_38xDV6E9CGyzhDHymAvWFTgZ1GBogCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022276471309:android:198a0dd689abc4455de344",
+        "android_client_info": {
+          "package_name": "com.fttx.partner.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_38xDV6E9CGyzhDHymAvWFTgZ1GBogCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

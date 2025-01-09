@@ -58,8 +58,9 @@ fun HomeRoute(
 
     val context = LocalContext.current
 
-    val isPermissionAsked = remember { mutableStateOf(areLocationPermissionsGranted(context)) }
+    val isPermissionAsked = remember { mutableStateOf(areLocationPermissionsGranted(context).not()) }
     val isPermissionRevoked = remember { mutableStateOf(false) }
+    val shouldShowRationale = remember { mutableStateOf(true) }
 
     val ticketFormUpdate =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -152,6 +153,7 @@ fun HomeRoute(
 
     if (isPermissionAsked.value) {
         RequestLocationPermission(
+            shouldShowRational = shouldShowRationale.value,
             onPermissionGranted = {
                 coroutineScope.launch {
                     homeViewModel.intents.send(HomeIntent.LocationPermissionGranted)
@@ -163,6 +165,7 @@ fun HomeRoute(
                     homeViewModel.intents.send(HomeIntent.LocationPermissionDenied)
                 }
                 isPermissionAsked.value = false
+                shouldShowRationale.value = it
             },
             onPermissionsRevoked = {
                 coroutineScope.launch {

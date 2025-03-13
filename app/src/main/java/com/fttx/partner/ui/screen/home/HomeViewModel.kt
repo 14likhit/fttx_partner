@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is HomeIntent.TicketCardCta -> {
-                        if (dataStorePreferences.isUserCheckedIn()) {
+                        if (_uiState.value.isCheckedIn) {
                             _uiEffect.send(HomeEffect.NavigateToTicketDetails(it.ticket))
                         } else {
                             _uiState.value = _uiState.value.copy(error = "Please Check In")
@@ -127,14 +127,15 @@ class HomeViewModel @Inject constructor(
                     val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
 
                     if (sdf.format(Date(lastCheckedInTimeStamp)) == sdf.format(yesterday)) {
-                        dataStorePreferences.saveUserCheckedIn(false)
+                        //todo-> call check out api
                     }
                     _uiState.value =
                         _uiState.value.copy(
                             tickets = result.data.tickets,
                             user = result.data.user,
                             isLoading = false,
-                            isCheckedIn = dataStorePreferences.isUserCheckedIn(),
+                            isCheckedIn = result.data.user.checkedIn,
+                            isCheckedOut = result.data.user.checkedOut,
                             locationPermissionState = if (locationPermissionGranted) LocationPermissionState.LocationPermissionGranted else LocationPermissionState.LocationPermissionDenied,
                             error = ""
                         )

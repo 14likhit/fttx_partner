@@ -20,7 +20,7 @@ sealed class HomeIntent : IIntent {
     data object LocationPermissionRevoked : HomeIntent()
     data object CheckIn : HomeIntent()
     data object CheckOut : HomeIntent()
-    data object EmptyError: HomeIntent()
+    data object EmptyError : HomeIntent()
 }
 
 sealed class HomeEffect : IEffect {
@@ -36,11 +36,12 @@ sealed class HomeEffect : IEffect {
 data class HomeState(
     val id: Int = -1,
     val locationPermissionState: LocationPermissionState = LocationPermissionState.LocationPermissionUnknown,
-    val user: User = User(-1, "", "", "", false),
+    val user: User = User(-1, "", "", "", false,false,false),
     val tickets: List<Ticket> = emptyList(),
     val isLoading: Boolean = false,
     val error: String = "",
-    val isCheckedIn: Boolean = false
+    val isCheckedIn: Boolean = false,
+    val isCheckedOut: Boolean = false,
 ) : IState
 
 enum class LocationPermissionState() {

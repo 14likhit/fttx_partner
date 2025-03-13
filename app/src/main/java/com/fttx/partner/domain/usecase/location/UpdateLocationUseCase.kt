@@ -2,6 +2,7 @@ package com.fttx.partner.domain.usecase.location
 
 import com.fttx.partner.data.network.util.NetworkResultWrapper
 import com.fttx.partner.data.network.util.SemaaiResult
+import com.fttx.partner.domain.model.Action
 import com.fttx.partner.domain.model.LocationUpdateRequestBody
 import com.fttx.partner.domain.repository.location.ILocationRepository
 import com.fttx.partner.domain.util.coroutine.CoroutineDispatcherProvider
@@ -15,7 +16,7 @@ class UpdateLocationUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(
-        agentId: Int, location: Pair<Double, Double>
+        agentId: Int, location: Pair<Double, Double>,action: Action
     ): SemaaiResult<Unit, UiText> =
         coroutineDispatcherProvider.switchToIO {
             executeSafeCall(
@@ -26,6 +27,7 @@ class UpdateLocationUseCase @Inject constructor(
                                 location.first,
                                 location.second,
                                 agentId,
+                                action.value
                             )
                         )) {
                         is NetworkResultWrapper.Error -> {

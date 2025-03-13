@@ -11,6 +11,8 @@ data class User(
     val mobile: String,
     val email: String,
     val isAdmin: Boolean,
+    val checkedIn: Boolean,
+    val checkedOut: Boolean,
 ) : Parcelable {
     fun toUserUiModel(): UserUiModel {
         return UserUiModel(

@@ -70,7 +70,7 @@ fun HomeScreen(
                         Text(text = "Check Out")
                     }
                 }
-            } else {
+            } else if(uiState.isCheckedOut) {
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -87,23 +87,6 @@ fun HomeScreen(
                     }
                 }
             }
-//            if (uiState.isCheckedIn.not()) {
-//                Row(
-//                    modifier = Modifier.padding(16.dp),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Text(text = "Mark Check In", modifier = Modifier.weight(1f))
-//                    Button(onClick = {
-//                        val intent = Intent(context, LocationService::class.java).apply {
-//                            action = LocationService.ACTION_START_TRACKING
-//                        }
-//                        context.startForegroundService(intent)
-//                        onTriggerIntent(HomeIntent.CheckIn)
-//                    }) {
-//                        Text(text = "Check In")
-//                    }
-//                }
-//            }
             HorizontalDivider()
             TicketList(
                 tickets = uiState.tickets,

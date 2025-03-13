@@ -1,17 +1,23 @@
 package com.fttx.partner.ui.screen.backgroundlocation
 
 // LocationService.kt
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
+import com.fttx.partner.domain.model.Action
 import com.fttx.partner.domain.usecase.location.UpdateLocationUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -24,8 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,8 +69,13 @@ class LocationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_START_TRACKING -> startTracking()
-            ACTION_STOP_TRACKING -> stopTracking()
+            ACTION_START_TRACKING -> {
+                startTracking()
+            }
+
+            ACTION_STOP_TRACKING -> {
+                stopTracking()
+            }
         }
         return START_STICKY
     }
@@ -82,9 +94,9 @@ class LocationService : Service() {
 
     private fun requestLocationUpdates() {
         val locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.HOURS.toMillis(1) // Update every hour
-            fastestInterval = TimeUnit.MINUTES.toMillis(55) // Fastest update interval
-            priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+            interval = 10000 // Update every hour
+            fastestInterval = 5000 // Fastest update interval
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
         try {
@@ -95,6 +107,7 @@ class LocationService : Service() {
             )
         } catch (e: SecurityException) {
             // Handle permission error
+            Log.e("LocationService", "Error requesting location updates", e)
         }
         checkTime()
     }
@@ -104,8 +117,6 @@ class LocationService : Service() {
         val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
         val currentMinute = calendar.get(Calendar.MINUTE)
 
-        Log.e("Test", "check time $currentHour $currentMinute")
-
         if (currentHour == 21 && currentMinute == 0) { // 9:00 PM
             stopTracking()
         }
@@ -114,15 +125,58 @@ class LocationService : Service() {
     private fun stopTracking() {
         isTracking = false
         serviceScope.launch {
-            // Save the check-in status in DataStorePreferences
-            dataStorePreferences.saveUserCheckedIn(false)
+            try {
+                // Get the last known location
+                val lastLocation = getLastKnownLocation()
+                if (lastLocation != null) {
+                    sendLocationToBackend(lastLocation)
+                } else {
+                    sendLocationToBackend(Location("provider").apply {
+                        latitude = 0.0
+                        longitude = 0.0
+                    })
+                }
+                withContext(Dispatchers.Main) {
+                    fusedLocationClient.removeLocationUpdates(locationCallback)
+                    stopForeground(true)
+                    stopSelf()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    fusedLocationClient.removeLocationUpdates(locationCallback)
+                    stopForeground(true)
+                    stopSelf()
+                }
+            }
         }
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-        stopForeground(true)
-        stopSelf()
     }
 
-    private suspend fun sendLocationToBackend(location: Location) {
+    private suspend fun getLastKnownLocation(): Location? {
+        return suspendCancellableCoroutine { continuation ->
+            try {
+                if (ActivityCompat.checkSelfPermission(
+                        this, Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { location ->
+                            continuation.resume(location) {}
+                        }
+                        .addOnFailureListener { exception ->
+                            continuation.resume(null) {}
+                            Log.e(TAG, "Failed to get last location", exception)
+                        }
+                } else {
+                    continuation.resume(null) {}
+                }
+            } catch (e: Exception) {
+                continuation.resume(null) {}
+                Log.e(TAG, "Error getting last location", e)
+            }
+        }
+    }
+
+    private suspend fun sendLocationToBackend(location: Location, isCheckout: Boolean = false) {
         // Implementation for sending location to your backend
         // Example using Retrofit:
         try {
@@ -131,23 +185,35 @@ class LocationService : Service() {
                 longitude = location.longitude,
                 timestamp = System.currentTimeMillis()
             )
-            // api.updateLocation(locationData)
-            Log.e(
-                "Test",
-                "Location ${locationData.latitude} ${locationData.longitude} ${locationData.timestamp}"
-            )
-            updateLocationUseCase(
+
+            val result = updateLocationUseCase(
                 dataStorePreferences.getUserId() ?: 0,
-                locationData.latitude to locationData.longitude
+                locationData.latitude to locationData.longitude,
+                if (dataStorePreferences.isUserCheckedIn()) Action.CheckIn else if (isCheckout) Action.CheckOut else Action.LocationUpdate
             )
+            when (result) {
+                is SemaaiResult.Error -> {}
+                is SemaaiResult.Success -> {
+                    if (isCheckout) {
+                        dataStorePreferences.saveUserCheckedIn(false)
+                        val broadcastIntent = Intent(BROADCAST_TRACKING_STOPPED)
+                        sendBroadcast(broadcastIntent)
+                        dataStorePreferences.saveCheckedInTimeStamp(0)
+                    } else if (!dataStorePreferences.isUserCheckedIn()) {
+                        dataStorePreferences.saveUserCheckedIn(true)
+                        val broadcastIntent = Intent(BROADCAST_TRACKING_STARTED)
+                        sendBroadcast(broadcastIntent)
+                        dataStorePreferences.saveCheckedInTimeStamp(System.currentTimeMillis())
+                    }
+                }
+            }
         } catch (e: Exception) {
             // Handle error, maybe store locally for retry
-            Log.e("Test", "Error ${e.toString()}")
+            Log.e("LocationService", "Error sending location to backend", e)
         }
     }
 
     private fun createNotificationChannel() {
-        Log.e("Test", "createNotificationChannel")
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Location Service Channel",
@@ -158,7 +224,6 @@ class LocationService : Service() {
     }
 
     private fun createNotification(): Notification {
-        Log.e("Test", "createNotification")
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Location Tracking Active")
             .setContentText("Tracking your location for attendance")
@@ -179,6 +244,8 @@ class LocationService : Service() {
         const val NOTIFICATION_ID = 1
         const val ACTION_START_TRACKING = "start_tracking"
         const val ACTION_STOP_TRACKING = "stop_tracking"
+        const val BROADCAST_TRACKING_STARTED = "tech.vance.app.TRACKING_STARTED"
+        const val BROADCAST_TRACKING_STOPPED = "tech.vance.app.TRACKING_STOPPED"
     }
 }
 

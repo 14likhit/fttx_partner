@@ -29,13 +29,6 @@ constructor(
         return getValue(Keys.userName) ?: ""
     }
 
-    suspend fun getCurrentLatitude(): String? {
-        return getValue(Keys.latitude)
-    }
-
-    suspend fun getCurrentLongitude(): String? {
-        return getValue(Keys.longitude)
-    }
 
     suspend fun setCurrentCity(city: String) {
         setValue(Keys.city, city)

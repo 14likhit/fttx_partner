@@ -1,7 +1,6 @@
 package com.fttx.partner.domain.model
 
 import android.os.Parcelable
-import com.fttx.partner.data.model.AgentsDto
 import com.fttx.partner.ui.compose.model.UserUiModel
 import kotlinx.parcelize.Parcelize
 

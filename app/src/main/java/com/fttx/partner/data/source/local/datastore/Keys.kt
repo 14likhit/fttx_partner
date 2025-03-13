@@ -11,8 +11,6 @@ internal object Keys {
     val authToken = stringPreferencesKey("auth_token")
     val isUserLoggedIn = booleanPreferencesKey("is_logged_in")
     val userName = stringPreferencesKey("user_first_name")
-    val latitude = stringPreferencesKey("latitude")
-    val longitude = stringPreferencesKey("longitude")
     val city = stringPreferencesKey("city")
     val accessToken = stringPreferencesKey("access_token")
     val isCheckedIn = booleanPreferencesKey("is_checked_in")

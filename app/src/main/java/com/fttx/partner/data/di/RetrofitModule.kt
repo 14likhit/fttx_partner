@@ -79,7 +79,7 @@ object RetrofitModule {
         return Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://ftth.fitpreneur.org/api/")
+            .baseUrl("http://admin.abcorpco.in/api/")
             .build()
     }
 }

@@ -18,7 +18,7 @@ class AccountActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val user = intent.getParcelableExtra(USER) ?: User(-1, "", "", "",false)
+        val user = intent.getParcelableExtra(USER) ?: User(-1, "", "", "", false, false, false)
         setContent {
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 AccountRoute(

@@ -36,6 +36,7 @@ import com.fttx.partner.domain.model.Ticket
 import com.fttx.partner.domain.model.User
 import com.fttx.partner.ui.compose.theme.Caption01Bold
 import com.fttx.partner.ui.compose.theme.Caption01Regular
+import com.fttx.partner.ui.screen.backgroundlocation.LocationService
 import com.fttx.partner.ui.screen.form.TicketFormActivity
 import com.fttx.partner.ui.utils.Constants.BundleKey.TICKET
 import com.fttx.partner.ui.utils.location.RequestLocationPermission
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeRoute(
+    mainViewModel: MainViewModel,
     navigateToTicketFormActivity: (Ticket?, Customer?) -> Unit,
     navigateToAccountActivity: (User) -> Unit,
     navigateToCallerActivity: (String) -> Unit,
@@ -54,13 +56,16 @@ fun HomeRoute(
 ) {
 
     val uiState by homeViewModel.uiState.collectAsState()
+    val uiStateMainViewModel by mainViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
     val context = LocalContext.current
 
-    val isPermissionAsked = remember { mutableStateOf(areLocationPermissionsGranted(context).not()) }
+    val isPermissionAsked =
+        remember { mutableStateOf(areLocationPermissionsGranted(context).not()) }
     val isPermissionRevoked = remember { mutableStateOf(false) }
     val shouldShowRationale = remember { mutableStateOf(true) }
+    val showProgress = remember { mutableStateOf(false) }
 
     val ticketFormUpdate =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { activityResult ->
@@ -91,6 +96,20 @@ fun HomeRoute(
 
                 HomeEffect.NavigateToLocationPermissionRequiredSettingsPopUp -> {
                     isPermissionRevoked.value = true
+                }
+
+                HomeEffect.ShowProgress -> {
+                    showProgress.value = true
+                }
+
+                HomeEffect.AutoCheckout -> {
+                    val intent = Intent(context, LocationService::class.java).apply {
+                        action = LocationService.ACTION_STOP_TRACKING
+                    }
+                    context.startService(intent)
+                    coroutineScope.launch {
+                        homeViewModel.intents.send(HomeIntent.CheckOut)
+                    }
                 }
             }
         }.collect()
@@ -205,6 +224,39 @@ fun HomeRoute(
                     Text("Cancel", style = Caption01Regular)
                 }
             })
+    }
+    if (showProgress.value) {
+        Dialog(
+            onDismissRequest = { },
+            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(100.dp)
+                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+    }
+    if (uiStateMainViewModel.isCheckedIn && showProgress.value) {
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                homeViewModel.intents.send(HomeIntent.CheckInSuccess)
+            }
+        }
+        showProgress.value = false
+    } else if (uiStateMainViewModel.isCheckedOut && showProgress.value) {
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                homeViewModel.intents.send(HomeIntent.CheckOutSuccess)
+            }
+        }
+        showProgress.value = false
+    } else if(uiStateMainViewModel.hideProgress){
+        showProgress.value = false
     }
     LaunchedEffect(Unit) {
         coroutineScope.launch {

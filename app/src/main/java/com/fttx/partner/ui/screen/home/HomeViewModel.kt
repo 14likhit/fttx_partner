@@ -94,11 +94,27 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeIntent.CheckIn -> {
-                        _uiState.value = _uiState.value.copy(isCheckedIn = true, error = "")
+                        _uiEffect.send(HomeEffect.ShowProgress)
+                    }
+
+                    HomeIntent.CheckInSuccess -> {
+                        _uiState.value = _uiState.value.copy(
+                            isCheckedIn = true,
+                            isCheckedOut = false,
+                            error = ""
+                        )
                     }
 
                     HomeIntent.CheckOut -> {
-                        _uiState.value = _uiState.value.copy(isCheckedIn = false, error = "")
+                        _uiEffect.send(HomeEffect.ShowProgress)
+                    }
+
+                    HomeIntent.CheckOutSuccess -> {
+                        _uiState.value = _uiState.value.copy(
+                            isCheckedIn = false,
+                            isCheckedOut = true,
+                            error = ""
+                        )
                     }
 
                     HomeIntent.EmptyError -> {
@@ -119,16 +135,17 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is SemaaiResult.Success -> {
+                    dataStorePreferences.saveUserCheckedIn(result.data.user.checkedIn)
                     val lastCheckedInTimeStamp = dataStorePreferences.getCheckedInTimeStamp()
                     val calendar = Calendar.getInstance()
                     calendar.add(Calendar.DAY_OF_YEAR, -1)
 
                     val yesterday = calendar.time
                     val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-
-                    if (sdf.format(Date(lastCheckedInTimeStamp)) == sdf.format(yesterday)) {
-                        //todo-> call check out api
+                    if ((sdf.format(Date(lastCheckedInTimeStamp)) == sdf.format(yesterday)) && _uiState.value.isCheckedIn) {
+                        _uiEffect.send(HomeEffect.AutoCheckout)
                     }
+
                     _uiState.value =
                         _uiState.value.copy(
                             tickets = result.data.tickets,

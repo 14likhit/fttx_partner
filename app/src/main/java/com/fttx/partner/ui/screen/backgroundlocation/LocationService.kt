@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -15,6 +14,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fttx.partner.data.network.util.SemaaiResult
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
 import com.fttx.partner.domain.model.Action
@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -76,26 +77,25 @@ class LocationService : Service() {
             ACTION_STOP_TRACKING -> {
                 stopTracking()
             }
+
+            ACTION_UPDATE_TRACKING -> {
+                startTracking()
+            }
         }
         return START_STICKY
     }
 
     private fun startTracking() {
         if (isTracking) return
-
         isTracking = true
-        serviceScope.launch {
-            dataStorePreferences.saveUserCheckedIn(true)
-            dataStorePreferences.saveCheckedInTimeStamp(System.currentTimeMillis())
-        }
         startForeground(NOTIFICATION_ID, createNotification())
         requestLocationUpdates()
     }
 
     private fun requestLocationUpdates() {
         val locationRequest = LocationRequest.create().apply {
-            interval = 10000 // Update every hour
-            fastestInterval = 5000 // Fastest update interval
+            interval = TimeUnit.HOURS.toMillis(1) // Update every hour
+            fastestInterval = TimeUnit.MINUTES.toMillis(55) // Fastest update interval
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
@@ -107,7 +107,7 @@ class LocationService : Service() {
             )
         } catch (e: SecurityException) {
             // Handle permission error
-            Log.e("LocationService", "Error requesting location updates", e)
+            e.printStackTrace()
         }
         checkTime()
     }
@@ -129,12 +129,12 @@ class LocationService : Service() {
                 // Get the last known location
                 val lastLocation = getLastKnownLocation()
                 if (lastLocation != null) {
-                    sendLocationToBackend(lastLocation)
+                    sendLocationToBackend(lastLocation, isCheckout = true)
                 } else {
                     sendLocationToBackend(Location("provider").apply {
                         latitude = 0.0
                         longitude = 0.0
-                    })
+                    }, isCheckout = true)
                 }
                 withContext(Dispatchers.Main) {
                     fusedLocationClient.removeLocationUpdates(locationCallback)
@@ -164,14 +164,14 @@ class LocationService : Service() {
                         }
                         .addOnFailureListener { exception ->
                             continuation.resume(null) {}
-                            Log.e(TAG, "Failed to get last location", exception)
+                            exception.printStackTrace()
                         }
                 } else {
                     continuation.resume(null) {}
                 }
             } catch (e: Exception) {
                 continuation.resume(null) {}
-                Log.e(TAG, "Error getting last location", e)
+                e.printStackTrace()
             }
         }
     }
@@ -189,10 +189,15 @@ class LocationService : Service() {
             val result = updateLocationUseCase(
                 dataStorePreferences.getUserId() ?: 0,
                 locationData.latitude to locationData.longitude,
-                if (dataStorePreferences.isUserCheckedIn()) Action.CheckIn else if (isCheckout) Action.CheckOut else Action.LocationUpdate
+                if (dataStorePreferences.isUserCheckedIn()
+                        .not()
+                ) Action.CheckIn else if (isCheckout) Action.CheckOut else Action.LocationUpdate
             )
             when (result) {
-                is SemaaiResult.Error -> {}
+                is SemaaiResult.Error -> {
+                    val broadcastIntent = Intent(BROADCAST_TRACKING_UPDATES)
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
+                }
                 is SemaaiResult.Success -> {
                     if (isCheckout) {
                         dataStorePreferences.saveUserCheckedIn(false)
@@ -202,14 +207,18 @@ class LocationService : Service() {
                     } else if (!dataStorePreferences.isUserCheckedIn()) {
                         dataStorePreferences.saveUserCheckedIn(true)
                         val broadcastIntent = Intent(BROADCAST_TRACKING_STARTED)
-                        sendBroadcast(broadcastIntent)
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                         dataStorePreferences.saveCheckedInTimeStamp(System.currentTimeMillis())
+                    } else {
+                        val broadcastIntent = Intent(BROADCAST_TRACKING_UPDATES)
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                     }
                 }
             }
         } catch (e: Exception) {
             // Handle error, maybe store locally for retry
             Log.e("LocationService", "Error sending location to backend", e)
+            e.printStackTrace()
         }
     }
 
@@ -244,8 +253,10 @@ class LocationService : Service() {
         const val NOTIFICATION_ID = 1
         const val ACTION_START_TRACKING = "start_tracking"
         const val ACTION_STOP_TRACKING = "stop_tracking"
-        const val BROADCAST_TRACKING_STARTED = "tech.vance.app.TRACKING_STARTED"
-        const val BROADCAST_TRACKING_STOPPED = "tech.vance.app.TRACKING_STOPPED"
+        const val ACTION_UPDATE_TRACKING = "update_tracking"
+        const val BROADCAST_TRACKING_STARTED = "com.fttx.partner.TRACKING_STARTED"
+        const val BROADCAST_TRACKING_STOPPED = "com.fttx.partner.TRACKING_STOPPED"
+        const val BROADCAST_TRACKING_UPDATES = "com.fttx.partner.TRACKING_UPDATES"
     }
 }
 

@@ -54,7 +54,7 @@ fun HomeScreen(
                                 onTriggerIntent(HomeIntent.AccountCta)
                             })
                 })
-            if (uiState.isCheckedIn) {
+            if (uiState.isCheckedIn && uiState.isCheckedOut.not()) {
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -70,7 +70,13 @@ fun HomeScreen(
                         Text(text = "Check Out")
                     }
                 }
-            } else if(uiState.isCheckedOut) {
+            } else {
+                if(uiState.isCheckedIn){
+                    val intent = Intent(context, LocationService::class.java).apply {
+                        action = LocationService.ACTION_UPDATE_TRACKING
+                    }
+                    context.startForegroundService(intent)
+                }
                 Row(
                     modifier = Modifier.padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically

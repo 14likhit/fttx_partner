@@ -19,7 +19,9 @@ sealed class HomeIntent : IIntent {
     data object LocationPermissionDenied : HomeIntent()
     data object LocationPermissionRevoked : HomeIntent()
     data object CheckIn : HomeIntent()
+    data object CheckInSuccess : HomeIntent()
     data object CheckOut : HomeIntent()
+    data object CheckOutSuccess : HomeIntent()
     data object EmptyError : HomeIntent()
 }
 
@@ -31,6 +33,8 @@ sealed class HomeEffect : IEffect {
     data class NavigateToCall(val ticket: Ticket) : HomeEffect()
     data object NavigateToLocationPermissionRequiredPopUp : HomeEffect()
     data object NavigateToLocationPermissionRequiredSettingsPopUp : HomeEffect()
+    data object ShowProgress : HomeEffect()
+    data object AutoCheckout : HomeEffect()
 }
 
 data class HomeState(

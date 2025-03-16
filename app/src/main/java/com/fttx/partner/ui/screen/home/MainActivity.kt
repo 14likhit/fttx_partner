@@ -11,10 +11,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.fttx.partner.data.source.local.datastore.DataStorePreferences
 import com.fttx.partner.ui.compose.theme.FTTXPartnerTheme
 import com.fttx.partner.ui.screen.account.AccountActivity
@@ -33,24 +35,32 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     @Inject
     lateinit var dataStorePreferences: DataStorePreferences
+
+    private val viewModel: MainViewModel by viewModels()
 
 
     private val trackingReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-
+            Log.e("MainActivity", "Received broadcast $intent")
             when (intent.action) {
                 LocationService.BROADCAST_TRACKING_STARTED -> {
                     // Handle tracking started
                     // Update UI, show notification, etc.
                     Log.e("MainActivity", "Tracking started")
+                    viewModel.checkIn()
                 }
 
                 LocationService.BROADCAST_TRACKING_STOPPED -> {
                     // Handle tracking stopped
                     // Update UI, hide notification, etc.
-                    Log.e("MainActivity", "Tracking stopped")
+                    viewModel.checkOut()
+                }
+
+                LocationService.BROADCAST_TRACKING_UPDATES -> {
+                    viewModel.hideProgress()
                 }
             }
         }
@@ -69,6 +79,7 @@ class MainActivity : ComponentActivity() {
             FTTXPartnerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     HomeRoute(
+                        mainViewModel = viewModel,
                         navigateToTicketFormActivity = { ticket, customer ->
                             startActivity(Intent(this, TicketFormActivity::class.java).apply {
                                 putExtra(TICKET, ticket)
@@ -107,14 +118,16 @@ class MainActivity : ComponentActivity() {
         val intentFilter = IntentFilter().apply {
             addAction(LocationService.BROADCAST_TRACKING_STARTED)
             addAction(LocationService.BROADCAST_TRACKING_STOPPED)
+            addAction(LocationService.BROADCAST_TRACKING_UPDATES)
         }
-        registerReceiver(trackingReceiver, intentFilter)
+        LocalBroadcastManager.getInstance(this).registerReceiver(trackingReceiver, intentFilter)
+
     }
 
     override fun onStop() {
         super.onStop()
 
         // Unregister the receiver when the activity is not visible
-        unregisterReceiver(trackingReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(trackingReceiver)
     }
 }

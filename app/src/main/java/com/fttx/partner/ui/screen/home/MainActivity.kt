@@ -56,10 +56,12 @@ class MainActivity : ComponentActivity() {
                 LocationService.BROADCAST_TRACKING_STOPPED -> {
                     // Handle tracking stopped
                     // Update UI, hide notification, etc.
+                    Log.e("MainActivity", "Tracking stopped")
                     viewModel.checkOut()
                 }
 
                 LocationService.BROADCAST_TRACKING_UPDATES -> {
+                    Log.e("MainActivity", "Hide Progress")
                     viewModel.hideProgress()
                 }
             }

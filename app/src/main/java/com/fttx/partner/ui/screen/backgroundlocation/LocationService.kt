@@ -195,21 +195,26 @@ class LocationService : Service() {
             )
             when (result) {
                 is SemaaiResult.Error -> {
+                    Log.e("Test","Error Sending BroadCast")
                     val broadcastIntent = Intent(BROADCAST_TRACKING_UPDATES)
                     LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                 }
                 is SemaaiResult.Success -> {
+                    Log.e("Test","Sending Success")
                     if (isCheckout) {
+                        Log.e("Test","Sending CheckoutBroadcast")
                         dataStorePreferences.saveUserCheckedIn(false)
                         val broadcastIntent = Intent(BROADCAST_TRACKING_STOPPED)
-                        sendBroadcast(broadcastIntent)
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                         dataStorePreferences.saveCheckedInTimeStamp(0)
                     } else if (!dataStorePreferences.isUserCheckedIn()) {
+                        Log.e("Test","Sending CheckInBroadcast")
                         dataStorePreferences.saveUserCheckedIn(true)
                         val broadcastIntent = Intent(BROADCAST_TRACKING_STARTED)
                         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                         dataStorePreferences.saveCheckedInTimeStamp(System.currentTimeMillis())
                     } else {
+                        Log.e("Test","Sending UpdateBroadcast")
                         val broadcastIntent = Intent(BROADCAST_TRACKING_UPDATES)
                         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent)
                     }
@@ -238,6 +243,7 @@ class LocationService : Service() {
             .setContentText("Tracking your location for attendance")
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
     }
 

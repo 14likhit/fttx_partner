@@ -1,5 +1,6 @@
 package com.fttx.partner.ui.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fttx.partner.ui.mvicore.IModel
@@ -40,6 +41,7 @@ class MainViewModel @Inject constructor() : ViewModel(), IModel<MainState, MainI
                     }
 
                     MainIntent.CheckOut -> {
+                        Log.e("Test","Checkout")
                         _uiState.value =
                             _uiState.value.copy(isCheckedOut = true, isCheckedIn = false)
                     }

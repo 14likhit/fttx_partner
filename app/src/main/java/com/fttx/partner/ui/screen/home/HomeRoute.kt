@@ -241,14 +241,15 @@ fun HomeRoute(
         }
 
     }
-    if (uiStateMainViewModel.isCheckedIn && showProgress.value) {
+    Log.e("Test","isCheckedIn ${uiStateMainViewModel.isCheckedIn} isCheckedOut ${uiStateMainViewModel.isCheckedOut} hideProgress ${uiStateMainViewModel.hideProgress}")
+    if (uiStateMainViewModel.isCheckedIn) {
         LaunchedEffect(Unit) {
             coroutineScope.launch {
                 homeViewModel.intents.send(HomeIntent.CheckInSuccess)
             }
         }
         showProgress.value = false
-    } else if (uiStateMainViewModel.isCheckedOut && showProgress.value) {
+    } else if (uiStateMainViewModel.isCheckedOut) {
         LaunchedEffect(Unit) {
             coroutineScope.launch {
                 homeViewModel.intents.send(HomeIntent.CheckOutSuccess)

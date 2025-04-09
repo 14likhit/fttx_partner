@@ -94,7 +94,12 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeIntent.CheckIn -> {
-                        _uiEffect.send(HomeEffect.ShowProgress)
+//                        _uiEffect.send(HomeEffect.ShowProgress)
+                        _uiState.value = _uiState.value.copy(
+                            isCheckedIn = true,
+                            isCheckedOut = false,
+                            error = ""
+                        )
                     }
 
                     HomeIntent.CheckInSuccess -> {
@@ -106,7 +111,12 @@ class HomeViewModel @Inject constructor(
                     }
 
                     HomeIntent.CheckOut -> {
-                        _uiEffect.send(HomeEffect.ShowProgress)
+//                        _uiEffect.send(HomeEffect.ShowProgress)
+                        _uiState.value = _uiState.value.copy(
+                            isCheckedIn = false,
+                            isCheckedOut = true,
+                            error = ""
+                        )
                     }
 
                     HomeIntent.CheckOutSuccess -> {

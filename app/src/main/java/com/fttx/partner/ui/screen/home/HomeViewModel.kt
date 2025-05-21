@@ -121,11 +121,24 @@ class HomeViewModel @Inject constructor(
 
                     HomeIntent.CheckOut -> {
 //                        _uiEffect.send(HomeEffect.ShowProgress)
-                        _uiState.value = _uiState.value.copy(
-                            isCheckedIn = false,
-                            isCheckedOut = true,
-                            error = ""
-                        )
+                        val currentTime = System.currentTimeMillis()
+                        val calendar = Calendar.getInstance().apply {
+                            timeInMillis = currentTime
+                        }
+
+                        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+                        if (currentHour >= 18) {
+                            _uiState.value = _uiState.value.copy(
+                                isCheckedIn = false,
+                                isCheckedOut = true,
+                                error = "",
+                                isEarlyCheckout = false
+                            )
+                        } else {
+                            _uiState.value = _uiState.value.copy(
+                                isEarlyCheckout = true
+                            )
+                        }
                     }
 
                     HomeIntent.CheckOutSuccess -> {
@@ -138,6 +151,12 @@ class HomeViewModel @Inject constructor(
 
                     HomeIntent.EmptyError -> {
                         _uiState.value = _uiState.value.copy(error = "")
+                    }
+
+                    HomeIntent.HideCheckoutMessage -> {
+                        _uiState.value = _uiState.value.copy(
+                            isEarlyCheckout = false
+                        )
                     }
                 }
             }

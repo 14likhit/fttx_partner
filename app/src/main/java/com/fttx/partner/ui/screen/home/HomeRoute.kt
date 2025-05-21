@@ -241,7 +241,25 @@ fun HomeRoute(
         }
 
     }
-    Log.e("Test","isCheckedIn ${uiStateMainViewModel.isCheckedIn} isCheckedOut ${uiStateMainViewModel.isCheckedOut} hideProgress ${uiStateMainViewModel.hideProgress}")
+    if (uiState.isEarlyCheckout) {
+        AlertDialog(
+            text = {
+                Text(text = "Checkout is allowed only after 6pm")
+            },
+            onDismissRequest = {
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            homeViewModel.intents.send(HomeIntent.HideCheckoutMessage)
+                        }
+                    }) {
+                    Text("Ok", style = Caption01Bold)
+                }
+            },
+        )
+    }
     if (uiStateMainViewModel.isCheckedIn) {
         LaunchedEffect(Unit) {
             coroutineScope.launch {
@@ -256,7 +274,7 @@ fun HomeRoute(
             }
         }
         showProgress.value = false
-    } else if(uiStateMainViewModel.hideProgress){
+    } else if (uiStateMainViewModel.hideProgress) {
         showProgress.value = false
     }
     LaunchedEffect(Unit) {

@@ -23,6 +23,7 @@ sealed class HomeIntent : IIntent {
     data object CheckOut : HomeIntent()
     data object CheckOutSuccess : HomeIntent()
     data object EmptyError : HomeIntent()
+    data object HideCheckoutMessage: HomeIntent()
 }
 
 sealed class HomeEffect : IEffect {
@@ -46,6 +47,7 @@ data class HomeState(
     val error: String = "",
     val isCheckedIn: Boolean = false,
     val isCheckedOut: Boolean = false,
+    val isEarlyCheckout: Boolean = false,
 ) : IState
 
 enum class LocationPermissionState() {

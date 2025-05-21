@@ -17,7 +17,7 @@ enum class TicketStatusUiModel(
     val textColor: Color
 ) {
     Assigned("Assigned", 1, Teal10, Teal50),
-    InProgress("In-Progress", 2, YellowAmber10, YellowAmber50),
+    InProgress("Inprogress", 2, YellowAmber10, YellowAmber50),
     Complete("Complete", 3, Green10, Green50),
     Invalid("Invalid", 4, Red10, Red50);
 
